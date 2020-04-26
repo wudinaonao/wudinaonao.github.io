@@ -6,14 +6,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Spring Boot 集成前端 - Naonao Blog</title>
+  <title>Spring Boot 集成 React - Naonao Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   
   <meta name="keywords" content="wudinaonao,"> 
   
-  <meta name="description" content="Naonao Life Record,Spring Boot 集成前端 ReactSprin..."> 
+  <meta name="description" content="Naonao Life Record,Spring Boot 集成前端 React
+0x00..."> 
   
   <meta name="author" content="wudinaonao"> 
   <link rel="shortcut icon" href="/image/favicon.ico">
@@ -108,18 +109,23 @@
   <section class="head">
   <img src="/image/post-image-0.jpg" draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Spring Boot 集成前端</h1>
+    <h1 class="head-title">Spring Boot 集成 React</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020-04-26</span
         class="post-info-item">
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>53</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1255</span>
     </div>
   </div>
 </section>
   <section class="main">
     <section class="content">
-      <h1 id="Spring-Boot-集成前端-React"><a href="#Spring-Boot-集成前端-React" class="headerlink" title="Spring Boot 集成前端 React"></a>Spring Boot 集成前端 React</h1><h2 id="Spring-Boot-集成前端构建好的静态文件打成一个包发布"><a href="#Spring-Boot-集成前端构建好的静态文件打成一个包发布" class="headerlink" title="Spring Boot 集成前端构建好的静态文件打成一个包发布"></a>Spring Boot 集成前端构建好的静态文件打成一个包发布</h2>
+      <h1 id="Spring-Boot-集成前端-React"><a href="#Spring-Boot-集成前端-React" class="headerlink" title="Spring Boot 集成前端 React"></a>Spring Boot 集成前端 React</h1><p><img src="http://q9eejfwql.bkt.clouddn.com/20200426221509.png" alt=""></p>
+<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
+<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
+<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
+<p>新建一个配置类 StaticResourceMap</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaticResourceMap</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">WebMvcConfigurer</span> </span>&#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addResourceHandlers</span><span class="hljs-params">(ResourceHandlerRegistry registry)</span> </span>&#123;<br>        <span class="hljs-comment">// 映射静态资源根目录到  frontend</span><br>        registry.addResourceHandler(<span class="hljs-string">"/**"</span>)<br>                .addResourceLocations(<span class="hljs-string">"classpath:/frontend/"</span>)<br>                .resourceChain(<span class="hljs-keyword">true</span>)<br>                .addResolver(<span class="hljs-keyword">new</span> PathResourceResolver()&#123;<br>                    <span class="hljs-comment">// 后端匹配不到路由时转给前端</span><br>                    <span class="hljs-meta">@Override</span><br>                    <span class="hljs-function"><span class="hljs-keyword">protected</span> Resource <span class="hljs-title">getResource</span><span class="hljs-params">(String resourcePath, Resource location)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;<br>                        Resource resource = <span class="hljs-keyword">super</span>.getResource(resourcePath, location);<br>                        <span class="hljs-keyword">if</span> (resource == <span class="hljs-keyword">null</span>)&#123;<br>                            resource = <span class="hljs-keyword">super</span>.getResource(<span class="hljs-string">"index.html"</span>, location);<br>                        &#125;<br>                        <span class="hljs-keyword">return</span> resource;<br>                    &#125;<br>                &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
     </section>
     <section class="extra">
       
@@ -134,6 +140,8 @@
 </section>
       
       
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Boot/" rel="tag">Spring Boot</a></li></ul>
+
       
     </section>
     
