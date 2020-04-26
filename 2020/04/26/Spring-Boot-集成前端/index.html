@@ -6,15 +6,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Spring Boot 集成 React - Naonao Blog</title>
+  <title>Spring Boot 集成 React 前端路由问题 - Naonao Blog</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
   
   <meta name="keywords" content="wudinaonao,"> 
   
-  <meta name="description" content="Naonao Life Record,Spring Boot 集成前端 React
-0x00..."> 
+  <meta name="description" content="Naonao Life Record,Spring Boot 集成 React 前端路由问题..."> 
   
   <meta name="author" content="wudinaonao"> 
   <link rel="shortcut icon" href="/image/favicon.ico">
@@ -109,18 +108,18 @@
   <section class="head">
   <img src="/image/post-image-0.jpg" draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">Spring Boot 集成 React</h1>
+    <h1 class="head-title">Spring Boot 集成 React 前端路由问题</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>2020-04-26</span
         class="post-info-item">
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1255</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1260</span>
     </div>
   </div>
 </section>
   <section class="main">
     <section class="content">
-      <h1 id="Spring-Boot-集成前端-React"><a href="#Spring-Boot-集成前端-React" class="headerlink" title="Spring Boot 集成前端 React"></a>Spring Boot 集成前端 React</h1><p><img src="http://q9eejfwql.bkt.clouddn.com/20200426221509.png" alt=""></p>
+      <h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img src="http://q9eejfwql.bkt.clouddn.com/20200426221509.png" alt=""></p>
 <h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
 <h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
 <h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
