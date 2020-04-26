@@ -1116,7 +1116,7 @@ body p {
 }
 .article .main .content p code {
   font-size: 1em;
-  background-color: #3e3e3e;
+  background-color: #f6f8fa;
   padding: 2px 5px;
   border-radius: 2px;
   color: #ffbe5b;
@@ -1154,7 +1154,7 @@ body p {
   border: none;
 }
 .article .main .content figure .code code {
-  background-color: #f6f8fa;
+  background-color: #3e3e3e;
   padding: 1em;
 }
 .article .main .content figure > * {
