@@ -91,24 +91,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring Boot 集成 React 前端路由问题</title>
-    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
-    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
-<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
-<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
-<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
-<p>新建一个配置类 StaticResourceMap</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Spring Boot</tag>
-        <tag>React</tag>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Next 主题设置代码高亮</title>
     <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
     <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
@@ -137,6 +119,24 @@
       </categories>
       <tags>
         <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring Boot 集成 React 前端路由问题</title>
+    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
+    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
+<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
+<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
+<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
+<p>新建一个配置类 StaticResourceMap</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Spring Boot</tag>
+        <tag>React</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
 </search>
