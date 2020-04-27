@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Next 主题设置代码高亮</title>
+    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
+    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
+<p>找到Next主题目录下的_config.xml文件</p>
+<a id="more"></a>
+
+<p>在这里可以修改风格</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
+
+<p>我们更改为 <code>highlight_theme: night eighties</code></p>
+<p>得到深色系的Code风格</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
+<p>但是我们发现一个问题。。。</p>
+<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
+
+<p>即可</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Keras 实现识别 12306 验证码</title>
     <url>/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/</url>
     <content><![CDATA[<h1 id="Python-Keras-实现识别12306验证码"><a href="#Python-Keras-实现识别12306验证码" class="headerlink" title="Python+Keras 实现识别12306验证码"></a>Python+Keras 实现识别12306验证码</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>CNN卷积神经网络在图像识别领域大放异彩使图形验证码的防护作用大大下降，我们需要寻找一种新的方式来代替传统的验证方式，识别操作者究竟是屏幕前的真人还是网络中的机器人。</p>
@@ -106,37 +137,6 @@
         <tag>Spring Boot</tag>
         <tag>React</tag>
         <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Next 主题设置代码高亮</title>
-    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
-    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
-<p>找到Next主题目录下的_config.xml文件</p>
-<a id="more"></a>
-
-<p>在这里可以修改风格</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
-
-<p>我们更改为 <code>highlight_theme: night eighties</code></p>
-<p>得到深色系的Code风格</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
-<p>但是我们发现一个问题。。。</p>
-<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>然后</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
-
-<p>即可</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
       </tags>
   </entry>
 </search>
