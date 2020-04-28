@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Flask部署Keras模型遇到的问题</title>
-    <url>/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
-<ul>
-<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
-</li>
-<li><p>在这个位置</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>增加</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>变成这样</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>问题解决</p>
-</li>
-</ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>Python</tag>
-        <tag>Keras</tag>
-        <tag>Flask</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ESXI 更改网卡速率并设置脚本</title>
     <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
     <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
@@ -104,6 +74,36 @@
         <tag>ESXI</tag>
         <tag>Shell</tag>
         <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flask部署Keras模型遇到的问题</title>
+    <url>/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
+<ul>
+<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
+</li>
+<li><p>在这个位置</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变成这样</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>问题解决</p>
+</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Keras</tag>
+        <tag>Flask</tag>
       </tags>
   </entry>
   <entry>
@@ -329,6 +329,26 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring Boot 集成 React 前端路由问题</title>
+    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
+    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
+<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
+<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
+<a id="more"></a>
+
+<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
+<p>新建一个配置类 StaticResourceMap</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Spring Boot</tag>
+        <tag>React</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用Flask部署Keras模型并提供Restful接口</title>
     <url>/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/</url>
     <content><![CDATA[<h1 id="使用Flask部署Keras模型并提供Restful接口"><a href="#使用Flask部署Keras模型并提供Restful接口" class="headerlink" title="使用Flask部署Keras模型并提供Restful接口"></a>使用Flask部署Keras模型并提供Restful接口</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们训练好了模型后想发布出去，提供Restful风格的API供外部使用，这个时候我们可以选择任意选择一款Web框架进行发布。我之前使用过Django，但是感觉有些繁琐，所以我更倾向于使用Flask这个框架，因为这个框架的路由标注方式跟Java的Springboot非常相似。接下来我们用之前训练的识别12306验证码的模型来进行部署。</p>
@@ -441,7 +461,7 @@
 <li><p>Config.py 全局配置文件</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> controller.charset <span class="keyword">import</span> LABEL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line"><span class="comment"># general configuration</span></span><br><span class="line">APP_NAME = <span class="string">"Mark12306Captcha"</span></span><br><span class="line">APP_VERSION = <span class="string">"v1.0"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># model and mark configuration</span></span><br><span class="line">MODEL_PATH = &#123;</span><br><span class="line">    <span class="string">"label"</span>: os.path.join(CURRENT_DIR, <span class="string">"controller"</span>, <span class="string">"models"</span>, <span class="string">"Label_12306_SmallCNN4.model"</span>),</span><br><span class="line">    <span class="string">"image"</span>: os.path.join(CURRENT_DIR, <span class="string">"controller"</span>, <span class="string">"models"</span>, <span class="string">"Image_12306_SmallCNN4.model"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LABEL_LIST = LABEL</span><br><span class="line"></span><br><span class="line">MARK_CONFIG = &#123;</span><br><span class="line">    <span class="comment"># captcha size</span></span><br><span class="line">    <span class="string">"label"</span>: &#123;</span><br><span class="line">        <span class="string">"height"</span>: <span class="number">30</span>,</span><br><span class="line">        <span class="string">"width"</span>: <span class="number">63</span>,</span><br><span class="line">        <span class="string">"channel"</span>: <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"image"</span>: &#123;</span><br><span class="line">        <span class="string">"height"</span>: <span class="number">67</span>,</span><br><span class="line">        <span class="string">"width"</span>: <span class="number">67</span>,</span><br><span class="line">        <span class="string">"channel"</span>: <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># draw marked result</span></span><br><span class="line">DRAW_CONFIG = &#123;</span><br><span class="line">    <span class="comment"># RGB</span></span><br><span class="line">    <span class="string">"color"</span>: (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">    <span class="string">"lineSize"</span>: <span class="number">5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>App.py 在App.py文件里把api导入进去，这个是程序的入口</p>
+<li><p>App.py 把api导入进去，这个是程序的入口</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, render_template</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> mark</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> get</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> errorHandler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.register_blueprint(errorHandler)</span><br><span class="line">app.register_blueprint(mark)</span><br><span class="line">app.register_blueprint(get)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -530,26 +550,6 @@
         <tag>Keras</tag>
         <tag>Flask</tag>
         <tag>Tensorflow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring Boot 集成 React 前端路由问题</title>
-    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
-    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
-<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
-<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
-<a id="more"></a>
-
-<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
-<p>新建一个配置类 StaticResourceMap</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Spring Boot</tag>
-        <tag>React</tag>
-        <tag>Java</tag>
       </tags>
   </entry>
 </search>
