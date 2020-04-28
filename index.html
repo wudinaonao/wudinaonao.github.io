@@ -325,7 +325,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-04-28 13:59:36 / 修改时间：16:50:48" itemprop="dateCreated datePublished" datetime="2020-04-28T13:59:36+08:00">2020-04-28</time>
+              <time title="创建时间：2020-04-28 13:59:36 / 修改时间：16:59:22" itemprop="dateCreated datePublished" datetime="2020-04-28T13:59:36+08:00">2020-04-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -375,61 +375,14 @@
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次从服务器拷贝文件的时候发现速度只有</p>
 <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162559.png" alt=""></p>
 <p>百兆带宽不到？</p>
-<p>登录 ESXI 查看网卡设置</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>我千兆网卡怎么设置的是百兆速度？</p>
-<p>点击 编辑设置 更改链路速度</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162801.png" alt=""></p>
-<p>保存</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162906.png" alt=""></p>
-<p>速度正常了。</p>
-<h2 id="好景不长"><a href="#好景不长" class="headerlink" title="好景不长"></a>好景不长</h2><p>本以为这样设置好就万事大吉了。But！Too young too simple! 第二天又成这样了。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>仿佛又自动设置成百兆速度了？</p>
-<p>于是乎，痛定思痛！</p>
-<p>我们需要编写一个脚本来判断网卡是不是又自动改回百兆了，如果改回来了就自动改过去！</p>
-<h3 id="撸起袖子开始干"><a href="#撸起袖子开始干" class="headerlink" title="撸起袖子开始干"></a>撸起袖子开始干</h3><ul>
-<li><p>开启ESXI SSH 登录</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163347.png" alt=""></p>
-</li>
-<li><p>登录 ESXI </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
-</li>
-<li><p>我们在 /etc 目录下新建一个 script 文件夹保存我们的脚本</p>
-</li>
-<li><p>(/etc目录 ESXI 重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！)</p>
-</li>
-</ul>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change Network Adapter Speed 1000Mbps</span></span><br><span class="line"></span><br><span class="line">currentSpeed=`esxcfg-nics -l|grep Mbps|awk '&#123;print $5&#125;'`</span><br><span class="line">if [ $currentSpeed != "1000Mbps" ]; then</span><br><span class="line">    # 注意 vmnic0 是你网卡的名字</span><br><span class="line">    esxcfg-nics -s 1000 -d full vmnic0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>保存 :wq</p>
-</li>
-<li><p>加入定时任务 每分钟检测一次</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
-</li>
-<li><p>在里面添加</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>注意添加在 <code>exit 0</code> 前面</p>
-</li>
-<li><p>重启 crontabs</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<p>大功告成。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
