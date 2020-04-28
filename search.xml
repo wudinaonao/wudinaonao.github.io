@@ -1,6 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Flask部署Keras模型遇到的问题</title>
+    <url>/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
+<ul>
+<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
+</li>
+<li><p>在这个位置</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变成这样</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>问题解决</p>
+</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Keras</tag>
+        <tag>Flask</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ESXI 更改网卡速率并设置脚本</title>
+    <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162239.png" alt=""></p>
+<p>平常从PT站下的资源直接放到这里提供给家里的小米电视和各种盒子等。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次从服务器拷贝文件的时候发现速度只有</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162559.png" alt=""></p>
+<p>百兆带宽不到？</p>
+<a id="more"></a>
+
+<p>登录 ESXI 查看网卡设置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
+<p>我千兆网卡怎么设置的是百兆速度？</p>
+<p>点击 编辑设置 更改链路速度</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162801.png" alt=""></p>
+<p>保存</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162906.png" alt=""></p>
+<p>速度正常了。</p>
+<h2 id="好景不长"><a href="#好景不长" class="headerlink" title="好景不长"></a>好景不长</h2><p>本以为这样设置好就万事大吉了。But！Too young too simple! 第二天又成这样了。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
+<p>仿佛又自动设置成百兆速度了？</p>
+<p>于是乎，痛定思痛！</p>
+<p>我们需要编写一个脚本来判断网卡是不是又自动改回百兆了，如果改回来了就自动改过去！</p>
+<h3 id="撸起袖子开始干"><a href="#撸起袖子开始干" class="headerlink" title="撸起袖子开始干"></a>撸起袖子开始干</h3><ul>
+<li><p>开启ESXI SSH 登录</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163347.png" alt=""></p>
+</li>
+<li><p>登录 ESXI </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
+</li>
+<li><p>我们在 /etc 目录下新建一个 script 文件夹保存我们的脚本</p>
+</li>
+<li><p>(/etc目录 ESXI 重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！)</p>
+</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change Network Adapter Speed 1000Mbps</span></span><br><span class="line"></span><br><span class="line">currentSpeed=`esxcfg-nics -l|grep Mbps|awk '&#123;print $5&#125;'`</span><br><span class="line">if [ $currentSpeed != "1000Mbps" ]; then</span><br><span class="line">    # 注意 vmnic0 是你网卡的名字</span><br><span class="line">    esxcfg-nics -s 1000 -d full vmnic0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>保存 :wq</p>
+</li>
+<li><p>加入定时任务 每分钟检测一次</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
+</li>
+<li><p>在里面添加</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>注意添加在 <code>exit 0</code> 前面</p>
+</li>
+<li><p>重启 crontabs</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
+<p>大功告成。</p>
+]]></content>
+      <categories>
+        <category>VMware</category>
+      </categories>
+      <tags>
+        <tag>Vmware</tag>
+        <tag>ESXI</tag>
+        <tag>Shell</tag>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Keras 实现识别 12306 验证码</title>
     <url>/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/</url>
     <content><![CDATA[<h1 id="Python-Keras-实现识别12306验证码"><a href="#Python-Keras-实现识别12306验证码" class="headerlink" title="Python+Keras 实现识别12306验证码"></a>Python+Keras 实现识别12306验证码</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>CNN卷积神经网络在图像识别领域大放异彩使图形验证码的防护作用大大下降，我们需要寻找一种新的方式来代替传统的验证方式，识别操作者究竟是屏幕前的真人还是网络中的机器人。</p>
@@ -82,108 +188,12 @@
         <category>Python</category>
       </categories>
       <tags>
-        <tag>Tensorflow</tag>
-        <tag>Keras</tag>
         <tag>Python</tag>
+        <tag>Keras</tag>
+        <tag>Tensorflow</tag>
         <tag>深度学习</tag>
         <tag>神经网络</tag>
         <tag>验证码识别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ESXI 更改网卡速率并设置脚本</title>
-    <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162239.png" alt=""></p>
-<p>平常从PT站下的资源直接放到这里提供给家里的小米电视和各种盒子等。</p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次从服务器拷贝文件的时候发现速度只有</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162559.png" alt=""></p>
-<p>百兆带宽不到？</p>
-<a id="more"></a>
-
-<p>登录 ESXI 查看网卡设置</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>我千兆网卡怎么设置的是百兆速度？</p>
-<p>点击 编辑设置 更改链路速度</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162801.png" alt=""></p>
-<p>保存</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162906.png" alt=""></p>
-<p>速度正常了。</p>
-<h2 id="好景不长"><a href="#好景不长" class="headerlink" title="好景不长"></a>好景不长</h2><p>本以为这样设置好就万事大吉了。But！Too young too simple! 第二天又成这样了。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>仿佛又自动设置成百兆速度了？</p>
-<p>于是乎，痛定思痛！</p>
-<p>我们需要编写一个脚本来判断网卡是不是又自动改回百兆了，如果改回来了就自动改过去！</p>
-<h3 id="撸起袖子开始干"><a href="#撸起袖子开始干" class="headerlink" title="撸起袖子开始干"></a>撸起袖子开始干</h3><ul>
-<li><p>开启ESXI SSH 登录</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163347.png" alt=""></p>
-</li>
-<li><p>登录 ESXI </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
-</li>
-<li><p>我们在 /etc 目录下新建一个 script 文件夹保存我们的脚本</p>
-</li>
-<li><p>(/etc目录 ESXI 重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！)</p>
-</li>
-</ul>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change Network Adapter Speed 1000Mbps</span></span><br><span class="line"></span><br><span class="line">currentSpeed=`esxcfg-nics -l|grep Mbps|awk '&#123;print $5&#125;'`</span><br><span class="line">if [ $currentSpeed != "1000Mbps" ]; then</span><br><span class="line">    # 注意 vmnic0 是你网卡的名字</span><br><span class="line">    esxcfg-nics -s 1000 -d full vmnic0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>保存 :wq</p>
-</li>
-<li><p>加入定时任务 每分钟检测一次</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
-</li>
-<li><p>在里面添加</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /etc/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>注意添加在 <code>exit 0</code> 前面</p>
-</li>
-<li><p>重启 crontabs</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<p>大功告成。</p>
-]]></content>
-      <categories>
-        <category>VMware</category>
-      </categories>
-      <tags>
-        <tag>Vmware</tag>
-        <tag>ESXI</tag>
-        <tag>Shell</tag>
-        <tag>虚拟机</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring Boot 集成 React 前端路由问题</title>
-    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
-    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
-<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
-<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
-<a id="more"></a>
-
-<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
-<p>新建一个配置类 StaticResourceMap</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Spring Boot</tag>
-        <tag>React</tag>
-        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -516,10 +526,30 @@
         <category>Python</category>
       </categories>
       <tags>
-        <tag>Tensorflow</tag>
-        <tag>Keras</tag>
         <tag>Python</tag>
+        <tag>Keras</tag>
         <tag>Flask</tag>
+        <tag>Tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring Boot 集成 React 前端路由问题</title>
+    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
+    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
+<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
+<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
+<a id="more"></a>
+
+<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
+<p>新建一个配置类 StaticResourceMap</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Spring Boot</tag>
+        <tag>React</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
 </search>
