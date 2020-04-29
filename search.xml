@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Flask部署Keras模型遇到的问题</title>
+    <url>/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
+<ul>
+<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
+</li>
+<li><p>在这个位置</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变成这样</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>问题解决</p>
+</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Keras</tag>
+        <tag>Flask</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ESXI 更改网卡速率并设置脚本</title>
     <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
     <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
@@ -77,33 +107,62 @@
       </tags>
   </entry>
   <entry>
-    <title>Flask部署Keras模型遇到的问题</title>
-    <url>/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
-<ul>
-<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
+    <title>Flask集成React前端部署</title>
+    <url>/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h1 id="Flask集成React前端部署"><a href="#Flask集成React前端部署" class="headerlink" title="Flask集成React前端部署"></a>Flask集成React前端部署</h1><h2 id="Build-React-文件"><a href="#Build-React-文件" class="headerlink" title="Build React 文件"></a>Build React 文件</h2><ul>
+<li><p>打包 React</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">npm <span class="keyword">run</span><span class="bash"> build</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>在这个位置</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>增加</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>变成这样</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(func)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">symbolic_fn_wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>问题解决</p>
+<li><p>得到build目录下的静态文件</p>
 </li>
 </ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
+<p><img data-src="https://raw.githubusercontent.com/wudinaonao/image-bucket-0/master/images/20200429234258.png" alt="20200429234258"></p>
+<p><img data-src="https://raw.githubusercontent.com/wudinaonao/image-bucket-0/master/images/20200429234325.png" alt="20200429234325"></p>
+<h2 id="设置-Flask"><a href="#设置-Flask" class="headerlink" title="设置 Flask"></a>设置 Flask</h2><p>Flask 默认静态资源在static目录，html文件在template目录，我们设置成我们自定义的路径。</p>
+<ul>
+<li><p>例如我们的目录结构</p>
+<p><img data-src="https://raw.githubusercontent.com/wudinaonao/image-bucket-0/master/images/20200429234735.png" alt="20200429234735"></p>
+</li>
+<li><p>我们构建好的静态文件放在/frontend/flask-mark-12306-captcha-frontend/build这个目录里</p>
+</li>
+<li><p>我们的在 App.py （你的应用程序入口）里面设置</p>
+ <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, render_template</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> mark</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> get</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> errorHandler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态文件目录</span></span><br><span class="line">frontEndDir = os.path.join(<span class="string">"frontend"</span>, <span class="string">"flask-mark-12306-captcha-frontend"</span>, <span class="string">"build"</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__, static_url_path=<span class="string">''</span>, static_folder=frontEndDir)</span><br><span class="line">app.register_blueprint(errorHandler)</span><br><span class="line">app.register_blueprint(mark)</span><br><span class="line">app.register_blueprint(get)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 渲染 index.html</span></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="keyword">return</span> render_template(<span class="string">"index.html"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">app.run()</span><br></pre></td></tr></table></figure></li>
+<li><p>这样我们就设置好了。</p>
+</li>
+<li><p>跑一下项目看一下。</p>
+</li>
+<li><p>问题解决。</p>
+<p><img data-src="https://raw.githubusercontent.com/wudinaonao/image-bucket-0/master/images/20200429235845.png" alt="20200429235845"></p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>Python</category>
       </categories>
       <tags>
         <tag>Python</tag>
-        <tag>Keras</tag>
         <tag>Flask</tag>
+        <tag>React</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring Boot 集成 React 前端路由问题</title>
+    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
+    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
+<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
+<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
+<a id="more"></a>
+
+<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
+<p>新建一个配置类 StaticResourceMap</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>React</tag>
+        <tag>Spring Boot</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -194,158 +253,6 @@
         <tag>深度学习</tag>
         <tag>神经网络</tag>
         <tag>验证码识别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring Boot 集成 React 前端路由问题</title>
-    <url>/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/</url>
-    <content><![CDATA[<h1 id="Spring-Boot-集成-React-前端路由问题"><a href="#Spring-Boot-集成-React-前端路由问题" class="headerlink" title="Spring Boot 集成 React 前端路由问题"></a>Spring Boot 集成 React 前端路由问题</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200426221509.png" alt=""></p>
-<h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00  背景"></a>0x00  背景</h2><p>趁着最近疫情窝在家无所事事，着手为自家的公寓开发了一个简易管理系统，实现了入住登记，缴纳各种费用等一些常用功能。</p>
-<h2 id="0x01-问题"><a href="#0x01-问题" class="headerlink" title="0x01  问题"></a>0x01  问题</h2><p>打算把React和SpringBoot打成一个Jar包，然后直接丢到Docker上进行部署，映射一个端口出来提供服务。但是发现这样的话SpringBoot会接管前端路由，导致找不到地址的时候SpringBoot直接抛404，前端路由无效。</p>
-<a id="more"></a>
-
-<h2 id="0x02-解决"><a href="#0x02-解决" class="headerlink" title="0x02  解决"></a>0x02  解决</h2><p>我们需要当服务端找不到地址的时候直接抛给前端，即index.html。</p>
-<p>新建一个配置类 StaticResourceMap</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticResourceMap</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 映射静态资源根目录到  frontend</span></span><br><span class="line">        registry.addResourceHandler(<span class="string">"/**"</span>)</span><br><span class="line">                .addResourceLocations(<span class="string">"classpath:/frontend/"</span>)</span><br><span class="line">                .resourceChain(<span class="keyword">true</span>)</span><br><span class="line">                .addResolver(<span class="keyword">new</span> PathResourceResolver()&#123;</span><br><span class="line">                    <span class="comment">// 后端匹配不到路由时转给前端</span></span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> Resource <span class="title">getResource</span><span class="params">(String resourcePath, Resource location)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                        Resource resource = <span class="keyword">super</span>.getResource(resourcePath, location);</span><br><span class="line">                        <span class="keyword">if</span> (resource == <span class="keyword">null</span>)&#123;</span><br><span class="line">                            resource = <span class="keyword">super</span>.getResource(<span class="string">"index.html"</span>, location);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">return</span> resource;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Spring Boot</tag>
-        <tag>React</tag>
-        <tag>Java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>VSCode 同步设置</title>
-    <url>/2020/04/28/VSCode-%E5%90%8C%E6%AD%A5%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="VSCode-同步设置"><a href="#VSCode-同步设置" class="headerlink" title="VSCode 同步设置"></a>VSCode 同步设置</h1><p>Visual Studio Code 因其轻巧和插件繁多已经逐渐成为我的主力开发工具。当我准备更换电脑在笔记本上开发时候的时候，我碰到了一个棘手的问题。我得重新下载插件和设置VSCode，难道我得记下台式机上所有的设置和插件然后到笔记本上重新设置和下载？这显然不符合Geek精神！有一款现成的插件可以解决我们的问题。</p>
-<a id="more"></a>
-
-<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ul>
-<li><p>下载 Settings Sync 插件</p>
-</li>
-<li><p>Github 账号</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li>安装 Settings Sync 插件</li>
-</ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152655.png" alt=""></p>
-</li>
-</ul>
-<h2 id="设置-Settings-Sync"><a href="#设置-Settings-Sync" class="headerlink" title="设置 Settings Sync"></a>设置 Settings Sync</h2><ul>
-<li><p>点击 Logtin with Github </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154119.png" alt=""></p>
-</li>
-<li><p>看见这个页面就可以关闭了</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154237.png" alt=""></p>
-</li>
-<li><p>这个时候就可以 Shift + alt + U 上传了</p>
-</li>
-</ul>
-<p>但是这个获取到的token权限有点大，我们需要设置一个只可以操作gists的token</p>
-<h2 id="设置-Github"><a href="#设置-Github" class="headerlink" title="设置 Github"></a>设置 Github</h2><ul>
-<li><p>打开 Github 点击 Settings</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152811.png" alt=""></p>
-</li>
-<li><p>点击 Developer settings</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152839.png" alt=""></p>
-</li>
-<li><p>点击 Personal access tokens</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153026.png" alt=""></p>
-</li>
-<li><p>点击 Generate new token</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153102.png" alt=""></p>
-</li>
-<li><p>输入描述，随便输，方便记忆我们可以输入 vscode settings sync</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153219.png" alt=""></p>
-</li>
-<li><p>勾选 Gist</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153240.png" alt=""></p>
-</li>
-<li><p>点击 Generate token 创建一个 token</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153313.png" alt=""></p>
-</li>
-<li><p>复制得到的 Token</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153455.png" alt=""></p>
-</li>
-<li><p>按 F1 找到 Sync 的选项， 点击高级选项</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153703.png" alt=""></p>
-</li>
-<li><p>点击 打开设置</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153735.png" alt=""></p>
-</li>
-<li><p>把刚才得到的 Token 粘贴到 获取令牌</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153818.png" alt=""></p>
-</li>
-</ul>
-<h2 id="GistID-设置问题"><a href="#GistID-设置问题" class="headerlink" title="GistID 设置问题"></a>GistID 设置问题</h2><p>但是我之前根据网上的教程设置的时候后，把刚才我们获取到的Token 设置成了 Gist ID，这样会造成</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154540.png" alt=""></p>
-<p>这个问题困扰了我许久。</p>
-<p>正确的 Gists ID 应该是你初次上传到Gists后插件自动创建的一个id</p>
-<p>我们可以在这里找到，点击 Your gists</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154724.png" alt=""></p>
-<p>这个插件自动创建的 Gists 才是正确的　Gist ID</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154752.png" alt=""></p>
-<p>点进去后的地址栏</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154925.png" alt=""></p>
-<p><code>https://gist.github.com/&lt;Yourself Github ID&gt;/&lt;Gists ID&gt;</code></p>
-<p>这个 <code>841ea17809fbf33b6550d34f464de557</code> 才是我们的Gist ID</p>
-<p>如果你之前也是错误的设置过这个你需要把这个GistID替换成正确的</p>
-<p>例如我之前错误的设置成了这样</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428155657.png" alt=""></p>
-<p>你需要把这个改过来，然后 Shift + alt + u 上传 ….</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154540.png" alt=""></p>
-<p>然后你会发现，Fuck！还是这样？</p>
-<p>再看一下</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428155657.png" alt=""></p>
-<p>你会发现怎么没改过去？又改回来了？我之前也被这个问题困扰了好久。不知道为什么每次改过来又自己改回去？</p>
-<h2 id="GistID-设置问题解决"><a href="#GistID-设置问题解决" class="headerlink" title="GistID 设置问题解决"></a>GistID 设置问题解决</h2><p>我们直接搜索这个值</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160148.png" alt=""></p>
-<p>发现我们当前目录下的 .vscode 文件夹下的settings.json 并没有改过来，依旧是这个值，我们编辑这个文件，把他改成正确的GistsID然后保存。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160616.png" alt=""></p>
-<p>问题解决。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428161000.png" alt=""></p>
-<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><hr>
-<h3 id="command-‘java-projectConfiguration-update’-not-found"><a href="#command-‘java-projectConfiguration-update’-not-found" class="headerlink" title="command ‘java.projectConfiguration.update’ not found"></a>command ‘java.projectConfiguration.update’ not found</h3><p>Sync 插件和这个插件冲突</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160722.png" alt=""></p>
-<p>Sync 的时候先停用这个插件。</p>
-]]></content>
-      <categories>
-        <category>VSCode</category>
-      </categories>
-      <tags>
-        <tag>VSCode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Next 主题设置代码高亮</title>
-    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
-    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
-<p>找到Next主题目录下的_config.xml文件</p>
-<a id="more"></a>
-
-<p>在这里可以修改风格</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
-
-<p>我们更改为 <code>highlight_theme: night eighties</code></p>
-<p>得到深色系的Code风格</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
-<p>但是我们发现一个问题。。。</p>
-<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>然后</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
-
-<p>即可</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -550,6 +457,138 @@
         <tag>Keras</tag>
         <tag>Flask</tag>
         <tag>Tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VSCode 同步设置</title>
+    <url>/2020/04/28/VSCode-%E5%90%8C%E6%AD%A5%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="VSCode-同步设置"><a href="#VSCode-同步设置" class="headerlink" title="VSCode 同步设置"></a>VSCode 同步设置</h1><p>Visual Studio Code 因其轻巧和插件繁多已经逐渐成为我的主力开发工具。当我准备更换电脑在笔记本上开发时候的时候，我碰到了一个棘手的问题。我得重新下载插件和设置VSCode，难道我得记下台式机上所有的设置和插件然后到笔记本上重新设置和下载？这显然不符合Geek精神！有一款现成的插件可以解决我们的问题。</p>
+<a id="more"></a>
+
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ul>
+<li><p>下载 Settings Sync 插件</p>
+</li>
+<li><p>Github 账号</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>安装 Settings Sync 插件</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152655.png" alt=""></p>
+</li>
+</ul>
+<h2 id="设置-Settings-Sync"><a href="#设置-Settings-Sync" class="headerlink" title="设置 Settings Sync"></a>设置 Settings Sync</h2><ul>
+<li><p>点击 Logtin with Github </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154119.png" alt=""></p>
+</li>
+<li><p>看见这个页面就可以关闭了</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154237.png" alt=""></p>
+</li>
+<li><p>这个时候就可以 Shift + alt + U 上传了</p>
+</li>
+</ul>
+<p>但是这个获取到的token权限有点大，我们需要设置一个只可以操作gists的token</p>
+<h2 id="设置-Github"><a href="#设置-Github" class="headerlink" title="设置 Github"></a>设置 Github</h2><ul>
+<li><p>打开 Github 点击 Settings</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152811.png" alt=""></p>
+</li>
+<li><p>点击 Developer settings</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428152839.png" alt=""></p>
+</li>
+<li><p>点击 Personal access tokens</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153026.png" alt=""></p>
+</li>
+<li><p>点击 Generate new token</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153102.png" alt=""></p>
+</li>
+<li><p>输入描述，随便输，方便记忆我们可以输入 vscode settings sync</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153219.png" alt=""></p>
+</li>
+<li><p>勾选 Gist</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153240.png" alt=""></p>
+</li>
+<li><p>点击 Generate token 创建一个 token</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153313.png" alt=""></p>
+</li>
+<li><p>复制得到的 Token</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153455.png" alt=""></p>
+</li>
+<li><p>按 F1 找到 Sync 的选项， 点击高级选项</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153703.png" alt=""></p>
+</li>
+<li><p>点击 打开设置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153735.png" alt=""></p>
+</li>
+<li><p>把刚才得到的 Token 粘贴到 获取令牌</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428153818.png" alt=""></p>
+</li>
+</ul>
+<h2 id="GistID-设置问题"><a href="#GistID-设置问题" class="headerlink" title="GistID 设置问题"></a>GistID 设置问题</h2><p>但是我之前根据网上的教程设置的时候后，把刚才我们获取到的Token 设置成了 Gist ID，这样会造成</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154540.png" alt=""></p>
+<p>这个问题困扰了我许久。</p>
+<p>正确的 Gists ID 应该是你初次上传到Gists后插件自动创建的一个id</p>
+<p>我们可以在这里找到，点击 Your gists</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154724.png" alt=""></p>
+<p>这个插件自动创建的 Gists 才是正确的　Gist ID</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154752.png" alt=""></p>
+<p>点进去后的地址栏</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154925.png" alt=""></p>
+<p><code>https://gist.github.com/&lt;Yourself Github ID&gt;/&lt;Gists ID&gt;</code></p>
+<p>这个 <code>841ea17809fbf33b6550d34f464de557</code> 才是我们的Gist ID</p>
+<p>如果你之前也是错误的设置过这个你需要把这个GistID替换成正确的</p>
+<p>例如我之前错误的设置成了这样</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428155657.png" alt=""></p>
+<p>你需要把这个改过来，然后 Shift + alt + u 上传 ….</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428154540.png" alt=""></p>
+<p>然后你会发现，Fuck！还是这样？</p>
+<p>再看一下</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428155657.png" alt=""></p>
+<p>你会发现怎么没改过去？又改回来了？我之前也被这个问题困扰了好久。不知道为什么每次改过来又自己改回去？</p>
+<h2 id="GistID-设置问题解决"><a href="#GistID-设置问题解决" class="headerlink" title="GistID 设置问题解决"></a>GistID 设置问题解决</h2><p>我们直接搜索这个值</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160148.png" alt=""></p>
+<p>发现我们当前目录下的 .vscode 文件夹下的settings.json 并没有改过来，依旧是这个值，我们编辑这个文件，把他改成正确的GistsID然后保存。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160616.png" alt=""></p>
+<p>问题解决。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428161000.png" alt=""></p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><hr>
+<h3 id="command-‘java-projectConfiguration-update’-not-found"><a href="#command-‘java-projectConfiguration-update’-not-found" class="headerlink" title="command ‘java.projectConfiguration.update’ not found"></a>command ‘java.projectConfiguration.update’ not found</h3><p>Sync 插件和这个插件冲突</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428160722.png" alt=""></p>
+<p>Sync 的时候先停用这个插件。</p>
+]]></content>
+      <categories>
+        <category>VSCode</category>
+      </categories>
+      <tags>
+        <tag>VSCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Next 主题设置代码高亮</title>
+    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
+    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
+<p>找到Next主题目录下的_config.xml文件</p>
+<a id="more"></a>
+
+<p>在这里可以修改风格</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
+
+<p>我们更改为 <code>highlight_theme: night eighties</code></p>
+<p>得到深色系的Code风格</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
+<p>但是我们发现一个问题。。。</p>
+<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
+
+<p>即可</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
       </tags>
   </entry>
 </search>
