@@ -17,15 +17,15 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.wudinaonao.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"blog.wudinaonao.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="用Nginx搭建自己的私有Git服务器背景现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！） 说干就干！">
+  <meta name="description" content="用Nginx搭建自己的私有Git服务器背景现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！额，貌似是Gitlab？） 说干就干！">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用Nginx搭建自己的私有Git服务器">
-<meta property="og:url" content="https://www.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:url" content="https://blog.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="Naonao Blog">
-<meta property="og:description" content="用Nginx搭建自己的私有Git服务器背景现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！） 说干就干！">
+<meta property="og:description" content="用Nginx搭建自己的私有Git服务器背景现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！额，貌似是Gitlab？） 说干就干！">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430162047.png">
 <meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430162118.png">
@@ -38,14 +38,14 @@
 <meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430193424.png">
 <meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430193439.png">
 <meta property="article:published_time" content="2020-04-30T07:47:29.000Z">
-<meta property="article:modified_time" content="2020-04-30T15:28:45.706Z">
+<meta property="article:modified_time" content="2020-05-01T14:34:56.247Z">
 <meta property="article:author" content="wudinaonao">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430162047.png">
 
-<link rel="canonical" href="https://www.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<link rel="canonical" href="https://blog.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
 
 <script id="page-configurations">
@@ -141,7 +141,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">18</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -151,7 +151,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,7 +219,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-0.gif">
@@ -241,10 +241,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-30 15:47:29 / 修改时间：23:28:45" itemprop="dateCreated datePublished" datetime="2020-04-30T15:47:29+08:00">2020-04-30</time>
+              <time title="创建时间：2020-04-30 15:47:29" itemprop="dateCreated datePublished" datetime="2020-04-30T15:47:29+08:00">2020-04-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-01 22:34:56" itemprop="dateModified" datetime="2020-05-01T22:34:56+08:00">2020-05-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -287,7 +293,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="用Nginx搭建自己的私有Git服务器"><a href="#用Nginx搭建自己的私有Git服务器" class="headerlink" title="用Nginx搭建自己的私有Git服务器"></a>用Nginx搭建自己的私有Git服务器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！）</p>
+        <h1 id="用Nginx搭建自己的私有Git服务器"><a href="#用Nginx搭建自己的私有Git服务器" class="headerlink" title="用Nginx搭建自己的私有Git服务器"></a>用Nginx搭建自己的私有Git服务器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！额，貌似是Gitlab？）</p>
 <p>说干就干！</p>
 <a id="more"></a>
 
@@ -458,7 +464,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="用Nginx搭建自己的私有Git服务器">https://www.wudinaonao.com/2020/04/30/用Nginx搭建自己的私有Git服务器/</a>
+    <a href="https://blog.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="用Nginx搭建自己的私有Git服务器">https://blog.wudinaonao.com/2020/04/30/用Nginx搭建自己的私有Git服务器/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -483,7 +489,10 @@
     <a href="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" rel="prev" title="Flask集成React前端部署">
       <i class="fa fa-chevron-left"></i> Flask集成React前端部署
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="Docker搭建Gitlab服务器">
+      Docker搭建Gitlab服务器 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -559,7 +568,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -572,7 +581,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -594,7 +594,7 @@
   <entry>
     <title>用Nginx搭建自己的私有Git服务器</title>
     <url>/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h1 id="用Nginx搭建自己的私有Git服务器"><a href="#用Nginx搭建自己的私有Git服务器" class="headerlink" title="用Nginx搭建自己的私有Git服务器"></a>用Nginx搭建自己的私有Git服务器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！）</p>
+    <content><![CDATA[<h1 id="用Nginx搭建自己的私有Git服务器"><a href="#用Nginx搭建自己的私有Git服务器" class="headerlink" title="用Nginx搭建自己的私有Git服务器"></a>用Nginx搭建自己的私有Git服务器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！额，貌似是Gitlab？）</p>
 <p>说干就干！</p>
 <a id="more"></a>
 
@@ -737,6 +737,67 @@
       <tags>
         <tag>Nginx</tag>
         <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker搭建Gitlab服务器</title>
+    <url>/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h1 id="Docker搭建Gitlab服务器"><a href="#Docker搭建Gitlab服务器" class="headerlink" title="Docker搭建Gitlab服务器"></a>Docker搭建Gitlab服务器</h1><h2 id="获取-Gitlab-镜像"><a href="#获取-Gitlab-镜像" class="headerlink" title="获取 Gitlab 镜像"></a>获取 Gitlab 镜像</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker</span> pull gitlab/gitlab-ce</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><p>映射端口，配置访问方式</p>
+<ul>
+<li>8443  https </li>
+<li>8080  http</li>
+<li>8022  ssh</li>
+</ul>
+<p>挂载3个volume到容器里，分别用于配置，持久化，日志。</p>
+<a id="more"></a>
+
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line">docker run -dit <span class="string">\</span></span><br><span class="line">    -p <span class="number">8443</span>:<span class="number">443</span> <span class="string">\</span></span><br><span class="line">    -p <span class="number">8080</span>:<span class="number">80</span> <span class="string">\</span></span><br><span class="line">    -p <span class="number">8022</span>:<span class="number">22</span> <span class="string">\</span></span><br><span class="line">    --name gitlab <span class="string">\</span></span><br><span class="line">    --restart always <span class="string">\</span></span><br><span class="line">    -v /etc/gitlab/config:/etc/gitlab <span class="string">\</span></span><br><span class="line">    -v /<span class="keyword">var</span>/log/gitlab/logs:/<span class="keyword">var</span>/log/gitlab <span class="string">\</span></span><br><span class="line">    -v /<span class="keyword">var</span>/opt/gitlab/data:/<span class="keyword">var</span>/opt/gitlab <span class="string">\</span></span><br><span class="line">    gitlab/gitlab-ce:latest</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-Gitlab"><a href="#配置-Gitlab" class="headerlink" title="配置 Gitlab"></a>配置 Gitlab</h2><p>进入容器修改配置文件</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">docker</span> exec -<span class="keyword">it </span>gitlab /<span class="keyword">bin/bash</span></span><br><span class="line"><span class="keyword">vim </span>/etc/gitlab/gitlab.rb</span><br></pre></td></tr></table></figure>
+
+<p>或者你可以直接修改宿主机的配置文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/etc/gi</span>tlab<span class="regexp">/config/gi</span>tlab.rb</span><br></pre></td></tr></table></figure>
+
+<p>然后进入容器重新加载配置</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">docker</span> exec -<span class="keyword">it </span>gitlab /<span class="keyword">bin/bash</span></span><br><span class="line"><span class="keyword">gitlab-ctl </span>reconfigure</span><br></pre></td></tr></table></figure>
+
+<h3 id="gitlab-rb-配置文件"><a href="#gitlab-rb-配置文件" class="headerlink" title="gitlab.rb 配置文件"></a>gitlab.rb 配置文件</h3><p>假如你有一个域名：gitlab.wudinaonao.com (这是我的域名)</p>
+<p>增加内容</p>
+<ul>
+<li>external_url 设置<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta"># 注意要有前缀，不能直接写域名，http或https</span></span><br><span class="line"><span class="meta"># example</span></span><br><span class="line"><span class="meta"># external_url "https://gitlab.wudinaonao.com"</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line">external_url <span class="string">"https://gitlab.wudinaonao.com"</span></span><br></pre></td></tr></table></figure>
+如果使用https的话记得配置nginx选项。具体参见nginx配置ssl</li>
+</ul>
+<p>重载配置</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="反向代理到容器提供的8848端口"><a href="#反向代理到容器提供的8848端口" class="headerlink" title="反向代理到容器提供的8848端口"></a>反向代理到容器提供的8848端口</h2><h3 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h3><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">...省略其他</span><br><span class="line"></span><br><span class="line">location ~/ &#123;</span><br><span class="line">    # 如果代理到一个动态域名，这里需要设置解析DNS</span><br><span class="line">    # 不然Nginx只在启动的时候解析一次</span><br><span class="line">    resolver <span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span> <span class="number">114.114</span><span class="number">.114</span><span class="number">.114</span> valid=<span class="number">10</span>s;</span><br><span class="line">    resolver_timeout <span class="number">3</span>s;</span><br><span class="line">    # 假如你要代理到 <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8848</span></span><br><span class="line">    <span class="keyword">set</span> $target <span class="string">"127.0.0.1:8848"</span>;</span><br><span class="line">    # 这里之前填写成 $proxy_host 导致代理失败</span><br><span class="line">    proxy_set_header Host $host;</span><br><span class="line">    proxy_set_header X-Forwarder-For $remote_addr;</span><br><span class="line">    proxy_ssl_certificate     # 证书路径;  </span><br><span class="line">    proxy_ssl_certificate_key # 私钥路径;</span><br><span class="line">    proxy_pass https:<span class="comment">//$target;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//gitlab.wudinaonao.com</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://raw.githubusercontent.com/wudinaonao/image-bucket-0/master/images/20200501235435.png" alt="20200501235435"></p>
+<p>第一次登录需要设置root密码。</p>
+<p>这里我已经设置好了。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Nginx反向代理HTTPS</title>
+    <url>/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/</url>
+    <content><![CDATA[<h1 id="Nginx反向代理HTTPS"><a href="#Nginx反向代理HTTPS" class="headerlink" title="Nginx反向代理HTTPS"></a>Nginx反向代理HTTPS</h1><h2 id="Nginx-Server-设置"><a href="#Nginx-Server-设置" class="headerlink" title="Nginx Server 设置"></a>Nginx Server 设置</h2><p>例如 转发到 <a href="https://127.0.0.1:8848" target="_blank" rel="noopener">https://127.0.0.1:8848</a></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">location</span> <span class="string">~/</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="comment"># 如果代理到一个动态域名，这里需要设置解析DNS</span></span><br><span class="line">    <span class="comment"># 不然Nginx只在启动的时候解析一次</span></span><br><span class="line">    <span class="string">resolver</span> <span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span> <span class="number">114.114</span><span class="number">.114</span><span class="number">.114</span> <span class="string">valid=10s;</span></span><br><span class="line">    <span class="string">resolver_timeout</span> <span class="string">3s;</span></span><br><span class="line">    <span class="string">假如你要代理到</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:8848</span></span><br><span class="line">    <span class="string">set</span> <span class="string">$target</span> <span class="string">"127.0.0.1:8848"</span><span class="string">;</span></span><br><span class="line">    <span class="comment"># 这里之前填写成 $proxy_host 导致代理失败</span></span><br><span class="line">    <span class="string">proxy_set_header</span> <span class="string">Host</span> <span class="string">$host;</span></span><br><span class="line">    <span class="string">proxy_set_header</span> <span class="string">X-Forwarder-For</span> <span class="string">$remote_addr;</span></span><br><span class="line">    <span class="string">proxy_ssl_certificate</span>     <span class="comment"># 证书路径;  </span></span><br><span class="line">    <span class="string">proxy_ssl_certificate_key</span> <span class="comment"># 私钥路径;</span></span><br><span class="line">    <span class="string">proxy_pass</span> <span class="string">https://$target;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
       </tags>
   </entry>
 </search>
