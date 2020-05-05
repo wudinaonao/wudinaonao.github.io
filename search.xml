@@ -867,4 +867,30 @@
         <tag>Tensorflow</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Gitlab添加邮箱</title>
+    <url>/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000117.png" alt="20200506000117"></p>
+<p>腾讯企业邮箱配置如下，其他邮箱同样适用。</p>
+<p>找到配置</p>
+<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"gitlab@wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"xxxxxxxxxxxxxxxxxx"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br></pre></td></tr></table></figure>
+
+<p>在找到配置</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="meta"># gitlab 发件邮箱</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'gitlab@wudinaonao.com'</span></span><br><span class="line"><span class="meta"># 默认标题</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_display_name'</span>] = <span class="string">'Gitlab'</span></span><br></pre></td></tr></table></figure>
+
+<p>重载gitlab配置</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+
+<p>登录到你搭建的Gitlab发一封重置密码的邮件试试</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
+<p>成功</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Gitlab</tag>
+      </tags>
+  </entry>
 </search>
