@@ -885,6 +885,13 @@
 <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
 <p>成功</p>
 <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
+<p>阿里云企业邮箱配置</p>
+<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.yourself.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"yourself user name"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"yourself password"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"yourself hostname"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = false</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br><span class="line"></span><br><span class="line">###! **<span class="symbol">Can</span> be: <span class="string">'none'</span>, <span class="string">'peer'</span>, <span class="string">'client_once'</span>, <span class="string">'fail_if_no_peer_cert'</span>**</span><br><span class="line">###! <span class="symbol">Docs</span>: http://api.rubyonrails.org/classes/<span class="symbol">ActionMailer</span>/<span class="symbol">Base</span>.html</span><br><span class="line">gitlab_rails[<span class="string">'smtp_openssl_verify_mode'</span>] = <span class="string">'none'</span></span><br></pre></td></tr></table></figure>
+
+<p>更多邮箱配置参见官方</p>
+<p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446</a></p>
 ]]></content>
       <categories>
         <category>Linux</category>
