@@ -931,4 +931,138 @@
         <tag>Ubuntu</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Valine评论系统增加邮件通知</title>
+    <url>/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
+<a id="more"></a>
+
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p>仓库地址 <a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
+<p>登录Leancloud</p>
+<p>选择应用</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020806.png" alt="20200508020806"></p>
+<p>云引擎-部署-部署项目</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020959.png" alt="20200508020959"></p>
+<p>Git 部署</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021107.png" alt="20200508021107"></p>
+<p>输入仓库地址</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin.git</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021128.png" alt="20200508021128"></p>
+<p>设置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021217.png" alt="20200508021217"></p>
+<p>添加自定义环境变量</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021234.png" alt="20200508021234"></p>
+<p>具体备注参见仓库说明</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SITE_NAME</td>
+<td>Deserts</td>
+<td>[必填]博客名称</td>
+</tr>
+<tr>
+<td>SITE_URL</td>
+<td><a href="https://deserts.io" target="_blank" rel="noopener">https://deserts.io</a></td>
+<td>[必填]首页地址</td>
+</tr>
+<tr>
+<td><strong>SMTP_SERVICE</strong></td>
+<td>QQ</td>
+<td>[新版支持]邮件服务提供商，支持 QQ、163、126、Gmail 以及 <a href="https://nodemailer.com/smtp/well-known/#supported-services" target="_blank" rel="noopener">更多</a></td>
+</tr>
+<tr>
+<td>SMTP_USER</td>
+<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
+<td>[必填]SMTP登录用户</td>
+</tr>
+<tr>
+<td>SMTP_PASS</td>
+<td>ccxxxxxxxxch</td>
+<td>[必填]SMTP登录密码（QQ邮箱需要获取独立密码）</td>
+</tr>
+<tr>
+<td>SENDER_NAME</td>
+<td>Deserts</td>
+<td>[必填]发件人</td>
+</tr>
+<tr>
+<td>SENDER_EMAIL</td>
+<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
+<td>[必填]发件邮箱</td>
+</tr>
+<tr>
+<td>ADMIN_URL</td>
+<td><a href="https://xxx.leanapp.cn/" target="_blank" rel="noopener">https://xxx.leanapp.cn/</a></td>
+<td>[建议]Web主机二级域名，用于自动唤醒</td>
+</tr>
+<tr>
+<td>BLOGGER_EMAIL</td>
+<td><a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a></td>
+<td>[可选]博主通知收件地址，默认使用SENDER_EMAIL</td>
+</tr>
+<tr>
+<td>AKISMET_KEY</td>
+<td>xxxxxxxxxxxx</td>
+<td>[可选]Akismet Key 用于垃圾评论检测，设为MANUAL_REVIEW开启人工审核，留空不使用反垃圾</td>
+</tr>
+</tbody></table>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022236.png" alt="20200508022236"></p>
+<p>切换回部署-部署</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022304.png" alt="20200508022304"></p>
+<p>等待部署完成，第一次要久一点。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022333.png" alt="20200508022333"></p>
+<p>设置-域名绑定-云引擎绑定</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022421.png" alt="20200508022421"></p>
+<p>绑定新域名，这个域名是用来管理评论的，一个简易后台，如果你用leancloud国内版，注意备案。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022436.png" alt="20200508022436"></p>
+<p>去你的dns服务商哪里解析这个域名</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022613.png" alt="20200508022613"></p>
+<p>等待准备就绪</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023122.png" alt="20200508023122"></p>
+<p>返回云引擎-定时任务-创建定时任务，这个用于定时唤醒，如果你是付费用户这一步可以忽略，付费用户容器不回休眠。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023224.png" alt="20200508023224"></p>
+<p>创建一个任务</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span>/<span class="number">30</span> <span class="number">7</span>-<span class="number">23</span> * * ?</span><br></pre></td></tr></table></figure>
+
+<p>这个表达式表示7-23点之间没半个小时执行一次，具体参考cron表达式</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023326.png" alt="20200508023326"></p>
+<p>再创建一个任务，每天早8点补发过去24小时漏发的邮件</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> <span class="number">8</span> * * ?</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023540.png" alt="20200508023540"></p>
+<p>访问你刚才设置的二级域名</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023653.png" alt="20200508023653"></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023709.png" alt="20200508023709"></p>
+<p>第一次你需要设置一个用户名和密码，访问</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//你设置的域名/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//sendemail.photo.wudinaonao.<span class="keyword">com</span>/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024711.png" alt="20200508024711"></p>
+<p>至此后台管理设置完成</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024822.png" alt="20200508024822"></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>去网站上发个评论试一下 </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024954.png" alt="20200508024954"></p>
+<p>测试成功</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><blockquote>
+<p><a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
 </search>
