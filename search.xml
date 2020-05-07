@@ -100,12 +100,12 @@
 <li><p>登录 ESXI </p>
 <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
 </li>
-<li><p>我们在 /vmfs/volumnes/datastore1 这样的位置保存，为毛？</p>
+<li><p>我们在 /vmfs/volumes/datastore1 这样的位置保存，为毛？</p>
 </li>
 <li><p>这样重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！</p>
 </li>
 </ul>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /vmfs/volumnes/datastore1</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /vmfs/volumes/datastore1</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
@@ -121,14 +121,14 @@
 <li><p>加入定时任务 每分钟检测一次</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumnes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
 </li>
 <li><p>在里面添加</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumnes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>注意添加在 <code>exit 0</code> 前面</p>
 </li>
