@@ -70,85 +70,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ESXI 更改网卡速率并设置脚本</title>
-    <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
-    <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162239.png" alt=""></p>
-<p>平常从PT站下的资源直接放到这里提供给家里的小米电视和各种盒子等。</p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次从服务器拷贝文件的时候发现速度只有</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162559.png" alt=""></p>
-<p>百兆带宽不到？</p>
-<a id="more"></a>
-
-<p>登录 ESXI 查看网卡设置</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>我千兆网卡怎么设置的是百兆速度？</p>
-<p>点击 编辑设置 更改链路速度</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162801.png" alt=""></p>
-<p>保存</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162906.png" alt=""></p>
-<p>速度正常了。</p>
-<h2 id="好景不长"><a href="#好景不长" class="headerlink" title="好景不长"></a>好景不长</h2><p>本以为这样设置好就万事大吉了。But！Too young too simple! 第二天又成这样了。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
-<p>仿佛又自动设置成百兆速度了？</p>
-<p>于是乎，痛定思痛！</p>
-<p>我们需要编写一个脚本来判断网卡是不是又自动改回百兆了，如果改回来了就自动改过去！</p>
-<h3 id="撸起袖子开始干"><a href="#撸起袖子开始干" class="headerlink" title="撸起袖子开始干"></a>撸起袖子开始干</h3><ul>
-<li><p>开启ESXI SSH 登录</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163347.png" alt=""></p>
-</li>
-<li><p>登录 ESXI </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
-</li>
-<li><p>我们在 /vmfs/volumes/datastore1 这样的位置保存，为毛？</p>
-</li>
-<li><p>这样重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！</p>
-</li>
-</ul>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /vmfs/volumes/datastore1</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change Network Adapter Speed 1000Mbps</span></span><br><span class="line"></span><br><span class="line">currentSpeed=`esxcfg-nics -l|grep Mbps|awk '&#123;print $5&#125;'`</span><br><span class="line">if [ $currentSpeed != "1000Mbps" ]; then</span><br><span class="line">    # 注意 vmnic0 是你网卡的名字</span><br><span class="line">    esxcfg-nics -s 1000 -d full vmnic0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>保存 :wq</p>
-</li>
-<li><p>执行权限</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod +x ChangeNetworkAdapterSpeed.sh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>加入定时任务 每分钟检测一次</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
-</li>
-<li><p>在里面添加</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>注意添加在 <code>exit 0</code> 前面</p>
-</li>
-<li><p>重启 crontabs</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
-<p>大功告成。</p>
-]]></content>
-      <categories>
-        <category>VMware</category>
-      </categories>
-      <tags>
-        <tag>Vmware</tag>
-        <tag>ESXI</tag>
-        <tag>Shell</tag>
-        <tag>虚拟机</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker搭建Gitlab服务器</title>
     <url>/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h1 id="Docker搭建Gitlab服务器"><a href="#Docker搭建Gitlab服务器" class="headerlink" title="Docker搭建Gitlab服务器"></a>Docker搭建Gitlab服务器</h1><h2 id="获取-Gitlab-镜像"><a href="#获取-Gitlab-镜像" class="headerlink" title="获取 Gitlab 镜像"></a>获取 Gitlab 镜像</h2><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker</span> pull gitlab/gitlab-ce</span><br></pre></td></tr></table></figure>
@@ -331,70 +252,170 @@
       </tags>
   </entry>
   <entry>
-    <title>用Docker搭建饥荒服务器</title>
-    <url>/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h1 id="用Docker搭建饥荒服务器"><a href="#用Docker搭建饥荒服务器" class="headerlink" title="用Docker搭建饥荒服务器"></a>用Docker搭建饥荒服务器</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210534.png" alt="20200503210534"></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line">docker pull jamesits/dst-<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+    <title>Valine评论系统增加邮件通知</title>
+    <url>/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
+<a id="more"></a>
 
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210917.png" alt="20200503210917"></p>
-<p>拉取到的镜像</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213045.png" alt="20200503213045"></p>
-<p>如果没有安装docker-compose建议安装，方便书写配置文件。</p>
-<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">install</span> docker-compose</span><br></pre></td></tr></table></figure>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p>仓库地址 <a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
+<p>登录Leancloud</p>
+<p>选择应用</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020806.png" alt="20200508020806"></p>
+<p>云引擎-部署-部署项目</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020959.png" alt="20200508020959"></p>
+<p>Git 部署</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021107.png" alt="20200508021107"></p>
+<p>输入仓库地址</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin.git</span><br></pre></td></tr></table></figure>
 
-<p>新建一个目录用于存放数据文件</p>
-<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mkdir</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br><span class="line"><span class="keyword">cd</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021128.png" alt="20200508021128"></p>
+<p>设置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021217.png" alt="20200508021217"></p>
+<p>添加自定义环境变量</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021234.png" alt="20200508021234"></p>
+<p>具体备注参见仓库说明</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SITE_NAME</td>
+<td>Deserts</td>
+<td>[必填]博客名称</td>
+</tr>
+<tr>
+<td>SITE_URL</td>
+<td><a href="https://deserts.io" target="_blank" rel="noopener">https://deserts.io</a></td>
+<td>[必填]首页地址</td>
+</tr>
+<tr>
+<td><strong>SMTP_SERVICE</strong></td>
+<td>QQ</td>
+<td>[新版支持]邮件服务提供商，支持 QQ、163、126、Gmail 以及 <a href="https://nodemailer.com/smtp/well-known/#supported-services" target="_blank" rel="noopener">更多</a></td>
+</tr>
+<tr>
+<td>SMTP_USER</td>
+<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
+<td>[必填]SMTP登录用户</td>
+</tr>
+<tr>
+<td>SMTP_PASS</td>
+<td>ccxxxxxxxxch</td>
+<td>[必填]SMTP登录密码（QQ邮箱需要获取独立密码）</td>
+</tr>
+<tr>
+<td>SENDER_NAME</td>
+<td>Deserts</td>
+<td>[必填]发件人</td>
+</tr>
+<tr>
+<td>SENDER_EMAIL</td>
+<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
+<td>[必填]发件邮箱</td>
+</tr>
+<tr>
+<td>ADMIN_URL</td>
+<td><a href="https://xxx.leanapp.cn/" target="_blank" rel="noopener">https://xxx.leanapp.cn/</a></td>
+<td>[建议]Web主机二级域名，用于自动唤醒</td>
+</tr>
+<tr>
+<td>BLOGGER_EMAIL</td>
+<td><a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a></td>
+<td>[可选]博主通知收件地址，默认使用SENDER_EMAIL</td>
+</tr>
+<tr>
+<td>AKISMET_KEY</td>
+<td>xxxxxxxxxxxx</td>
+<td>[可选]Akismet Key 用于垃圾评论检测，设为MANUAL_REVIEW开启人工审核，留空不使用反垃圾</td>
+</tr>
+</tbody></table>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022236.png" alt="20200508022236"></p>
+<p>切换回部署-部署</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022304.png" alt="20200508022304"></p>
+<p>等待部署完成，第一次要久一点。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022333.png" alt="20200508022333"></p>
+<p>设置-域名绑定-云引擎绑定</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022421.png" alt="20200508022421"></p>
+<p>绑定新域名，这个域名是用来管理评论的，一个简易后台，如果你用leancloud国内版，注意备案。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022436.png" alt="20200508022436"></p>
+<p>去你的dns服务商哪里解析这个域名</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022613.png" alt="20200508022613"></p>
+<p>等待准备就绪</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023122.png" alt="20200508023122"></p>
+<p>返回云引擎-定时任务-创建定时任务，这个用于定时唤醒，如果你是付费用户这一步可以忽略，付费用户容器不回休眠。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023224.png" alt="20200508023224"></p>
+<p>创建一个任务</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span>/<span class="number">30</span> <span class="number">7</span>-<span class="number">23</span> * * ?</span><br></pre></td></tr></table></figure>
 
-<p>打开本机饥荒</p>
-<p>点账号</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213529.png" alt="20200503213529"></p>
-<p>查看我的游戏</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213654.png" alt="20200503213654"></p>
-<p>选择饥荒</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214024.png" alt="20200503214024"></p>
-<p>添加一个新服务器，起一个用于识别的名字</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214359.png" alt="20200503214359"></p>
-<p>复制那串key</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214424.png" alt="20200503214424"></p>
-<p>回到服务器</p>
-<p>创建<code>docker-compose.yml</code>文件</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cat</span> &gt; docker-compose.yaml &lt;&lt;<span class="string">"EOF"</span></span><br><span class="line"><span class="keyword">version</span>: <span class="string">'3.5'</span></span><br><span class="line">service<span class="variable">s:</span></span><br><span class="line">  dst-server:</span><br><span class="line">     environmen<span class="variable">t:</span></span><br><span class="line">        - DST_CLUSTER_TOKEN=这里粘贴刚才复制的那串key</span><br><span class="line">     image: jamesits/dst-server:latest</span><br><span class="line">     restar<span class="variable">t:</span> <span class="string">"on-failure:5"</span></span><br><span class="line">     port<span class="variable">s:</span></span><br><span class="line">        - <span class="string">"10999-11000:10999-11000/udp"</span></span><br><span class="line">        - <span class="string">"12346-12347:12346-12347/udp"</span></span><br><span class="line">     volume<span class="variable">s:</span></span><br><span class="line">        - $&#123;HOME&#125;/.klei/DoNotStarveTogether:/data</span><br><span class="line">     stop_grace_period: <span class="number">6</span><span class="keyword">m</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>这个表达式表示7-23点之间没半个小时执行一次，具体参考cron表达式</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023326.png" alt="20200508023326"></p>
+<p>再创建一个任务，每天早8点补发过去24小时漏发的邮件</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> <span class="number">8</span> * * ?</span><br></pre></td></tr></table></figure>
 
-<p>创建并运行容器</p>
-<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker-compose up</span></span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023540.png" alt="20200508023540"></p>
+<p>访问你刚才设置的二级域名</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023653.png" alt="20200508023653"></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023709.png" alt="20200508023709"></p>
+<p>第一次你需要设置一个用户名和密码，访问</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//你设置的域名/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
 
-<p>看到这个</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503215417.png" alt="20200503215417"></p>
-<p><code>ctrl+c</code>退出容器编辑配置文件</p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line"><span class="keyword">cd</span> <span class="string">.klei/DoNotStarveTogether/DoNotStarveTogether/Cluster_1</span></span><br><span class="line">nano cluster.ini</span><br></pre></td></tr></table></figure>
+<p>例如</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//sendemail.photo.wudinaonao.<span class="keyword">com</span>/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
 
-<p>简单配置下，这里基本是关于游戏模式和服务器的设置。你也可以在本地新建一个房间，然后把配置文件拿过来替换掉服务器上的配置。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220023.png" alt="20200503220023"></p>
-<p>后台运行</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line">docker-compose <span class="keyword">up</span> -d</span><br></pre></td></tr></table></figure>
-
-<p>如果你的主机提供商有安全规则的话，你需要放行这样四个端口，UDP协议。</p>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">10999</span><span class="number">-11000</span></span><br><span class="line"><span class="number">12346</span><span class="number">-12347</span></span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220519.png" alt="20200503220519"></p>
-<h2 id="开始玩"><a href="#开始玩" class="headerlink" title="开始玩"></a>开始玩</h2><p>浏览游戏</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220813.png" alt="20200503220813"></p>
-<p>等待搜索完服务器列表</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503221138.png" alt="20200503221138"></p>
-<p>过滤器输入我们刚才配置的服务器名字 NaonaoTencenCloud</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220848.png" alt="20200503220848"></p>
-<p>加入 </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503222950.png" alt="20200503222950"></p>
-<p>创建角色</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503223240.png" alt="20200503223240"></p>
-<p>可以愉快的玩耍了</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://hub.docker.com/r/jamesits/dst-server" target="_blank" rel="noopener">https://hub.docker.com/r/jamesits/dst-server</a></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024711.png" alt="20200508024711"></p>
+<p>至此后台管理设置完成</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024822.png" alt="20200508024822"></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>去网站上发个评论试一下 </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024954.png" alt="20200508024954"></p>
+<p>测试成功</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><blockquote>
+<p><a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
+</blockquote>
 ]]></content>
       <categories>
-        <category>Games</category>
+        <category>Web</category>
       </categories>
       <tags>
-        <tag>Docker</tag>
-        <tag>Games</tag>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gitlab添加邮箱</title>
+    <url>/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000117.png" alt="20200506000117"></p>
+<p>腾讯企业邮箱配置如下，其他邮箱同样适用。</p>
+<p>找到配置</p>
+<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"gitlab@wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"xxxxxxxxxxxxxxxxxx"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br></pre></td></tr></table></figure>
+
+<p>在找到配置</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="meta"># gitlab 发件邮箱</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'gitlab@wudinaonao.com'</span></span><br><span class="line"><span class="meta"># 默认标题</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_display_name'</span>] = <span class="string">'Gitlab'</span></span><br></pre></td></tr></table></figure>
+
+<p>重载gitlab配置</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+
+<p>登录到你搭建的Gitlab发一封重置密码的邮件试试</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
+<p>成功</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
+<p>阿里云企业邮箱配置</p>
+<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.yourself.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"yourself user name"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"yourself password"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"yourself hostname"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = false</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br><span class="line"></span><br><span class="line">###! **<span class="symbol">Can</span> be: <span class="string">'none'</span>, <span class="string">'peer'</span>, <span class="string">'client_once'</span>, <span class="string">'fail_if_no_peer_cert'</span>**</span><br><span class="line">###! <span class="symbol">Docs</span>: http://api.rubyonrails.org/classes/<span class="symbol">ActionMailer</span>/<span class="symbol">Base</span>.html</span><br><span class="line">gitlab_rails[<span class="string">'smtp_openssl_verify_mode'</span>] = <span class="string">'none'</span></span><br></pre></td></tr></table></figure>
+
+<p>更多邮箱配置参见官方</p>
+<p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
+<p><a href="https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Gitlab</tag>
       </tags>
   </entry>
   <entry>
@@ -464,6 +485,9 @@
 <figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="meta"># comment</span></span><br><span class="line"><span class="symbol">name1:</span>password1</span><br><span class="line"><span class="symbol">name2:</span>password2:comment</span><br><span class="line"><span class="symbol">name3:</span>password3</span><br></pre></td></tr></table></figure>
 
 <p>推荐使用<code>htpasswd</code>命令创建用户，可以通过<code>apt install apache2-utils</code>安装</p>
+<p>创建文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">touch <span class="regexp">/etc/</span>nginx<span class="regexp">/passwd</span></span><br></pre></td></tr></table></figure>
+
 <p>创建一个用户 user</p>
 <figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">htpasswd <span class="regexp">/etc/</span>nginx<span class="regexp">/passwd user</span></span><br></pre></td></tr></table></figure>
 
@@ -524,6 +548,8 @@
 </li>
 <li><p>例如我的nginx用户为www-data，那么远程主机的blog.wudinaonao.com.git目录的用户也要是www-data.</p>
 </li>
+<li><p>使用 chmod 设置权限，直接 chmod -R 777</p>
+</li>
 </ul>
 <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200430193424.png" alt="20200430193424"></p>
 <ul>
@@ -543,37 +569,6 @@
       <tags>
         <tag>Git</tag>
         <tag>Nginx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Next 主题设置代码高亮</title>
-    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
-    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
-<p>找到Next主题目录下的_config.xml文件</p>
-<a id="more"></a>
-
-<p>在这里可以修改风格</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
-
-<p>我们更改为 <code>highlight_theme: night eighties</code></p>
-<p>得到深色系的Code风格</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
-<p>但是我们发现一个问题。。。</p>
-<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>然后</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
-
-<p>即可</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -664,6 +659,34 @@
         <tag>深度学习</tag>
         <tag>神经网络</tag>
         <tag>验证码识别</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派ubuntu更换国内源</title>
+    <url>/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507193511.png" alt="20200507193511"></p>
+<h1 id="备份原始源"><a href="#备份原始源" class="headerlink" title="备份原始源"></a>备份原始源</h1><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> /etc/apt</span><br><span class="line">cp sources.<span class="keyword">list</span> sources.<span class="keyword">list</span>.bak</span><br><span class="line"><span class="keyword">rm</span> sources.<span class="keyword">list</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="更改源"><a href="#更改源" class="headerlink" title="更改源"></a>更改源</h1><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">nano sources.<span class="built_in">list</span></span><br></pre></td></tr></table></figure>
+<p>然后填写以下内容。</p>
+<h2 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h2><h3 id="ubuntu-20-04-focal-配置如下"><a href="#ubuntu-20-04-focal-配置如下" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"># 默认注释了源码镜像以提高 apt <span class="keyword">update</span> 速度，如有需要可自行取消注释</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"># 预发布软件源，不建议启用</span><br><span class="line"># <span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<h2 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h2><h3 id="ubuntu-20-04-focal-配置如下-1"><a href="#ubuntu-20-04-focal-配置如下-1" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<p>其他版本根据版本号替换即可</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+<p>focal即版本号</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt<span class="built_in"> upgrade </span>-y</span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507194302.png" alt="20200507194302"></p>
+<p>速度比官方源快很多。</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ubuntu-ports是Arm64，Armhf 等平台的 Ubuntu 软件仓库</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Raspberry</tag>
+        <tag>Ubuntu</tag>
       </tags>
   </entry>
   <entry>
@@ -871,198 +894,180 @@
       </tags>
   </entry>
   <entry>
-    <title>Gitlab添加邮箱</title>
-    <url>/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/</url>
-    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000117.png" alt="20200506000117"></p>
-<p>腾讯企业邮箱配置如下，其他邮箱同样适用。</p>
-<p>找到配置</p>
-<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"gitlab@wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"xxxxxxxxxxxxxxxxxx"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br></pre></td></tr></table></figure>
+    <title>用Docker搭建饥荒服务器</title>
+    <url>/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h1 id="用Docker搭建饥荒服务器"><a href="#用Docker搭建饥荒服务器" class="headerlink" title="用Docker搭建饥荒服务器"></a>用Docker搭建饥荒服务器</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210534.png" alt="20200503210534"></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line">docker pull jamesits/dst-<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
 
-<p>在找到配置</p>
-<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="meta"># gitlab 发件邮箱</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'gitlab@wudinaonao.com'</span></span><br><span class="line"><span class="meta"># 默认标题</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_display_name'</span>] = <span class="string">'Gitlab'</span></span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210917.png" alt="20200503210917"></p>
+<p>拉取到的镜像</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213045.png" alt="20200503213045"></p>
+<p>如果没有安装docker-compose建议安装，方便书写配置文件。</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">install</span> docker-compose</span><br></pre></td></tr></table></figure>
 
-<p>重载gitlab配置</p>
-<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+<p>新建一个目录用于存放数据文件</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mkdir</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br><span class="line"><span class="keyword">cd</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br></pre></td></tr></table></figure>
 
-<p>登录到你搭建的Gitlab发一封重置密码的邮件试试</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
-<p>成功</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
-<p>阿里云企业邮箱配置</p>
-<figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.yourself.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"yourself user name"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"yourself password"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"yourself hostname"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = false</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br><span class="line"></span><br><span class="line">###! **<span class="symbol">Can</span> be: <span class="string">'none'</span>, <span class="string">'peer'</span>, <span class="string">'client_once'</span>, <span class="string">'fail_if_no_peer_cert'</span>**</span><br><span class="line">###! <span class="symbol">Docs</span>: http://api.rubyonrails.org/classes/<span class="symbol">ActionMailer</span>/<span class="symbol">Base</span>.html</span><br><span class="line">gitlab_rails[<span class="string">'smtp_openssl_verify_mode'</span>] = <span class="string">'none'</span></span><br></pre></td></tr></table></figure>
+<p>打开本机饥荒</p>
+<p>点账号</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213529.png" alt="20200503213529"></p>
+<p>查看我的游戏</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213654.png" alt="20200503213654"></p>
+<p>选择饥荒</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214024.png" alt="20200503214024"></p>
+<p>添加一个新服务器，起一个用于识别的名字</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214359.png" alt="20200503214359"></p>
+<p>复制那串key</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214424.png" alt="20200503214424"></p>
+<p>回到服务器</p>
+<p>创建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cat</span> &gt; docker-compose.yaml &lt;&lt;<span class="string">"EOF"</span></span><br><span class="line"><span class="keyword">version</span>: <span class="string">'3.5'</span></span><br><span class="line">service<span class="variable">s:</span></span><br><span class="line">  dst-server:</span><br><span class="line">     environmen<span class="variable">t:</span></span><br><span class="line">        - DST_CLUSTER_TOKEN=这里粘贴刚才复制的那串key</span><br><span class="line">     image: jamesits/dst-server:latest</span><br><span class="line">     restar<span class="variable">t:</span> <span class="string">"on-failure:5"</span></span><br><span class="line">     port<span class="variable">s:</span></span><br><span class="line">        - <span class="string">"10999-11000:10999-11000/udp"</span></span><br><span class="line">        - <span class="string">"12346-12347:12346-12347/udp"</span></span><br><span class="line">     volume<span class="variable">s:</span></span><br><span class="line">        - $&#123;HOME&#125;/.klei/DoNotStarveTogether:/data</span><br><span class="line">     stop_grace_period: <span class="number">6</span><span class="keyword">m</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
-<p>更多邮箱配置参见官方</p>
-<p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<p><a href="https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446</a></p>
+<p>创建并运行容器</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker-compose up</span></span><br></pre></td></tr></table></figure>
+
+<p>看到这个</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503215417.png" alt="20200503215417"></p>
+<p><code>ctrl+c</code>退出容器编辑配置文件</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line"><span class="keyword">cd</span> <span class="string">.klei/DoNotStarveTogether/DoNotStarveTogether/Cluster_1</span></span><br><span class="line">nano cluster.ini</span><br></pre></td></tr></table></figure>
+
+<p>简单配置下，这里基本是关于游戏模式和服务器的设置。你也可以在本地新建一个房间，然后把配置文件拿过来替换掉服务器上的配置。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220023.png" alt="20200503220023"></p>
+<p>后台运行</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line">docker-compose <span class="keyword">up</span> -d</span><br></pre></td></tr></table></figure>
+
+<p>如果你的主机提供商有安全规则的话，你需要放行这样四个端口，UDP协议。</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="number">10999</span><span class="number">-11000</span></span><br><span class="line"><span class="number">12346</span><span class="number">-12347</span></span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220519.png" alt="20200503220519"></p>
+<h2 id="开始玩"><a href="#开始玩" class="headerlink" title="开始玩"></a>开始玩</h2><p>浏览游戏</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220813.png" alt="20200503220813"></p>
+<p>等待搜索完服务器列表</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503221138.png" alt="20200503221138"></p>
+<p>过滤器输入我们刚才配置的服务器名字 NaonaoTencenCloud</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220848.png" alt="20200503220848"></p>
+<p>加入 </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503222950.png" alt="20200503222950"></p>
+<p>创建角色</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503223240.png" alt="20200503223240"></p>
+<p>可以愉快的玩耍了</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://hub.docker.com/r/jamesits/dst-server" target="_blank" rel="noopener">https://hub.docker.com/r/jamesits/dst-server</a></p>
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>Games</category>
       </categories>
       <tags>
-        <tag>Gitlab</tag>
+        <tag>Docker</tag>
+        <tag>Games</tag>
       </tags>
   </entry>
   <entry>
-    <title>树莓派ubuntu更换国内源</title>
-    <url>/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/</url>
-    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507193511.png" alt="20200507193511"></p>
-<h1 id="备份原始源"><a href="#备份原始源" class="headerlink" title="备份原始源"></a>备份原始源</h1><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> /etc/apt</span><br><span class="line">cp sources.<span class="keyword">list</span> sources.<span class="keyword">list</span>.bak</span><br><span class="line"><span class="keyword">rm</span> sources.<span class="keyword">list</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="更改源"><a href="#更改源" class="headerlink" title="更改源"></a>更改源</h1><figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">nano sources.<span class="built_in">list</span></span><br></pre></td></tr></table></figure>
-<p>然后填写以下内容。</p>
-<h2 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h2><h3 id="ubuntu-20-04-focal-配置如下"><a href="#ubuntu-20-04-focal-配置如下" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"># 默认注释了源码镜像以提高 apt <span class="keyword">update</span> 速度，如有需要可自行取消注释</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"># 预发布软件源，不建议启用</span><br><span class="line"># <span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"># <span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.tuna.tsinghua.edu.<span class="keyword">cn</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-
-<h2 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h2><h3 id="ubuntu-20-04-focal-配置如下-1"><a href="#ubuntu-20-04-focal-配置如下-1" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br><span class="line"><span class="keyword">deb</span>-src http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-
-<p>其他版本根据版本号替换即可</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">deb</span> http<span class="variable">s:</span>//mirrors.aliyun.<span class="keyword">com</span>/ubuntu-ports/ focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-<p>focal即版本号</p>
-<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt<span class="built_in"> upgrade </span>-y</span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507194302.png" alt="20200507194302"></p>
-<p>速度比官方源快很多。</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ubuntu-ports是Arm64，Armhf 等平台的 Ubuntu 软件仓库</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Raspberry</tag>
-        <tag>Ubuntu</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Valine评论系统增加邮件通知</title>
-    <url>/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/</url>
-    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
+    <title>Next 主题设置代码高亮</title>
+    <url>/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/</url>
+    <content><![CDATA[<h1 id="Next-主题设置代码高亮"><a href="#Next-主题设置代码高亮" class="headerlink" title="Next 主题设置代码高亮"></a>Next 主题设置代码高亮</h1><p>Next 主题默认使用 tomorrow-theme 来做代码高亮。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185002.png" alt=""></p>
+<p>找到Next主题目录下的_config.xml文件</p>
 <a id="more"></a>
 
-<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p>仓库地址 <a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
-<p>登录Leancloud</p>
-<p>选择应用</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020806.png" alt="20200508020806"></p>
-<p>云引擎-部署-部署项目</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508020959.png" alt="20200508020959"></p>
-<p>Git 部署</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021107.png" alt="20200508021107"></p>
-<p>输入仓库地址</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin.git</span><br></pre></td></tr></table></figure>
+<p>在这里可以修改风格</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="comment"># Code Highlight theme</span></span><br><span class="line">  <span class="comment"># Available values: normal | night | night eighties | night blue | night bright | solarized | solarized dark | galactic</span></span><br><span class="line">  <span class="comment"># See: https://github.com/chriskempson/tomorrow-theme</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">normal</span></span><br><span class="line">  <span class="comment"># Add copy button on codeblock</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Show text copy result.</span></span><br><span class="line">    <span class="attr">show_result:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># Available values: default | flat | mac</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021128.png" alt="20200508021128"></p>
-<p>设置</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021217.png" alt="20200508021217"></p>
-<p>添加自定义环境变量</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508021234.png" alt="20200508021234"></p>
-<p>具体备注参见仓库说明</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/DesertsP/</span>Valine-Admin</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>变量</th>
-<th>示例</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SITE_NAME</td>
-<td>Deserts</td>
-<td>[必填]博客名称</td>
-</tr>
-<tr>
-<td>SITE_URL</td>
-<td><a href="https://deserts.io" target="_blank" rel="noopener">https://deserts.io</a></td>
-<td>[必填]首页地址</td>
-</tr>
-<tr>
-<td><strong>SMTP_SERVICE</strong></td>
-<td>QQ</td>
-<td>[新版支持]邮件服务提供商，支持 QQ、163、126、Gmail 以及 <a href="https://nodemailer.com/smtp/well-known/#supported-services" target="_blank" rel="noopener">更多</a></td>
-</tr>
-<tr>
-<td>SMTP_USER</td>
-<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
-<td>[必填]SMTP登录用户</td>
-</tr>
-<tr>
-<td>SMTP_PASS</td>
-<td>ccxxxxxxxxch</td>
-<td>[必填]SMTP登录密码（QQ邮箱需要获取独立密码）</td>
-</tr>
-<tr>
-<td>SENDER_NAME</td>
-<td>Deserts</td>
-<td>[必填]发件人</td>
-</tr>
-<tr>
-<td>SENDER_EMAIL</td>
-<td><a href="mailto:xxxxxx@qq.com">xxxxxx@qq.com</a></td>
-<td>[必填]发件邮箱</td>
-</tr>
-<tr>
-<td>ADMIN_URL</td>
-<td><a href="https://xxx.leanapp.cn/" target="_blank" rel="noopener">https://xxx.leanapp.cn/</a></td>
-<td>[建议]Web主机二级域名，用于自动唤醒</td>
-</tr>
-<tr>
-<td>BLOGGER_EMAIL</td>
-<td><a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a></td>
-<td>[可选]博主通知收件地址，默认使用SENDER_EMAIL</td>
-</tr>
-<tr>
-<td>AKISMET_KEY</td>
-<td>xxxxxxxxxxxx</td>
-<td>[可选]Akismet Key 用于垃圾评论检测，设为MANUAL_REVIEW开启人工审核，留空不使用反垃圾</td>
-</tr>
-</tbody></table>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022236.png" alt="20200508022236"></p>
-<p>切换回部署-部署</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022304.png" alt="20200508022304"></p>
-<p>等待部署完成，第一次要久一点。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022333.png" alt="20200508022333"></p>
-<p>设置-域名绑定-云引擎绑定</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022421.png" alt="20200508022421"></p>
-<p>绑定新域名，这个域名是用来管理评论的，一个简易后台，如果你用leancloud国内版，注意备案。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022436.png" alt="20200508022436"></p>
-<p>去你的dns服务商哪里解析这个域名</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508022613.png" alt="20200508022613"></p>
-<p>等待准备就绪</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023122.png" alt="20200508023122"></p>
-<p>返回云引擎-定时任务-创建定时任务，这个用于定时唤醒，如果你是付费用户这一步可以忽略，付费用户容器不回休眠。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023224.png" alt="20200508023224"></p>
-<p>创建一个任务</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span>/<span class="number">30</span> <span class="number">7</span>-<span class="number">23</span> * * ?</span><br></pre></td></tr></table></figure>
+<p>我们更改为 <code>highlight_theme: night eighties</code></p>
+<p>得到深色系的Code风格</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427185242.png" alt=""></p>
+<p>但是我们发现一个问题。。。</p>
+<p>为什么字体颜色都是一样的？这个问题困扰了我许久，后来我发现因为Hexo使用了HighLight.js这个插件来显示代码高亮，之前把这个插件选项打开了，应该同Next主题使用的tomorrow-theme产生了冲突。在Hexo的_config.xml里把 highlight 的 hljs 选项关了即可。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">highlight:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">line_number:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">auto_detect:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">tab_replace:</span> <span class="string">''</span></span><br><span class="line">  <span class="attr">wrap:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hljs:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
-<p>这个表达式表示7-23点之间没半个小时执行一次，具体参考cron表达式</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023326.png" alt="20200508023326"></p>
-<p>再创建一个任务，每天早8点补发过去24小时漏发的邮件</p>
-<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> <span class="number">8</span> * * ?</span><br></pre></td></tr></table></figure>
+<p>然后</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">hexo</span> <span class="string">clean</span></span><br><span class="line"><span class="attr">hexo</span> <span class="string">g</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023540.png" alt="20200508023540"></p>
-<p>访问你刚才设置的二级域名</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023653.png" alt="20200508023653"></p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508023709.png" alt="20200508023709"></p>
-<p>第一次你需要设置一个用户名和密码，访问</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//你设置的域名/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
-
-<p>例如</p>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">http<span class="variable">s:</span>//sendemail.photo.wudinaonao.<span class="keyword">com</span>/<span class="keyword">sign</span>-<span class="keyword">up</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024711.png" alt="20200508024711"></p>
-<p>至此后台管理设置完成</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024822.png" alt="20200508024822"></p>
-<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>去网站上发个评论试一下 </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508024954.png" alt="20200508024954"></p>
-<p>测试成功</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><blockquote>
-<p><a href="https://github.com/DesertsP/Valine-Admin" target="_blank" rel="noopener">https://github.com/DesertsP/Valine-Admin</a></p>
-</blockquote>
+<p>即可</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427190006.png" alt=""></p>
 ]]></content>
       <categories>
-        <category>Web</category>
+        <category>Hexo</category>
       </categories>
       <tags>
         <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ESXI 更改网卡速率并设置脚本</title>
+    <url>/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<h1 id="ESXI-更改网卡速率并设置脚本"><a href="#ESXI-更改网卡速率并设置脚本" class="headerlink" title="ESXI 更改网卡速率并设置脚本"></a>ESXI 更改网卡速率并设置脚本</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>用闲置主机搭了一个ESXI，上面用Ubuntu跑了一个Samba服务做家庭文件中心。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162239.png" alt=""></p>
+<p>平常从PT站下的资源直接放到这里提供给家里的小米电视和各种盒子等。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次从服务器拷贝文件的时候发现速度只有</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162559.png" alt=""></p>
+<p>百兆带宽不到？</p>
+<a id="more"></a>
+
+<p>登录 ESXI 查看网卡设置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
+<p>我千兆网卡怎么设置的是百兆速度？</p>
+<p>点击 编辑设置 更改链路速度</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162801.png" alt=""></p>
+<p>保存</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162906.png" alt=""></p>
+<p>速度正常了。</p>
+<h2 id="好景不长"><a href="#好景不长" class="headerlink" title="好景不长"></a>好景不长</h2><p>本以为这样设置好就万事大吉了。But！Too young too simple! 第二天又成这样了。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428162711.png" alt=""></p>
+<p>仿佛又自动设置成百兆速度了？</p>
+<p>于是乎，痛定思痛！</p>
+<p>我们需要编写一个脚本来判断网卡是不是又自动改回百兆了，如果改回来了就自动改过去！</p>
+<h3 id="撸起袖子开始干"><a href="#撸起袖子开始干" class="headerlink" title="撸起袖子开始干"></a>撸起袖子开始干</h3><ul>
+<li><p>开启ESXI SSH 登录</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163347.png" alt=""></p>
+</li>
+<li><p>登录 ESXI </p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428163524.png" alt=""></p>
+</li>
+<li><p>我们在 /vmfs/volumes/datastore1 这样的位置保存，为毛？</p>
+</li>
+<li><p>这样重启不会重置，之前我在根目录下创建的script目录在一次意外断电重启后神秘消失了，人间惨剧！</p>
+</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /vmfs/volumes/datastore1</span><br><span class="line">mkdir script</span><br><span class="line">cd script</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建脚本 <code>vi ChangeNetworkAdapterSpeed.sh</code> </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Change Network Adapter Speed 1000Mbps</span></span><br><span class="line"></span><br><span class="line">currentSpeed=`esxcfg-nics -l|grep Mbps|awk '&#123;print $5&#125;'`</span><br><span class="line">if [ $currentSpeed != "1000Mbps" ]; then</span><br><span class="line">    # 注意 vmnic0 是你网卡的名字</span><br><span class="line">    esxcfg-nics -s 1000 -d full vmnic0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>保存 :wq</p>
+</li>
+<li><p>执行权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod +x ChangeNetworkAdapterSpeed.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加入定时任务 每分钟检测一次</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>每次重启 ESXI 它的定时任务是会重置的，所以我们需要修改<code>/etc/rc.local.d/local.sh</code></p>
+</li>
+<li><p>在里面添加</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> add script to crontab</span></span><br><span class="line">cat &gt;&gt; /var/spool/cron/crontabs/root &lt;&lt;"EOF"</span><br><span class="line">*/1    *   *   *   *   /bin/sh /vmfs/volumes/datastore1/script/ChangeNetworkAdapterSpeed.sh</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart crontabs</span></span><br><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>注意添加在 <code>exit 0</code> 前面</p>
+</li>
+<li><p>重启 crontabs</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/bin/kill $(cat /var/run/crond.pid)</span><br><span class="line">/usr/lib/vmware/busybox/bin/busybox crond</span><br></pre></td></tr></table></figure>
+<p>大功告成。</p>
+]]></content>
+      <categories>
+        <category>VMware</category>
+      </categories>
+      <tags>
+        <tag>Vmware</tag>
+        <tag>ESXI</tag>
+        <tag>Shell</tag>
+        <tag>虚拟机</tag>
       </tags>
   </entry>
 </search>
