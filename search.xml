@@ -1138,4 +1138,29 @@
         <tag>Gitlab</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Openwrt通过SSH启动接口</title>
+    <url>/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/</url>
+    <content><![CDATA[<p>如果你像我一样，把lan口关闭了导致无法通过web进入后台。那么你可以进入通过SSH来重新启用这个接口。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cd /etc/config</span><br><span class="line">vi network</span><br></pre></td></tr></table></figure>
+
+<p>找到你的lan口<br>更改</p>
+<figure class="highlight vbnet"><table><tr><td class="code"><pre><span class="line"><span class="keyword">option</span> <span class="keyword">auto</span> <span class="comment">'0'</span></span><br></pre></td></tr></table></figure>
+
+<p>为</p>
+<figure class="highlight vbnet"><table><tr><td class="code"><pre><span class="line"><span class="keyword">option</span> <span class="keyword">auto</span> <span class="comment">'1'</span></span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">service<span class="built_in"> network </span>restart</span><br></pre></td></tr></table></figure>
+
+<p>这样lan口便重新启用，可以登录后台了。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>LEDE</tag>
+        <tag>Openwrt</tag>
+      </tags>
+  </entry>
 </search>
