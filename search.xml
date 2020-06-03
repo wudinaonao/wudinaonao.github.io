@@ -1163,4 +1163,45 @@
         <tag>Openwrt</tag>
       </tags>
   </entry>
+  <entry>
+    <title>ESXI下无损扩展Linux硬盘空间</title>
+    <url>/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603160434.png" alt="20200603160434"></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在ESXI下扩容磁盘是非常简单的。例如，我制作了一个通用Ubuntu镜像。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603160729.png" alt="20200603160729"></p>
+<p>当我像创建一个基于Ubuntu的虚拟机时，我直接导入ESXI即可，不用重新安装一个，非常便捷。</p>
+<p>但是我制作的这个镜像文件设置磁盘大小只有16G，在长期使用后可能磁盘空间就不够了，这个时候我们需要对磁盘进行扩容。</p>
+<p>你可能会问为什么制作镜像的时候不设置个大点的硬盘空间？因为当ESXI进行硬盘扩容的时候，空间只能改大不能改小。</p>
+<h1 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h1><p>我们以Database这个虚拟机为例</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161130.png" alt="20200603161130"></p>
+<p>先使虚拟机处于关闭状态。然后点击编辑</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161200.png" alt="20200603161200"></p>
+<p>我们把<strong>硬盘1</strong>改成64GB，保存</p>
+<p>打开虚拟机。</p>
+<p>登录虚拟机</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">df -h</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161352.png" alt="20200603161352"></p>
+<p>可以看到空间并没有增加。我们需要把扩容的空间无损增加到根目录。<strong>以下操作有风险，建议创建快照</strong></p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">fdisk</span> /<span class="selector-tag">dev</span>/<span class="selector-tag">sda</span></span><br><span class="line"><span class="selector-tag">d</span></span><br><span class="line"><span class="selector-tag">2</span></span><br><span class="line"><span class="selector-tag">n</span></span><br><span class="line">回车(默认)</span><br><span class="line">回车(默认)</span><br><span class="line"><span class="selector-tag">y</span></span><br><span class="line"><span class="selector-tag">wq</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，我的根目录挂载在/dev/sda2，所以删除的分区号是2</strong></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161840.png" alt="20200603161840"></p>
+<p>原理就是把之间个根目录挂载的分区删除了，然后重建一个扩容的分区。</p>
+<p>然后格式化磁盘</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">resize2fs <span class="regexp">/dev/</span>sda2</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603162037.png" alt="20200603162037"></p>
+<p>查看一下结果。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603162100.png" alt="20200603162100"></p>
+<p>可以看到已经扩容成功了。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
 </search>
