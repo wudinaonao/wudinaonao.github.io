@@ -1204,4 +1204,23 @@
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Python用Base64编码文件</title>
+    <url>/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">bytes = <span class="string">b"wudinaonao"</span></span><br><span class="line">base64.b64encode(bytes)</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'d3VkaW5hb25hbw=='</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">bytes = <span class="string">b"wudinaonao"</span></span><br><span class="line">encode = base64.b64encode(bytes)</span><br><span class="line">base64.b64decode(encode, <span class="string">"utf-8"</span>)</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'wudinaonao'</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
 </search>
