@@ -1237,4 +1237,44 @@
         <tag>Ubuntu</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Python库apscheduler中时区的问题</title>
+    <url>/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h1><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"Scheduler.py"</span>, line 96, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    scheduler.start()</span><br><span class="line">  File <span class="string">"Scheduler.py"</span>, line 78, <span class="keyword">in</span> start</span><br><span class="line">    CronTrigger.from_crontab(Config.SPIDER_INTERVAL)</span><br><span class="line">  File <span class="string">"/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/apscheduler/triggers/cron/__init__.py"</span>, line 103, <span class="keyword">in</span> from_crontab</span><br><span class="line">    <span class="attribute">day_of_week</span>=values[4], <span class="attribute">timezone</span>=timezone)</span><br><span class="line">  File <span class="string">"/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/apscheduler/triggers/cron/__init__.py"</span>, line 58, <span class="keyword">in</span> __init__</span><br><span class="line">    self.timezone = get_localzone()</span><br><span class="line">  File <span class="string">"/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/unix.py"</span>, line 165, <span class="keyword">in</span> get_localzone</span><br><span class="line">    _cache_tz = _get_localzone()</span><br><span class="line">  File <span class="string">"/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/unix.py"</span>, line 90, <span class="keyword">in</span> _get_localzone</span><br><span class="line">    utils.assert_tz_offset(tz)</span><br><span class="line">  File <span class="string">"/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/utils.py"</span>, line 46, <span class="keyword">in</span> assert_tz_offset</span><br><span class="line">    raise ValueError(msg)</span><br><span class="line">ValueError: Timezone offset does <span class="keyword">not</span> match<span class="built_in"> system </span>offset: 0 != 28800. Please, check your<span class="built_in"> config </span>files.</span><br></pre></td></tr></table></figure>
+
+<p>开发机上一切正常，部署到服务器上出现这个问题。</p>
+<p>服务器的时区和apscheduler不一样。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="在-apscheuler-里指定时区"><a href="#在-apscheuler-里指定时区" class="headerlink" title="在 apscheuler 里指定时区"></a>在 apscheuler 里指定时区</h2><p>查看服务器上的时区</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">cat <span class="regexp">/etc/</span>timezone</span><br></pre></td></tr></table></figure>
+<p>在 apscheuler 里指定时区</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200606173447.png" alt="20200606173447"></p>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu修改时区</title>
+    <url>/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</url>
+    <content><![CDATA[<p>Ubuntu 版本 20.04 LTS</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">sudo tzselect</span></span><br></pre></td></tr></table></figure>
+
+<p>根据提示选择你需要的时区</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200606171802.png" alt="20200606171802"></p>
+<p>例如我选择的是Asia-China-Beijing Time</p>
+<p>创建一个软连接</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">ln -sf <span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo/</span>Asia<span class="regexp">/Shanghai /</span>etc<span class="regexp">/localtime</span></span><br></pre></td></tr></table></figure>
+
+<p>查看结果</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">date</span> -R</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+      </tags>
+  </entry>
 </search>
