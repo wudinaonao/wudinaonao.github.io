@@ -1277,4 +1277,197 @@
         <tag>Ubuntu</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Python获取环境变量</title>
+    <url>/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</url>
+    <content><![CDATA[<h1 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h1><p>返回值为字符串类型</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">import <span class="built_in">os</span></span><br><span class="line"><span class="built_in">os</span>.<span class="built_in">getenv</span>(<span class="string">"KEY"</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>返回值为bytes类型</p>
+<figure class="highlight moonscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="built_in">os</span></span><br><span class="line"><span class="built_in">os</span>.getenvb(<span class="string">"KEY"</span>)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker推送镜像遇到的问题</title>
+    <url>/2020/06/09/Docker%E6%8E%A8%E9%80%81%E9%95%9C%E5%83%8F%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="denied-requested-access-to-the-resource-is-denied"><a href="#denied-requested-access-to-the-resource-is-denied" class="headerlink" title="denied: requested access to the resource is denied"></a>denied: requested access to the resource is denied</h1><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">The push <span class="built_in">ref</span>ers to repository [docker.io/library/flask-mark<span class="number">-12306</span>-captcha]</span><br><span class="line"><span class="number">0566</span>a0ade762: Preparing </span><br><span class="line">a82f13d5c08d: Preparing </span><br><span class="line"><span class="number">6680</span>b518709b: Preparing </span><br><span class="line"><span class="number">42</span>d3338c1387: Preparing </span><br><span class="line"><span class="number">380</span>d9d1be624: Preparing </span><br><span class="line"><span class="number">5</span>bf497fc7ae4: Waiting </span><br><span class="line"><span class="number">079e0</span>a70bca0: Waiting </span><br><span class="line"><span class="number">569e5571</span>a3eb: Waiting </span><br><span class="line"><span class="number">697765</span>a85531: Waiting </span><br><span class="line"><span class="number">8</span>c39f7b1a31a: Waiting </span><br><span class="line"><span class="number">88</span>cfc2fcd059: Waiting </span><br><span class="line"><span class="number">760e8</span>d95cf58: Waiting </span><br><span class="line"><span class="number">7</span>cc1c2d7e744: Waiting </span><br><span class="line"><span class="number">8</span>c02234b8605: Waiting </span><br><span class="line">denied: requested access to the resource <span class="keyword">is</span> denied</span><br></pre></td></tr></table></figure>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>push 的时候加上用户名</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">docker push <span class="tag">&lt;<span class="name">username</span>&gt;</span>/<span class="tag">&lt;<span class="name">image</span> <span class="attr">name</span>&gt;</span>:<span class="tag">&lt;<span class="name">tag</span> <span class="attr">name</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="An-image-does-not-exist-locally-with-the-tag"><a href="#An-image-does-not-exist-locally-with-the-tag" class="headerlink" title="An image does not exist locally with the tag"></a>An image does not exist locally with the tag</h1><figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">(base) root<span class="variable">@ubuntu</span><span class="symbol">:/home/ubuntu/docker/python/FlaskMark12306Captcha</span><span class="comment"># docker push wudinaonao/flask-mark-12306-captcha:v1</span></span><br><span class="line">The push refers to repository [docker.io/wudinaonao/flask-mark<span class="number">-12306</span>-captcha]</span><br><span class="line">An image does <span class="keyword">not</span> exist locally <span class="keyword">with</span> the <span class="symbol">tag:</span> wudinaonao/flask-mark<span class="number">-12306</span>-captcha</span><br></pre></td></tr></table></figure>
+<h2 id="解决-1"><a href="#解决-1" class="headerlink" title="解决"></a>解决</h2><p>本地不存在指定的镜像，可能构建镜像的时候没有指定tag</p>
+<figure class="highlight pf"><table><tr><td class="code"><pre><span class="line">docker <span class="keyword">tag</span> <span class="variable">&lt;old image name&gt;</span> <span class="variable">&lt;username&gt;</span>/<span class="variable">&lt;new image name&gt;</span>:<span class="variable">&lt;tag name&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">docker <span class="keyword">tag</span> flask-<span class="keyword">mark</span>-<span class="number">12306</span>-captcha wudinaonao/flask-<span class="keyword">mark</span>-<span class="number">12306</span>-captch<span class="variable">a:v1</span></span><br></pre></td></tr></table></figure>
+
+<p>完成</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200609193818.png" alt="20200609193818"></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用Docker部署识别12306验证码服务</title>
+    <url>/2020/06/09/%E7%94%A8Docker%E9%83%A8%E7%BD%B2%E8%AF%86%E5%88%AB12306%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%8D%E5%8A%A1/</url>
+    <content><![CDATA[<h1 id="12306验证码识别"><a href="#12306验证码识别" class="headerlink" title="12306验证码识别"></a>12306验证码识别</h1><p>这是一个基于Flask，Tensorflow，Keras实现的12306验证码识别接口。</p>
+<p>搭建好的接口：<a href="https://mark12306captcha.wudinaonao.com" target="_blank" rel="noopener">https://mark12306captcha.wudinaonao.com</a></p>
+<h1 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h1><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">docker pull wudinaonao/flask-mark<span class="number">-12306</span>-captcha:v1<span class="number">.0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h1><h2 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h2><figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">docker run -dit -p <span class="number">8848</span>:<span class="number">8848</span> flask-mark<span class="number">-12306</span>-captcha wudinaonao/flask-mark<span class="number">-12306</span>-captcha:v1<span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="docker-compose"><a href="#docker-compose" class="headerlink" title="docker compose"></a>docker compose</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">version</span>: <span class="string">"3.1"</span></span><br><span class="line">service<span class="variable">s:</span></span><br><span class="line">  flask-<span class="keyword">mark</span>-<span class="number">12306</span>-captch<span class="variable">a:</span></span><br><span class="line">    image: wudinaonao/flask-<span class="keyword">mark</span>-<span class="number">12306</span>-captch<span class="variable">a:v1</span>.<span class="number">0</span></span><br><span class="line">    container_name: flask-<span class="keyword">mark</span>-<span class="number">12306</span>-captcha</span><br><span class="line">    port<span class="variable">s:</span></span><br><span class="line">      - <span class="number">8848</span>:<span class="number">8848</span></span><br><span class="line">    restar<span class="variable">t:</span> always</span><br></pre></td></tr></table></figure>
+
+<h1 id="一个用于验证的前端"><a href="#一个用于验证的前端" class="headerlink" title="一个用于验证的前端"></a>一个用于验证的前端</h1><p>访问：<code>http://yourhostname:8848</code></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200609204007.png" alt="20200609204007"></p>
+<h1 id="API"><a href="#API" class="headerlink" title="API"></a>API</h1><h2 id="获取验证码"><a href="#获取验证码" class="headerlink" title="获取验证码"></a>获取验证码</h2><p>从12306获取一张测试的验证码</p>
+<ul>
+<li><p>Request</p>
+<ul>
+<li>Method: GET</li>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>URL: <code>/Mark12306Captcha/api/v1.0/get/captcha</code></li>
+</ul>
+</li>
+<li><p>Response</p>
+<ul>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>Body  <figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"success"</span>,</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"mark successfully"</span>,</span><br><span class="line">    <span class="attr">"result"</span>: <span class="string">"captcha base64 string"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="识别"><a href="#识别" class="headerlink" title="识别"></a>识别</h2><h3 id="Full"><a href="#Full" class="headerlink" title="Full"></a>Full</h3><ul>
+<li><p>Request</p>
+<ul>
+<li>Method: POST</li>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>URL: <code>/Mark12306Captcha/api/v1.0/mark</code></li>
+<li>Body<ul>
+<li><code>{&quot;originCaptcha&quot;:&quot;captcha base64 string&quot;}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Response</p>
+<ul>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>Body<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"success"</span>,</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"mark successfully"</span>,</span><br><span class="line">    <span class="attr">"result"</span>: &#123;</span><br><span class="line">        <span class="attr">"originCaptcha"</span>: <span class="string">"origin captcha base64 string"</span>,</span><br><span class="line">        <span class="attr">"ids"</span>: [</span><br><span class="line">            <span class="number">5</span>,</span><br><span class="line">            <span class="number">7</span></span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"results"</span>: [</span><br><span class="line">            [</span><br><span class="line">                <span class="number">190</span>,</span><br><span class="line">                <span class="number">165</span></span><br><span class="line">            ],</span><br><span class="line">            [</span><br><span class="line">                <span class="number">260</span>,</span><br><span class="line">                <span class="number">141</span></span><br><span class="line">            ]</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"markedCaptcha"</span>: <span class="string">"marked captcha base64 string"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Result 解释说明</p>
+<ul>
+<li>ids 图片的编号<ul>
+<li><table>
+<thead>
+<tr>
+<th>0</th>
+<th>2</th>
+<th>4</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>3</td>
+<td>5</td>
+<td>7</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li>results 一个列表，每个元素是标记的坐标</li>
+<li>markedCaptcha 绘制好标记结果的验证码Base64字符串</li>
+</ul>
+</li>
+</ul>
+<h3 id="Lite"><a href="#Lite" class="headerlink" title="Lite"></a>Lite</h3><ul>
+<li><p>Request</p>
+<ul>
+<li>Method: POST</li>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>URL: <code>/Mark12306Captcha/api/v1.0/mark/lite</code></li>
+<li>Body<ul>
+<li><code>{&quot;originCaptcha&quot;:&quot;captcha base64 string&quot;}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Response</p>
+<ul>
+<li>Headers<ul>
+<li><code>Content-Type: application/json</code></li>
+</ul>
+</li>
+<li>Body<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"success"</span>,</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"mark successfully"</span>,</span><br><span class="line">    <span class="attr">"result"</span>: [</span><br><span class="line">        [</span><br><span class="line">            <span class="number">168</span>,</span><br><span class="line">            <span class="number">144</span></span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="number">274</span>,</span><br><span class="line">            <span class="number">125</span></span><br><span class="line">        ]</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>Result 解释说明参见上面</li>
+</ul>
+</li>
+</ul>
+<h1 id="License"><a href="#License" class="headerlink" title="License"></a>License</h1><p><a href="https://github.com/wudinaonao/FlaskMark12306Captcha/blob/master/LICENSE" target="_blank" rel="noopener">Apache License</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu20.04开机启动</title>
+    <url>/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/</url>
+    <content><![CDATA[<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ln -fs /lib/systemd/system/rc-local.service /etc/systemd/system/rc-local.service</span><br><span class="line">cd /etc/systemd/system/</span><br><span class="line">nano rc-local.service</span><br></pre></td></tr></table></figure>
+
+<p>rc-local.service 内容</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">  SPDX-License-Identifier: LGPL-2.1+</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  This file is part of systemd.</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  systemd is free software; you can redistribute it and/or modify it</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  under the terms of the GNU Lesser General Public License as published by</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  the Free Software Foundation; either version 2.1 of the License, or</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  (at your option) any later version.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> This unit gets pulled automatically into multi-user.target by</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> systemd-rc-local-generator <span class="keyword">if</span> /etc/rc.local is executable.</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=/etc/rc.local Compatibility</span><br><span class="line">Documentation=man:systemd-rc-local-generator(8)</span><br><span class="line">ConditionFileIsExecutable=/etc/rc.local</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/etc/rc.local start</span><br><span class="line">TimeoutSec=0</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line">GuessMainPID=no</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">Alias=rc-local.service</span><br></pre></td></tr></table></figure>
+
+<p>创建 rc.local 文件</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">touch /etc/rc.<span class="keyword">local</span></span><br></pre></td></tr></table></figure>
+
+<p>赋予可执行权限</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">chmod <span class="number">755</span> /etc/rc.local</span><br></pre></td></tr></table></figure>
+
+<p>编辑 rc.local</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">nano /etc/rc.<span class="keyword">local</span></span><br></pre></td></tr></table></figure>
+
+<p>文件内容 </p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里开机执行的脚本</span></span><br><span class="line"><span class="comment"># 要卸载 exit 0 之前</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>完成。</p>
+<p>参考链接 <a href="https://blog.csdn.net/zhengchaooo/article/details/80202599" target="_blank" rel="noopener">https://blog.csdn.net/zhengchaooo/article/details/80202599</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+      </tags>
+  </entry>
 </search>
