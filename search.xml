@@ -1470,4 +1470,28 @@
         <tag>Ubuntu</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CentOS8安装Docker</title>
+    <url>/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/</url>
+    <content><![CDATA[<p><a href="https://developer.aliyun.com/mirror/docker-ce?spm=a2c6h.13651102.0.0.3e221b11A4nUxe" target="_blank" rel="noopener">使用阿里源进行安装</a></p>
+<p>CentOS7用阿里源安装Docker</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment"># step 1: 安装必要的一些系统工具</span></span><br><span class="line">sudo yum <span class="keyword">install</span> -y yum-utils device-mapper-persistent-<span class="keyword">data</span> lvm2</span><br><span class="line"><span class="comment"># Step 2: 添加软件源信息</span></span><br><span class="line">sudo yum-config-manager <span class="comment">--add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span></span><br><span class="line"><span class="comment"># Step 3: 更新并安装Docker-CE</span></span><br><span class="line">sudo yum makecache <span class="keyword">fast</span></span><br><span class="line">sudo yum -y <span class="keyword">install</span> docker-ce</span><br><span class="line"><span class="comment"># Step 4: 开启Docker服务</span></span><br><span class="line">sudo service docker <span class="keyword">start</span></span><br></pre></td></tr></table></figure>
+
+<p>根据CentOS7的安装方式安装遇到如下问题。<br>错误描述</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">上次元数据过期检查：<span class="number">0</span>:<span class="number">00</span>:<span class="number">11</span> 前，执行于 <span class="number">2020</span>年<span class="number">06</span>月<span class="number">10</span>日 星期三 <span class="number">02</span>时<span class="number">05</span>分<span class="number">21</span>秒。</span><br><span class="line">错误：</span><br><span class="line"> 问题: package docker-ce<span class="number">-3</span>:<span class="number">19.03</span><span class="number">.11</span><span class="number">-3.</span>el7.x86_64 requires containerd.io &gt;= <span class="number">1.2</span><span class="number">.2</span><span class="number">-3</span>, but none of the providers can be installed</span><br><span class="line">  - cannot install the best candidate <span class="keyword">for</span> the job</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.10</span><span class="number">-3.2</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.13</span><span class="number">-3.1</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.13</span><span class="number">-3.2</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.2</span><span class="number">-3.3</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.2</span><span class="number">-3.</span>el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.4</span><span class="number">-3.1</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.5</span><span class="number">-3.1</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">  - package containerd.io<span class="number">-1.2</span><span class="number">.6</span><span class="number">-3.3</span>.el7.x86_64 <span class="keyword">is</span> excluded</span><br><span class="line">(尝试添加 <span class="string">'--skip-broken'</span> 来跳过无法安装的软件包 或 <span class="string">'--nobest'</span> 来不只使用最佳选择的软件包)</span><br></pre></td></tr></table></figure>
+
+<p>使用阿里源安装containerd.io安装不低于1.2.2-3的版本</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">yum install -y https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/docker-ce/</span>linux<span class="regexp">/centos/</span><span class="number">7</span><span class="regexp">/x86_64/</span>edge<span class="regexp">/Packages/</span>containerd.io-<span class="number">1.2</span>.<span class="number">13</span>-<span class="number">3.2</span>.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>然后继续根据CentOS7的安装方法安装即可。</p>
+<p>参考链接：<a href="https://blog.csdn.net/RtxTitanV/article/details/106550640" target="_blank" rel="noopener">https://blog.csdn.net/RtxTitanV/article/details/106550640</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+        <tag>CentOS8</tag>
+      </tags>
+  </entry>
 </search>
