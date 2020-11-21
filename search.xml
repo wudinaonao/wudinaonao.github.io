@@ -1543,4 +1543,21 @@
         <tag>Docker</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Git Your local changes to the following files would be overwritten by merge</title>
+    <url>/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/</url>
+    <content><![CDATA[<h1 id="Your-local-changes-to-the-following-files-would-be-overwritten-by-merge"><a href="#Your-local-changes-to-the-following-files-would-be-overwritten-by-merge" class="headerlink" title="Your local changes to the following files would be overwritten by merge"></a>Your local changes to the following files would be overwritten by merge</h1><h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><figure class="highlight subunit"><table><tr><td class="code"><pre><span class="line">e66515c..389e67f  master     -&gt; gitlab/master</span><br><span class="line"><span class="keyword">error: </span>Your local changes to the following files would be overwritten by merge:</span><br><span class="line">        config/clash/haikou.yaml</span><br><span class="line">        config/clash/yuncheng.yaml</span><br><span class="line">Please commit your changes or stash them before you merge.</span><br><span class="line">Aborting</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>放弃本地修改,直接覆盖</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">git <span class="keyword">reset</span> <span class="comment">--hard</span></span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
 </search>
