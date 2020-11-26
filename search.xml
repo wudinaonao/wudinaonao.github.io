@@ -1560,4 +1560,29 @@
         <tag>Git</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Docker日志查看与清理</title>
+    <url>/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/</url>
+    <content><![CDATA[<p>查看日志</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker logs container_name_or_id</span></span><br></pre></td></tr></table></figure>
+
+<p>Docker 日志目录</p>
+<figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line">/var/<span class="class"><span class="keyword">lib</span>/<span class="title">docker</span>/<span class="title">containers</span>/<span class="title">container_id</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="设置Docker容器日志大小-以docker-compose文件为例"><a href="#设置Docker容器日志大小-以docker-compose文件为例" class="headerlink" title="设置Docker容器日志大小, 以docker-compose文件为例"></a>设置Docker容器日志大小, 以docker-compose文件为例</h2><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="attribute">v2ray</span>: </span><br><span class="line">  <span class="attribute">image</span>: v2ray</span><br><span class="line">  <span class="attribute">restart</span>: always </span><br><span class="line">  <span class="attribute">logging</span>: </span><br><span class="line">    <span class="attribute">driver</span>: <span class="string">"json-file"</span></span><br><span class="line">    <span class="attribute">options</span>: </span><br><span class="line">      <span class="attribute">max-size</span>: <span class="string">"5g"</span></span><br></pre></td></tr></table></figure>
+<p>日志被限制在5g大小.</p>
+<h2 id="更改全局设置"><a href="#更改全局设置" class="headerlink" title="更改全局设置"></a>更改全局设置</h2><p>增加项文件</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"log-driver"</span>:<span class="string">"json-file"</span>,</span><br><span class="line">  <span class="attr">"log-opts"</span>: &#123;<span class="attr">"max-size"</span>:<span class="string">"500m"</span>, <span class="attr">"max-file"</span>:<span class="string">"3"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到文件, 如果没有则新建.</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>docker<span class="regexp">/daemon.json</span></span><br></pre></td></tr></table></figure>
+
+<p>重启docker</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">service docker restart</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
 </search>
