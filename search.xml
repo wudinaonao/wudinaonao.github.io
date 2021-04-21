@@ -1857,4 +1857,21 @@
         <tag>BT Tracker</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Docker删除None镜像</title>
+    <url>/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/</url>
+    <content><![CDATA[<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line"># 停止docker</span><br><span class="line">docker stop <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">"Exited"</span> | <span class="params">awk</span> '&#123;<span class="params">print</span> $1 &#125;')</span></span><br><span class="line"># 删除docker</span><br><span class="line">docker rm <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">"Exited"</span> | <span class="params">awk</span> '&#123;<span class="params">print</span> $1 &#125;')</span></span><br><span class="line"># 删除images</span><br><span class="line">docker rmi <span class="constructor">$(<span class="params">docker</span> <span class="params">images</span> | <span class="params">grep</span> <span class="string">"none"</span> | <span class="params">awk</span> '&#123;<span class="params">print</span> $3&#125;')</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p> <a href="https://www.jianshu.com/p/d06830de219f" target="_blank" rel="noopener">https://www.jianshu.com/p/d06830de219f</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
 </search>
