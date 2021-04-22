@@ -1874,4 +1874,43 @@
         <tag>Docker</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Koolshare Clash 更新 Clash 版本</title>
+    <url>/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/</url>
+    <content><![CDATA[<p>Koolshare-Clash 的 Github 地址</p>
+<p><code>https://github.com/SukkaW/Koolshare-Clash</code></p>
+<p>这个项目已经两年没更新了, 项目自带的 Clash 版本为 Clash v0.20.0 已经很旧了.</p>
+<p>目前为止 Clash 的最新版本为 Clash v1.5.0</p>
+<p>笔者尝试更新 Clash 版本, 但是遇到的一些问题, 这里记录一下解决方案.</p>
+<h2 id="更新-Clash-版本"><a href="#更新-Clash-版本" class="headerlink" title="更新 Clash 版本"></a>更新 Clash 版本</h2><p>笔者的路由器为LEDE_X86 for linux, 首先通过 SSH 登录后台.</p>
+<p>切换到目录</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">/koolshare/bin</span></span><br></pre></td></tr></table></figure>
+
+<p>去 Github 下载对应的平台的最新的 Clash </p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash</span><br></pre></td></tr></table></figure>
+
+<p>删除旧的 Clash</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">rm clash</span></span><br></pre></td></tr></table></figure>
+
+<p>把新的 Clash 拷贝进去, 然后更改权限</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">chmod <span class="number">755</span> clash</span><br></pre></td></tr></table></figure>
+
+<p>然后去 Koolshare 重启 Clash</p>
+<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="访问代理后台看不见配置的代理"><a href="#访问代理后台看不见配置的代理" class="headerlink" title="访问代理后台看不见配置的代理"></a>访问代理后台看不见配置的代理</h3><p>出现这种原因是因为 0.20.0 的配置文件和 1.5.0 配置文件有些字段更改了, 需要更改 Clash 的配置文件</p>
+<p>访问该网址可以查看最新的配置文件规则</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash<span class="regexp">/wiki/</span>configuration</span><br></pre></td></tr></table></figure>
+
+<p>一些差异</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">0.20.0 -&gt; Proxy</span><br><span class="line">1.5.0  -&gt; proxies</span><br><span class="line"></span><br><span class="line">0.20.0 -&gt;<span class="built_in"> Proxy </span>Group</span><br><span class="line">1.5.0  -&gt; proxy-groups</span><br><span class="line"></span><br><span class="line">0.20.0 -&gt; Rule</span><br><span class="line">1.5.0  -&gt; rules</span><br></pre></td></tr></table></figure>
+
+<p>虽然我没有考证配置文件是从哪个版本开始更改的, 不过确实是配置文件的问题.</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Clash</tag>
+        <tag>Koolshare</tag>
+      </tags>
+  </entry>
 </search>
