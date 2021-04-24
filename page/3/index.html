@@ -145,7 +145,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">39</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -218,6 +218,104 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" class="post-title-link" itemprop="url">Ubuntu修改时区</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-06 17:16:23 / 修改时间：17:40:08" itemprop="dateCreated datePublished" datetime="2020-06-06T17:16:23+08:00">2020-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu修改时区" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Ubuntu 版本 20.04 LTS</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">sudo tzselect</span></span><br></pre></td></tr></table></figure>
+
+<p>根据提示选择你需要的时区</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200606171802.png" alt="20200606171802"></p>
+<p>例如我选择的是Asia-China-Beijing Time</p>
+<p>创建一个软连接</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -sf <span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo/</span>Asia<span class="regexp">/Shanghai /</span>etc<span class="regexp">/localtime</span></span><br></pre></td></tr></table></figure>
+
+<p>查看结果</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -R</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1044,116 +1142,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" class="post-title-link" itemprop="url">Gitlab添加邮箱</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-05-06 00:00:29 / 修改时间：13:37:01" itemprop="dateCreated datePublished" datetime="2020-05-06T00:00:29+08:00">2020-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" class="post-meta-item leancloud_visitors" data-flag-title="Gitlab添加邮箱" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000117.png" alt="20200506000117"></p>
-<p>腾讯企业邮箱配置如下，其他邮箱同样适用。</p>
-<p>找到配置</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"gitlab@wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"xxxxxxxxxxxxxxxxxx"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"wudinaonao.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br></pre></td></tr></table></figure>
-
-<p>在找到配置</p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># gitlab 发件邮箱</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'gitlab@wudinaonao.com'</span></span><br><span class="line"><span class="meta"># 默认标题</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_display_name'</span>] = <span class="string">'Gitlab'</span></span><br></pre></td></tr></table></figure>
-
-<p>重载gitlab配置</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
-
-<p>登录到你搭建的Gitlab发一封重置密码的邮件试试</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
-<p>成功</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
-<p>阿里云企业邮箱配置</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.yourself.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"yourself user name"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"yourself password"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"yourself hostname"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">"login"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = false</span><br><span class="line">gitlab_rails[<span class="string">'smtp_tls'</span>] = true</span><br><span class="line"></span><br><span class="line">###! **<span class="symbol">Can</span> be: <span class="string">'none'</span>, <span class="string">'peer'</span>, <span class="string">'client_once'</span>, <span class="string">'fail_if_no_peer_cert'</span>**</span><br><span class="line">###! <span class="symbol">Docs</span>: http://api.rubyonrails.org/classes/<span class="symbol">ActionMailer</span>/<span class="symbol">Base</span>.html</span><br><span class="line">gitlab_rails[<span class="string">'smtp_openssl_verify_mode'</span>] = <span class="string">'none'</span></span><br></pre></td></tr></table></figure>
-
-<p>更多邮箱配置参见官方</p>
-<p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.gitlab.com/omnibus/settings/smtp.html" target="_blank" rel="noopener">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<p><a href="https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1225,7 +1213,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1238,7 +1226,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

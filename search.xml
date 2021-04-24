@@ -1903,7 +1903,7 @@
 <p>一些差异</p>
 <figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">0.20.0 -&gt; Proxy</span><br><span class="line">1.5.0  -&gt; proxies</span><br><span class="line"></span><br><span class="line">0.20.0 -&gt;<span class="built_in"> Proxy </span>Group</span><br><span class="line">1.5.0  -&gt; proxy-groups</span><br><span class="line"></span><br><span class="line">0.20.0 -&gt; Rule</span><br><span class="line">1.5.0  -&gt; rules</span><br></pre></td></tr></table></figure>
 
-<p>虽然我没有考证配置文件是从哪个版本开始更改的, 不过确实是配置文件的问题.</p>
+<p>配置文件从1.0.0版本开始更改.</p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -1911,6 +1911,26 @@
       <tags>
         <tag>Clash</tag>
         <tag>Koolshare</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cloudflare CDN 的一些问题</title>
+    <url>/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>Cloudflare 免费版的 CDN 似乎不支持三级域名.</p>
+<p>例如 </p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">A</span> <span class="selector-tag">-</span>&gt; <span class="selector-tag">www</span><span class="selector-class">.abc</span><span class="selector-class">.xxx</span><span class="selector-class">.com</span></span><br><span class="line"><span class="selector-tag">B</span> <span class="selector-tag">-</span>&gt; <span class="selector-tag">abc</span><span class="selector-class">.xxx</span><span class="selector-class">.com</span></span><br></pre></td></tr></table></figure>
+
+<p>访问 A 域名时会提示 SSL 错误, 访问 B 则一切正常.</p>
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://community.cloudflare.com/t/third-level-domain/63383" target="_blank" rel="noopener">https://community.cloudflare.com/t/third-level-domain/63383</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Cloudflare</tag>
       </tags>
   </entry>
 </search>
