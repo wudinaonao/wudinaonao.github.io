@@ -2085,4 +2085,43 @@
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>gitlab本地自动定时备份</title>
+    <url>/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/</url>
+    <content><![CDATA[<p>项目基于 docker 搭建.</p>
+<p>编辑 gitlab.rb 文件</p>
+<p>该文件在容器里的路径为</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/etc/gi</span>tlab<span class="regexp">/gitlab.rb</span></span><br></pre></td></tr></table></figure>
+
+<p>编辑一下内容</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'manage_backup_path'</span>] = <span class="literal">true</span></span><br><span class="line"><span class="meta"># gitlab备份目录</span></span><br><span class="line">gitlab_rails[<span class="string">'backup_path'</span>] = <span class="string">"/var/opt/gitlab/backups"</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 生成的备份文件权限</span></span><br><span class="line">gitlab_rails[<span class="string">'backup_archive_permissions'</span>] = <span class="number">0644</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 备份保留天数，秒计算, 86400 * 7 = 604800 保留 7 天</span></span><br><span class="line">gitlab_rails[<span class="string">'backup_keep_time'</span>] = <span class="number">604800</span></span><br></pre></td></tr></table></figure>
+
+<p>更新 gitlab 配置</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+
+<p>使用 crontab 添加定时任务</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">crontab -e</span></span><br></pre></td></tr></table></figure>
+
+<p>添加配置, 每天 0 点备份</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> * * * /opt/gitlab/bin/gitlab-rake gitlab:backup:create</span><br></pre></td></tr></table></figure>
+
+<p>查看备份文件, 备份目录在容器里的路径</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/var/</span>opt<span class="regexp">/gitlab/</span>backups</span><br></pre></td></tr></table></figure>
+
+<p>查看</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> <span class="string">/var/opt/gitlab/backups</span></span><br><span class="line"><span class="keyword">ls</span></span><br></pre></td></tr></table></figure>
+
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/rdp1305442102/article/details/105768441" target="_blank" rel="noopener">https://blog.csdn.net/rdp1305442102/article/details/105768441</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Gitlab</tag>
+      </tags>
+  </entry>
 </search>
