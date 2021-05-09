@@ -2124,4 +2124,25 @@
         <tag>Gitlab</tag>
       </tags>
   </entry>
+  <entry>
+    <title>编译Openwrt以及遇到的问题</title>
+    <url>/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="问题以及解决方案"><a href="#问题以及解决方案" class="headerlink" title="问题以及解决方案"></a>问题以及解决方案</h1><h2 id="you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check"><a href="#you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check" class="headerlink" title="you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)"></a>you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)</h2><p>错误提示:</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">you should <span class="keyword">not</span> <span class="builtin-name">run</span> configure as root (<span class="builtin-name">set</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1 <span class="keyword">in</span> environment <span class="keyword">to</span> bypass this check)</span><br></pre></td></tr></table></figure>
+
+<p>如果你以root用户运行编译, 会有这个提示. 有两个解决方案, 你可以换一个非root用户, 或者接忽略提示.</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">export</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/tx422/article/details/78593860" target="_blank" rel="noopener">https://blog.csdn.net/tx422/article/details/78593860</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Linuxe</category>
+      </categories>
+      <tags>
+        <tag>OpenWRT</tag>
+      </tags>
+  </entry>
 </search>
