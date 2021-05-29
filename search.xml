@@ -2145,4 +2145,34 @@
         <tag>OpenWRT</tag>
       </tags>
   </entry>
+  <entry>
+    <title>crontab 排错</title>
+    <url>/2021/05/29/crontab-%E6%8E%92%E9%94%99/</url>
+    <content><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在用 crontab 定时备份 gitlab 时, 发现任务总是不成功. </p>
+<p>命令如下</p>
+<figure class="highlight basic"><table><tr><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> * * * /root/docker/gitlab/backup-gitlab.sh &gt;&gt; /root/docker/gitlab/backup-gitlab.<span class="keyword">log</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>测试后发现日志总是没有任何输出, 说明这个命令没有被执行.</p>
+<p>随便写了条命令测试</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">* </span><span class="emphasis">* *</span> <span class="emphasis">* *</span> echo "<span class="code">`date`</span>" &gt; /root/crontest.log</span><br></pre></td></tr></table></figure>
+
+<p>发现有输出….</p>
+<p>那么说明 crontab 确实工作了….</p>
+<p>沉思….</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>虽然我不太清楚是什么原因, 但是当我把一下配置加入 crontab 后他开始工作了.</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">SHELL=<span class="regexp">/bin/bash</span></span><br><span class="line">PATH=<span class="regexp">/sbin:/bin</span><span class="symbol">:/usr/sbin</span><span class="symbol">:/usr/bin</span></span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p>也许是因为显式指定了 shell, 以及一些其他的一些参数, 导致可以正常工作, 因为我之前一直怀疑是权限的问题.</p>
+<p>参考连接</p>
+<blockquote>
+<p><a href="https://my.oschina.net/leejun2005/blog/1788342" target="_blank" rel="noopener">https://my.oschina.net/leejun2005/blog/1788342</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>crontab</tag>
+      </tags>
+  </entry>
 </search>
