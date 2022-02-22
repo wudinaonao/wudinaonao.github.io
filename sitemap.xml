@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.wudinaonao.com/2022/02/23/dev-null-2-1/</loc>
+    
+    <lastmod>2022-02-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.wudinaonao.com/2022/02/22/Linux%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</loc>
     
     <lastmod>2022-02-22</lastmod>

@@ -2404,4 +2404,28 @@
 <p>在文件底部添加</p>
 <figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
+  <entry>
+    <title>&gt;/dev/null 2&gt;&amp;1</title>
+    <url>/2022/02/23/dev-null-2-1/</url>
+    <content><![CDATA[<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>标准输出</th>
+<th>错误输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&gt;/dev/null 2&gt;&amp;1</td>
+<td>丢弃</td>
+<td>丢弃</td>
+</tr>
+<tr>
+<td>2&gt;&amp;1 &gt;/dev/null</td>
+<td>丢弃</td>
+<td>屏幕</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
 </search>
