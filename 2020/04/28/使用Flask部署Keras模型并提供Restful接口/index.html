@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.wudinaonao.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使用Flask部署Keras模型并提供Restful接口前言当我们训练好了模型后想发布出去，提供Restful风格的API供外部使用，这个时候我们可以选择任意选择一款Web框架进行发布。我之前使用过Django，但是感觉有些繁琐，所以我更倾向于使用Flask这个框架，因为这个框架的路由标注方式跟Java的Springboot非常相似。接下来我们用之前训练的识别12306验证码的模型来进行部署。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Flask部署Keras模型并提供Restful接口">
+<meta property="og:url" content="https://blog.wudinaonao.com/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/index.html">
+<meta property="og:site_name" content="Naonao Blog">
+<meta property="og:description" content="使用Flask部署Keras模型并提供Restful接口前言当我们训练好了模型后想发布出去，提供Restful风格的API供外部使用，这个时候我们可以选择任意选择一款Web框架进行发布。我之前使用过Django，但是感觉有些繁琐，所以我更倾向于使用Flask这个框架，因为这个框架的路由标注方式跟Java的Springboot非常相似。接下来我们用之前训练的识别12306验证码的模型来进行部署。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428183550.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428185938.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190142.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190306.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190427.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190944.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428191955.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192451.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192755.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192943.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428193614.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428193842.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194044.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194208.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194353.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194432.png">
+<meta property="article:published_time" content="2020-04-28T04:23:17.000Z">
+<meta property="article:modified_time" content="2020-04-28T04:23:17.000Z">
+<meta property="article:author" content="wudinaonao">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Keras">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Tensorflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428183550.png">
+
+<link rel="canonical" href="https://blog.wudinaonao.com/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用Flask部署Keras模型并提供Restful接口 | Naonao Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165348730-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-165348730-2');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a1ff7056e50cd944195678f962b5740b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband">
+        
+    </div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Naonao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to Naonao Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">37</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">55</span></a>
+
+  </li>
+        <li class="menu-item menu-item-留言板">
+
+    <a href="/messagebox/" rel="section"><i class="fas fa-comment fa-fw"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-摄影集">
+
+    <a href="https://photo.wudinaonao.com/" rel="noopener" target="_blank"><i class="fas fa-camera fa-fw"></i>摄影集</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Flask部署Keras模型并提供Restful接口
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-28 12:23:17" itemprop="dateCreated datePublished" datetime="2020-04-28T12:23:17+08:00">2020-04-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" class="post-meta-item leancloud_visitors" data-flag-title="使用Flask部署Keras模型并提供Restful接口" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="使用Flask部署Keras模型并提供Restful接口"><a href="#使用Flask部署Keras模型并提供Restful接口" class="headerlink" title="使用Flask部署Keras模型并提供Restful接口"></a>使用Flask部署Keras模型并提供Restful接口</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们训练好了模型后想发布出去，提供Restful风格的API供外部使用，这个时候我们可以选择任意选择一款Web框架进行发布。我之前使用过Django，但是感觉有些繁琐，所以我更倾向于使用Flask这个框架，因为这个框架的路由标注方式跟Java的Springboot非常相似。接下来我们用之前训练的识别12306验证码的模型来进行部署。</p>
+<span id="more"></span>
+
+<h2 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2><p>在Pycharm里新建一个Flask项目</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428183550.png" alt="20200428183550"></p>
+<ul>
+<li>新建一个controller包，在里面再新建三个子包，charset，models，utils，分别保存字符集，模型和工具类</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428185938.png" alt="20200428185938"></p>
+<ul>
+<li>在charset包里新建Label.py模块，内容为训练模型时候的字符集。</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190142.png" alt="20200428190142"></p>
+<ul>
+<li>复制训练好的模型到models包底下</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190306.png" alt="20200428190306"></p>
+<h2 id="创建工具模块"><a href="#创建工具模块" class="headerlink" title="创建工具模块"></a>创建工具模块</h2><ul>
+<li>我们在utils包底下新建几个工具模块</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190427.png" alt="20200428190427"></p>
+<ul>
+<li><p>Base64.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base64</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">convertToBytes</span>(<span class="params">cls, imageBase64: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        <span class="keyword">return</span> base64.b64decode(imageBase64)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ConvertFormat.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ConvertFormat</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">convertImageToArrayByChannel</span>(<span class="params">cls, image, channel: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        input image (PIL) object convert to array by channel</span></span><br><span class="line"><span class="string">        :param image: image obj</span></span><br><span class="line"><span class="string">        :return:      numpy array obj</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> channel == <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> np.array(image.convert(<span class="string">&quot;RGB&quot;</span>))</span><br><span class="line">        <span class="keyword">if</span> channel == <span class="number">1</span>:</span><br><span class="line">            imageArray = np.array(image.convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">            imageArray = np.expand_dims(imageArray, axis=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">return</span> imageArray</span><br><span class="line">        <span class="keyword">return</span> np.array(image.convert(<span class="string">&quot;RGB&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">convertImageFormat</span>(<span class="params">cls, image, <span class="built_in">format</span>=<span class="string">&quot;PNG&quot;</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        input image obj, convert to png format</span></span><br><span class="line"><span class="string">        :param image: image obj</span></span><br><span class="line"><span class="string">        :return:      image obj</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> image <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">&quot;image object is none.&quot;</span>)</span><br><span class="line">        <span class="keyword">with</span> BytesIO() <span class="keyword">as</span> imageIO:</span><br><span class="line">            image.save(imageIO, <span class="built_in">format</span>=<span class="built_in">format</span>)</span><br><span class="line">            imageByte = imageIO.getvalue()</span><br><span class="line">        <span class="keyword">return</span> Image.<span class="built_in">open</span>(BytesIO(imageByte))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HashUtils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HashUtils</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">md5</span>(<span class="params">string: <span class="built_in">str</span></span>):</span><br><span class="line">        md5 = hashlib.md5(string.encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">        <span class="keyword">return</span> md5.hexdigest()</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sha1</span>(<span class="params">string: <span class="built_in">str</span></span>):</span><br><span class="line">        sha1 = hashlib.sha1(string.encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">        <span class="keyword">return</span> sha1.hexdigest()</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sha256</span>(<span class="params">string: <span class="built_in">str</span></span>):</span><br><span class="line">        sha256 = hashlib.sha256(string.encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">        <span class="keyword">return</span> sha256.hexdigest()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResquestUtils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> ResponseUtils</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> RequestDataFormatException</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RequestUtils</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkPostDataIsJson</span>(<span class="params">req: request</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;check post data is json</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        check post data if is json type, otherwise</span></span><br><span class="line"><span class="string">        return invalid exception.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            req: flask request object</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> req.json:</span><br><span class="line">            <span class="keyword">raise</span> RequestDataFormatException(</span><br><span class="line">                ResponseStatus.FAILED,</span><br><span class="line">                <span class="string">&quot;data invalid, not json.&quot;</span>,</span><br><span class="line">                <span class="number">400</span></span><br><span class="line">            )</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deleteNoneAttributes</span>(<span class="params">obj: <span class="built_in">any</span></span>) -&gt; <span class="built_in">any</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;delete attribute is none from instance</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            obj: instance</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns: instance</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> obj <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> obj</span><br><span class="line">        attributeNames = obj.__dict__.keys()</span><br><span class="line">        <span class="keyword">for</span> attributeName <span class="keyword">in</span> <span class="built_in">list</span>(attributeNames):</span><br><span class="line">            attribute = <span class="built_in">getattr</span>(obj, attributeName)</span><br><span class="line">            <span class="keyword">if</span> attribute <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="built_in">delattr</span>(obj, attributeName)</span><br><span class="line">        <span class="keyword">return</span> obj</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResponseUtils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request, make_response</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResponseUtils</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">responseJson</span>(<span class="params">obj: <span class="built_in">object</span>, headers: <span class="built_in">dict</span>=<span class="literal">None</span></span>) -&gt; <span class="built_in">any</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;convert obj to response object</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        the method encapsulation the object to flask response</span></span><br><span class="line"><span class="string">        object and set content type is json.</span></span><br><span class="line"><span class="string">        you still can custom headers.</span></span><br><span class="line"><span class="string">        the method need input obj rewrite __str__ method,</span></span><br><span class="line"><span class="string">        __str__ method return a json string</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Examples:</span></span><br><span class="line"><span class="string">            </span></span><br><span class="line"><span class="string">            &#123;</span></span><br><span class="line"><span class="string">                &quot;status&quot;: &quot;...&quot;,</span></span><br><span class="line"><span class="string">                ...</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            obj: any object</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns: flask response object</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        response = make_response(<span class="built_in">str</span>(obj))</span><br><span class="line">        response.headers[<span class="string">&quot;Content-Type&quot;</span>] = <span class="string">&quot;application/json&quot;</span></span><br><span class="line">        <span class="keyword">if</span> headers:</span><br><span class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> headers.items():</span><br><span class="line">                response.headers[<span class="built_in">str</span>(k)] = v</span><br><span class="line">        <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+<h2 id="创建控制层模块"><a href="#创建控制层模块" class="headerlink" title="创建控制层模块"></a>创建控制层模块</h2></li>
+<li><p>我们在controller包里面新建我们的控制层模块</p>
+</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428190944.png" alt="20200428190944"></p>
+<ul>
+<li><p>CutCaptcha.py 用于切割原始验证码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> ResultCutCaptcha</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> Base64</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Any</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CutCaptcha</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_imageToBytes</span>(<span class="params">cls, image: Image</span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        imageIO = BytesIO()</span><br><span class="line">        image.save(imageIO, <span class="built_in">format</span>=<span class="string">&quot;PNG&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> imageIO.getvalue()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_cutLabel</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;return Image object&quot;&quot;&quot;</span></span><br><span class="line">        label = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        x = <span class="number">117</span></span><br><span class="line">        y = <span class="number">0</span></span><br><span class="line">        w = <span class="number">180</span></span><br><span class="line">        h = <span class="number">30</span></span><br><span class="line">        label = label.crop((x, y, w, h))</span><br><span class="line">        <span class="keyword">return</span> cls._imageToBytes(label)</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_cutImage</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span></span>) -&gt; <span class="type">Tuple</span>[<span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;return Image object tuple&quot;&quot;&quot;</span></span><br><span class="line">        image = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        space = <span class="number">67</span> + <span class="number">5</span></span><br><span class="line">        x0, y0, w0, h0 = <span class="number">0</span> * space + <span class="number">5</span>, <span class="number">0</span> * space + <span class="number">41</span>, <span class="number">1</span> * space, <span class="number">0</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x1, y1, w1, h1 = <span class="number">0</span> * space + <span class="number">5</span>, <span class="number">1</span> * space + <span class="number">41</span>, <span class="number">1</span> * space, <span class="number">1</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x2, y2, w2, h2 = <span class="number">1</span> * space + <span class="number">5</span>, <span class="number">0</span> * space + <span class="number">41</span>, <span class="number">2</span> * space, <span class="number">0</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x3, y3, w3, h3 = <span class="number">1</span> * space + <span class="number">5</span>, <span class="number">1</span> * space + <span class="number">41</span>, <span class="number">2</span> * space, <span class="number">1</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x4, y4, w4, h4 = <span class="number">2</span> * space + <span class="number">5</span>, <span class="number">0</span> * space + <span class="number">41</span>, <span class="number">3</span> * space, <span class="number">0</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x5, y5, w5, h5 = <span class="number">2</span> * space + <span class="number">5</span>, <span class="number">1</span> * space + <span class="number">41</span>, <span class="number">3</span> * space, <span class="number">1</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x6, y6, w6, h6 = <span class="number">3</span> * space + <span class="number">5</span>, <span class="number">0</span> * space + <span class="number">41</span>, <span class="number">4</span> * space, <span class="number">0</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        x7, y7, w7, h7 = <span class="number">3</span> * space + <span class="number">5</span>, <span class="number">1</span> * space + <span class="number">41</span>, <span class="number">4</span> * space, <span class="number">1</span> * space + <span class="number">41</span> + <span class="number">67</span></span><br><span class="line">        image0 = image.crop((x0, y0, w0, h0))</span><br><span class="line">        image1 = image.crop((x1, y1, w1, h1))</span><br><span class="line">        image2 = image.crop((x2, y2, w2, h2))</span><br><span class="line">        image3 = image.crop((x3, y3, w3, h3))</span><br><span class="line">        image4 = image.crop((x4, y4, w4, h4))</span><br><span class="line">        image5 = image.crop((x5, y5, w5, h5))</span><br><span class="line">        image6 = image.crop((x6, y6, w6, h6))</span><br><span class="line">        image7 = image.crop((x7, y7, w7, h7))</span><br><span class="line">        <span class="keyword">return</span> (cls._imageToBytes(image0),</span><br><span class="line">                cls._imageToBytes(image1),</span><br><span class="line">                cls._imageToBytes(image2),</span><br><span class="line">                cls._imageToBytes(image3),</span><br><span class="line">                cls._imageToBytes(image4),</span><br><span class="line">                cls._imageToBytes(image5),</span><br><span class="line">                cls._imageToBytes(image6),</span><br><span class="line">                cls._imageToBytes(image7))</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">cut</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span></span>) -&gt; ResultCutCaptcha:</span><br><span class="line">        <span class="keyword">return</span> ResultCutCaptcha(</span><br><span class="line">            label=cls._cutLabel(imageByte),</span><br><span class="line">            images=cls._cutImage(imageByte)</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>DrawMarkedResult.py 用于绘制标记结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageDraw</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> IMAGE_POSITION_COORDINATES</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DrawMarkedResult</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_sumCenterPoint</span>(<span class="params">cls, a: <span class="built_in">tuple</span>, b: <span class="built_in">tuple</span></span>) -&gt; <span class="built_in">tuple</span>:</span><br><span class="line">        x = <span class="built_in">int</span>((b[<span class="number">0</span>] - a[<span class="number">0</span>]) // <span class="number">2</span> + a[<span class="number">0</span>])</span><br><span class="line">        y = <span class="built_in">int</span>((b[<span class="number">1</span>] - a[<span class="number">1</span>]) // <span class="number">2</span> + a[<span class="number">1</span>])</span><br><span class="line">        <span class="comment"># +30 补偿y轴距离</span></span><br><span class="line">        <span class="keyword">return</span> (x, y + <span class="number">30</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_imageToBytes</span>(<span class="params">cls, image: Image</span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        imageIO = BytesIO()</span><br><span class="line">        image.save(imageIO, <span class="built_in">format</span>=<span class="string">&quot;JPEG&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> imageIO.getvalue()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkmark</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span>, ids: <span class="built_in">list</span></span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;draw marked result at origin image&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># imageArray = np.asarray(Image.open(BytesIO(imageByte)), dtype=&quot;uint8&quot;)</span></span><br><span class="line">        <span class="comment"># image = cv2.imdecode(imageArray, cv2.IMREAD_UNCHANGED)</span></span><br><span class="line">        image = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        draw = ImageDraw.Draw(image)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">id</span> <span class="keyword">in</span> ids:</span><br><span class="line">            <span class="comment"># draw checkmark</span></span><br><span class="line">            centerPoint = cls._sumCenterPoint(</span><br><span class="line">                (IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">0</span>][<span class="number">0</span>], IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">0</span>][<span class="number">1</span>] - <span class="number">30</span>),</span><br><span class="line">                (IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">1</span>][<span class="number">0</span>], IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">1</span>][<span class="number">1</span>] - <span class="number">30</span>)</span><br><span class="line">            )</span><br><span class="line">            <span class="comment"># checkmark center point</span></span><br><span class="line">            tickMidpoint = (</span><br><span class="line">                centerPoint[<span class="number">0</span>] + <span class="number">2</span>,</span><br><span class="line">                centerPoint[<span class="number">1</span>] + <span class="number">5</span></span><br><span class="line">            )</span><br><span class="line">            <span class="comment"># a and b is checkmark left and right coordinate</span></span><br><span class="line">            a = (centerPoint[<span class="number">0</span>] - <span class="number">5</span>, centerPoint[<span class="number">1</span>] - <span class="number">5</span>)</span><br><span class="line">            b = (centerPoint[<span class="number">0</span>] + <span class="number">10</span>, centerPoint[<span class="number">1</span>] - <span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">            draw.line([a, tickMidpoint], fill=Config.DRAW_CONFIG[<span class="string">&quot;color&quot;</span>], width=Config.DRAW_CONFIG[<span class="string">&quot;lineSize&quot;</span>])</span><br><span class="line">            draw.line([tickMidpoint, b], fill=Config.DRAW_CONFIG[<span class="string">&quot;color&quot;</span>], width=Config.DRAW_CONFIG[<span class="string">&quot;lineSize&quot;</span>])</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> cls._imageToBytes(image)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">rectangle</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span>, ids: <span class="built_in">list</span></span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">        image = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        draw = ImageDraw.Draw(image)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">id</span> <span class="keyword">in</span> ids:</span><br><span class="line">            draw.rectangle(</span><br><span class="line">                [IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">0</span>], IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">1</span>]],</span><br><span class="line">                outline=Config.DRAW_CONFIG[<span class="string">&quot;color&quot;</span>],</span><br><span class="line">                width=Config.DRAW_CONFIG[<span class="string">&quot;lineSize&quot;</span>]</span><br><span class="line">            )</span><br><span class="line">        <span class="keyword">return</span> cls._imageToBytes(image)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ErrorHandler.py 全局错误处理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Register error handler in flask framework</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, Blueprint</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> RequestDataFormatException</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> CaptchaValidException</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> GetCaptchaException</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">errorHandler = Blueprint(<span class="string">&quot;errorHandler&quot;</span>, __name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@errorHandler.app_errorhandler(<span class="params">RequestDataFormatException</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleRequestDataFormatException</span>(<span class="params">error</span>):</span><br><span class="line">    response = jsonify(error.toDict())</span><br><span class="line">    response.statusCode = error.statusCode</span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line"><span class="meta">@errorHandler.app_errorhandler(<span class="params">CaptchaValidException</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleCaptchaValidException</span>(<span class="params">error</span>):</span><br><span class="line">    response = jsonify(error.toDict())</span><br><span class="line">    response.statusCode = error.statusCode</span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line"><span class="meta">@errorHandler.app_errorhandler(<span class="params">GetCaptchaException</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleGetCaptchaException</span>(<span class="params">error</span>):</span><br><span class="line">    response = jsonify(error.toDict())</span><br><span class="line">    response.statusCode = error.statusCode</span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>GetCaptcha.py 从12306获取验证码用于测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> GetCaptchaException</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GetCaptcha</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getCaptchaFrom12306</span>(<span class="params">cls</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        获取12306验证码</span></span><br><span class="line"><span class="string">        :return: base64 string</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        url = <span class="string">&quot;https://kyfw.12306.cn/passport/captcha/captcha-image64&quot;</span></span><br><span class="line">        headers = &#123;</span><br><span class="line">            <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        req = requests.get(url=url, headers=headers)</span><br><span class="line">        json_data = json.loads(req.content)</span><br><span class="line">        <span class="keyword">if</span> json_data[<span class="string">&#x27;result_message&#x27;</span>] == <span class="string">&quot;系统维护时间&quot;</span>:</span><br><span class="line">            <span class="keyword">raise</span> GetCaptchaException(<span class="string">&quot;system maintenance, get captcha failed.&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> json_data[<span class="string">&#x27;image&#x27;</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MarkCaptcha.py 标记结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">from</span> .PreprocessingCaptcha <span class="keyword">import</span> PreprocessingCaptcha</span><br><span class="line"><span class="keyword">from</span> .CutCaptcha <span class="keyword">import</span> CutCaptcha</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> Base64</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MarkCaptcha</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._labelModel = load_model(Config.MODEL_PATH[<span class="string">&quot;label&quot;</span>])</span><br><span class="line">        self._imageModel = load_model(Config.MODEL_PATH[<span class="string">&quot;image&quot;</span>])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_label</span>(<span class="params">self, imageByte: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;mark label&quot;&quot;&quot;</span></span><br><span class="line">        x = PreprocessingCaptcha.loadData(</span><br><span class="line">            imageByte=imageByte,</span><br><span class="line">            height=Config.MARK_CONFIG[<span class="string">&quot;label&quot;</span>][<span class="string">&quot;height&quot;</span>],</span><br><span class="line">            width=Config.MARK_CONFIG[<span class="string">&quot;label&quot;</span>][<span class="string">&quot;width&quot;</span>],</span><br><span class="line">            channel=Config.MARK_CONFIG[<span class="string">&quot;label&quot;</span>][<span class="string">&quot;channel&quot;</span>],</span><br><span class="line">        )</span><br><span class="line">        result = self._labelModel.predict(x)</span><br><span class="line">        result = PreprocessingCaptcha.decode([result])</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_image</span>(<span class="params">self, imageByte: <span class="built_in">bytes</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;mark image&quot;&quot;&quot;</span></span><br><span class="line">        x = PreprocessingCaptcha.loadData(</span><br><span class="line">            imageByte=imageByte,</span><br><span class="line">            height=Config.MARK_CONFIG[<span class="string">&quot;image&quot;</span>][<span class="string">&quot;height&quot;</span>],</span><br><span class="line">            width=Config.MARK_CONFIG[<span class="string">&quot;image&quot;</span>][<span class="string">&quot;width&quot;</span>],</span><br><span class="line">            channel=Config.MARK_CONFIG[<span class="string">&quot;image&quot;</span>][<span class="string">&quot;channel&quot;</span>],</span><br><span class="line">        )</span><br><span class="line">        result = self._imageModel.predict(x)</span><br><span class="line">        result = PreprocessingCaptcha.decode([result])</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mark</span>(<span class="params">self, imageBase64: <span class="built_in">str</span></span>) -&gt; <span class="built_in">list</span>:</span><br><span class="line">        cutResults = CutCaptcha.cut(Base64.convertToBytes(imageBase64))</span><br><span class="line">        label = cutResults.getLabel</span><br><span class="line">        labelStr = self._label(label)</span><br><span class="line">        images = cutResults.getImages</span><br><span class="line">        markedIds = []</span><br><span class="line">        <span class="keyword">for</span> i, image <span class="keyword">in</span> <span class="built_in">enumerate</span>(images):</span><br><span class="line">            imageStr = self._image(image)</span><br><span class="line">            <span class="keyword">if</span> labelStr.strip() == imageStr.strip():</span><br><span class="line">                markedIds.append(i)</span><br><span class="line">        <span class="keyword">return</span> markedIds</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PreCheck.py 检查前端传过来的Base64编码后的验证码是否有效</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> CaptchaValidException</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PreCheck</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkImageIsValid</span>(<span class="params">imageBase64: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            Image.<span class="built_in">open</span>(BytesIO(base64.b64decode(imageBase64))).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        <span class="keyword">except</span> IOError:</span><br><span class="line">            <span class="keyword">raise</span> CaptchaValidException(</span><br><span class="line">                status=ResponseStatus.FAILED,</span><br><span class="line">                message=<span class="string">&quot;captcha is invalid, broken data.&quot;</span></span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PreprocessingCaptcha.py 预处理验证码，处理成Numpy数组才能喂给模型！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> ConvertFormat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PreprocessingCaptcha</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">cls, y: <span class="built_in">list</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;decode np array predict result to string&quot;&quot;&quot;</span></span><br><span class="line">        y = np.array(y)</span><br><span class="line">        y = np.argmax(y, axis=<span class="number">2</span>)[:, <span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join([Config.LABEL_LIST[x] <span class="keyword">for</span> x <span class="keyword">in</span> y])</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">loadData</span>(<span class="params">cls, imageByte: <span class="built_in">bytes</span>, height: <span class="built_in">int</span>, width: <span class="built_in">int</span>, channel: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;load data from image byte to np array&quot;&quot;&quot;</span></span><br><span class="line">        x = np.zeros((<span class="number">1</span>, height, width, channel), dtype=np.float32)</span><br><span class="line">        <span class="comment"># read to image object</span></span><br><span class="line">        image = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        <span class="comment"># convert format</span></span><br><span class="line">        image = ConvertFormat.convertImageFormat(image)</span><br><span class="line">        <span class="comment"># resize image</span></span><br><span class="line">        image = image.resize((width, height), Image.ANTIALIAS)</span><br><span class="line">        <span class="comment"># convert channel</span></span><br><span class="line">        imageArray = ConvertFormat.convertImageToArrayByChannel(image, channel)</span><br><span class="line">        <span class="comment"># normalization</span></span><br><span class="line">        x[<span class="number">0</span>] = imageArray / <span class="number">255.0</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Scheduler.py 封装成一个模块，对外只提供一个标记方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageDraw</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="comment"># import cv2</span></span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> MarkCaptcha</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> Base64</span><br><span class="line"><span class="keyword">from</span> .DrawMarkedResult <span class="keyword">import</span> DrawMarkedResult</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> IMAGE_POSITION_COORDINATES</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> ResultMarked</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> RequestMark</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> .PreCheck <span class="keyword">import</span> PreCheck</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Scheduler</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self._markCaptcha = MarkCaptcha()</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">markCaptcha</span>(<span class="params">self, requestMark: RequestMark</span>) -&gt; ResultMarked:</span><br><span class="line">        <span class="comment"># check is valid</span></span><br><span class="line">        PreCheck.checkImageIsValid(requestMark.originCaptcha)</span><br><span class="line">        <span class="comment"># get data from entity</span></span><br><span class="line">        originCaptcha = requestMark.originCaptcha</span><br><span class="line">        ids = self._markCaptcha.mark(originCaptcha)</span><br><span class="line">        results = self._sumCoordinate(ids)</span><br><span class="line">        markedCaptcha = <span class="built_in">str</span>(base64.b64encode(</span><br><span class="line">            DrawMarkedResult.rectangle(</span><br><span class="line">                base64.b64decode(originCaptcha),</span><br><span class="line">                ids</span><br><span class="line">            )</span><br><span class="line">        ), encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> ResultMarked(</span><br><span class="line">            originCaptcha=originCaptcha,</span><br><span class="line">            ids=ids,</span><br><span class="line">            results=results,</span><br><span class="line">            markedCaptcha=markedCaptcha</span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_sumCoordinate</span>(<span class="params">self, ids: <span class="built_in">list</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">tuple</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        calculate coordinates based on marked result ids</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            ids: marked result id list</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns: example -&gt; [(12, 43) ...]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        markedResults = []</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">id</span> <span class="keyword">in</span> ids:</span><br><span class="line">            a = IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">0</span>]</span><br><span class="line">            b = IMAGE_POSITION_COORDINATES[<span class="built_in">id</span>][<span class="number">1</span>]</span><br><span class="line">            x = random.randint(a[<span class="number">0</span>] + <span class="number">10</span>, b[<span class="number">0</span>] - <span class="number">10</span>)</span><br><span class="line">            y = random.randint(a[<span class="number">1</span>] + <span class="number">10</span>, b[<span class="number">1</span>] - <span class="number">10</span>)</span><br><span class="line">            markedResults.append((x, y))</span><br><span class="line">        <span class="keyword">return</span> markedResults</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="创建实体包装数据"><a href="#创建实体包装数据" class="headerlink" title="创建实体包装数据"></a>创建实体包装数据</h2><ul>
+<li>新建一个entities包，在里面新建几个实体包装数据</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428191955.png" alt="20200428191955"></p>
+<ul>
+<li><p>BaseEntity.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> inspect</span><br><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> RequestDataFormatException</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BaseEntity</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;base entity</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    the class implement object convert to json string and</span></span><br><span class="line"><span class="string">    check attributes is none method.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> json.dumps(self, default=<span class="keyword">lambda</span> obj: obj.__dict__, ensure_ascii=<span class="literal">False</span>, indent=<span class="number">4</span>, sort_keys=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkAttributesIsNone</span>(<span class="params">self, on: <span class="built_in">bool</span> = <span class="literal">True</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;check attributes is none</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> on:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="keyword">for</span> attributeName <span class="keyword">in</span> <span class="built_in">list</span>(self.__dict__.keys()):</span><br><span class="line">            value = <span class="built_in">getattr</span>(self, attributeName)</span><br><span class="line">            <span class="keyword">if</span> value <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">raise</span> RequestDataFormatException(</span><br><span class="line">                    status=ResponseStatus.FAILED,</span><br><span class="line">                    message=<span class="string">&quot;Attribute &#123;&#125; not found.&quot;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(attributeName)),</span><br><span class="line">                    statusCode=<span class="number">400</span></span><br><span class="line">                )</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RequestMark.py 请求接口</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> BaseEntity</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RequestMark</span>(<span class="title class_ inherited__">BaseEntity</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, requestJson: <span class="built_in">dict</span></span>):</span><br><span class="line">        self._originCaptcha = requestJson.setdefault(<span class="string">&quot;originCaptcha&quot;</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">        self.checkAttributesIsNone()</span><br><span class="line">        </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">originCaptcha</span>(<span class="params">self</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">return</span> self._originCaptcha</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResponseGeneral.py 响应接口</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResponseGeneral</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, status: Enum, message: <span class="built_in">str</span>, **kwargs</span>):</span><br><span class="line">        self.status = status.value</span><br><span class="line">        self.message = message</span><br><span class="line">        <span class="keyword">for</span> k, v <span class="keyword">in</span> kwargs.items():</span><br><span class="line">            <span class="built_in">setattr</span>(self, k, v)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        jsonObj = <span class="built_in">dict</span>()</span><br><span class="line">        args = self.__dict__.keys()</span><br><span class="line">        <span class="keyword">for</span> arg <span class="keyword">in</span> args:</span><br><span class="line">            jsonObj.setdefault(arg, <span class="built_in">getattr</span>(self, arg))</span><br><span class="line">        <span class="keyword">return</span> json.dumps(jsonObj)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResultCutCaptcha.py 包装验证码切割的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Tuple</span></span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Any</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResultCutCaptcha</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, label: <span class="built_in">bytes</span>, images: <span class="type">Tuple</span>[<span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>, <span class="built_in">bytes</span>]</span>):</span><br><span class="line">        self.label = label</span><br><span class="line">        self.images = images</span><br><span class="line">        </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getLabel</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.label</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getImages</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.images</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResultMarked.py 包装标记结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResultMarked</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, originCaptcha: <span class="built_in">str</span>, ids: <span class="built_in">list</span>, results: <span class="built_in">list</span>, markedCaptcha: <span class="built_in">str</span></span>):</span><br><span class="line">        self._originCaptcha = originCaptcha</span><br><span class="line">        self._ids = ids</span><br><span class="line">        self._results = results</span><br><span class="line">        self._markedCatpcha = markedCaptcha</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">originCaptcha</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._originCaptcha</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">ids</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._ids</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">results</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._results</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">markedResult</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self._markedCatpcha</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> json.dumps(</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">&quot;originCaptcha&quot;</span>: self._originCaptcha,</span><br><span class="line">                <span class="string">&quot;ids&quot;</span>: self._ids,</span><br><span class="line">                <span class="string">&quot;results&quot;</span>: self._results,</span><br><span class="line">                <span class="string">&quot;markedCaptcha&quot;</span>: self._markedCatpcha</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><ul>
+<li>创建几个表达式用于自定义错误处理。</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192451.png" alt="20200428192451"></p>
+<ul>
+<li><p>BaseException.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BaseException</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    </span><br><span class="line">    STATUS_CODE = <span class="number">200</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, status: Enum, message: <span class="built_in">str</span>, statusCode=<span class="literal">None</span>, payload=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.status = status</span><br><span class="line">        self.message = message</span><br><span class="line">        <span class="keyword">if</span> statusCode <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.statusCode = statusCode</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.statusCode = self.STATUS_CODE</span><br><span class="line">        self.payload = payload</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">toDict</span>(<span class="params">self</span>):</span><br><span class="line">        rv = <span class="built_in">dict</span>(self.payload <span class="keyword">or</span> ())</span><br><span class="line">        rv[<span class="string">&quot;statusCode&quot;</span>] = <span class="built_in">int</span>(self.statusCode)</span><br><span class="line">        rv[<span class="string">&quot;status&quot;</span>] = self.status.value</span><br><span class="line">        rv[<span class="string">&quot;message&quot;</span>] = self.message</span><br><span class="line">        <span class="keyword">return</span> rv</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.message</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RequestException.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> exception <span class="keyword">import</span> BaseException</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RequestDataFormatException</span>(<span class="title class_ inherited__">BaseException</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CaptchaValidException</span>(<span class="title class_ inherited__">BaseException</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GetCaptchaException</span>(<span class="title class_ inherited__">BaseException</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="创建配置和初始化模块"><a href="#创建配置和初始化模块" class="headerlink" title="创建配置和初始化模块"></a>创建配置和初始化模块</h2><ul>
+<li><p>Initialization.py 初始化一个全局scheduler对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> Scheduler</span><br><span class="line"></span><br><span class="line">scheduler = Scheduler()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Config.py 全局配置文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> controller.charset <span class="keyword">import</span> LABEL</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line"><span class="comment"># general configuration</span></span><br><span class="line">APP_NAME = <span class="string">&quot;Mark12306Captcha&quot;</span></span><br><span class="line">APP_VERSION = <span class="string">&quot;v1.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># model and mark configuration</span></span><br><span class="line">MODEL_PATH = &#123;</span><br><span class="line">    <span class="string">&quot;label&quot;</span>: os.path.join(CURRENT_DIR, <span class="string">&quot;controller&quot;</span>, <span class="string">&quot;models&quot;</span>, <span class="string">&quot;Label_12306_SmallCNN4.model&quot;</span>),</span><br><span class="line">    <span class="string">&quot;image&quot;</span>: os.path.join(CURRENT_DIR, <span class="string">&quot;controller&quot;</span>, <span class="string">&quot;models&quot;</span>, <span class="string">&quot;Image_12306_SmallCNN4.model&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LABEL_LIST = LABEL</span><br><span class="line"></span><br><span class="line">MARK_CONFIG = &#123;</span><br><span class="line">    <span class="comment"># captcha size</span></span><br><span class="line">    <span class="string">&quot;label&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;height&quot;</span>: <span class="number">30</span>,</span><br><span class="line">        <span class="string">&quot;width&quot;</span>: <span class="number">63</span>,</span><br><span class="line">        <span class="string">&quot;channel&quot;</span>: <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;image&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;height&quot;</span>: <span class="number">67</span>,</span><br><span class="line">        <span class="string">&quot;width&quot;</span>: <span class="number">67</span>,</span><br><span class="line">        <span class="string">&quot;channel&quot;</span>: <span class="number">3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># draw marked result</span></span><br><span class="line">DRAW_CONFIG = &#123;</span><br><span class="line">    <span class="comment"># RGB</span></span><br><span class="line">    <span class="string">&quot;color&quot;</span>: (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">    <span class="string">&quot;lineSize&quot;</span>: <span class="number">5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>App.py 把api导入进去，这个是程序的入口</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, render_template</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> mark</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> get</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> errorHandler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.register_blueprint(errorHandler)</span><br><span class="line">app.register_blueprint(mark)</span><br><span class="line">app.register_blueprint(get)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="创建API"><a href="#创建API" class="headerlink" title="创建API"></a>创建API</h2><ul>
+<li>提供两个API，一个用于获取从12306获取验证码，一个用于标记验证码。</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192755.png" alt="20200428192755"></p>
+<ul>
+<li><p>Get.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, Blueprint, request</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> RequestUtils</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> ResponseUtils</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> PreCheck</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> RequestMark</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> ResponseGeneral</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> PreCheck</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> GetCaptcha</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">get = Blueprint(<span class="string">&quot;get&quot;</span>, __name__, url_prefix=<span class="string">&quot;/&#123;&#125;/api/&#123;&#125;/get&quot;</span>.<span class="built_in">format</span>(Config.APP_NAME, Config.APP_VERSION))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@get.route(<span class="params"><span class="string">&quot;/captcha&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getCaptchaFrom12306</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;get captcha from 12306&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># RequestUtils.checkPostDataIsJson(request)</span></span><br><span class="line">    <span class="comment"># from Initialization import scheduler</span></span><br><span class="line">    <span class="comment"># requetsMark = RequestMark(request.json)</span></span><br><span class="line">    <span class="comment"># PreCheck.checkImageIsValid(requetsMark.originCaptcha)</span></span><br><span class="line">    <span class="comment"># resultMarked = scheduler.markCaptcha(requetsMark)</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ResponseUtils.responseJson(ResponseGeneral(</span><br><span class="line">        status=ResponseStatus.SUCCESS,</span><br><span class="line">        message=<span class="string">&quot;mark successfully&quot;</span>,</span><br><span class="line">        result=GetCaptcha.getCaptchaFrom12306()</span><br><span class="line">    ))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Mark.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, Blueprint, request</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> RequestUtils</span><br><span class="line"><span class="keyword">from</span> controller.utils <span class="keyword">import</span> ResponseUtils</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> PreCheck</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> RequestMark</span><br><span class="line"><span class="keyword">from</span> entities <span class="keyword">import</span> ResponseGeneral</span><br><span class="line"><span class="keyword">from</span> constants <span class="keyword">import</span> ResponseStatus</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> PreCheck</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">mark = Blueprint(<span class="string">&quot;mark&quot;</span>, __name__, url_prefix=<span class="string">&quot;/&#123;&#125;/api/&#123;&#125;/mark&quot;</span>.<span class="built_in">format</span>(Config.APP_NAME, Config.APP_VERSION))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@mark.route(<span class="params"><span class="string">&quot;&quot;</span>, methods=[<span class="string">&quot;POST&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">markCaptcha</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;mark captcha&quot;&quot;&quot;</span></span><br><span class="line">    RequestUtils.checkPostDataIsJson(request)</span><br><span class="line">    <span class="keyword">from</span> Initialization <span class="keyword">import</span> scheduler</span><br><span class="line">    requetsMark = RequestMark(request.json)</span><br><span class="line">    <span class="comment"># PreCheck.checkImageIsValid(requetsMark.originCaptcha)</span></span><br><span class="line">    resultMarked = scheduler.markCaptcha(requetsMark)</span><br><span class="line">    <span class="keyword">return</span> ResponseUtils.responseJson(ResponseGeneral(</span><br><span class="line">        status=ResponseStatus.SUCCESS,</span><br><span class="line">        message=<span class="string">&quot;mark successfully&quot;</span>,</span><br><span class="line">        result=json.loads(<span class="built_in">str</span>(resultMarked))</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@mark.route(<span class="params"><span class="string">&quot;lite&quot;</span>, methods=[<span class="string">&quot;POST&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">markCaptchaLite</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;mark captcha lite result&quot;&quot;&quot;</span></span><br><span class="line">    RequestUtils.checkPostDataIsJson(request)</span><br><span class="line">    <span class="keyword">from</span> Initialization <span class="keyword">import</span> scheduler</span><br><span class="line">    requetsMark = RequestMark(request.json)</span><br><span class="line">    <span class="comment"># PreCheck.checkImageIsValid(requetsMark.originCaptcha)</span></span><br><span class="line">    resultMarked = scheduler.markCaptcha(requetsMark)</span><br><span class="line">    <span class="keyword">return</span> ResponseUtils.responseJson(ResponseGeneral(</span><br><span class="line">        status=ResponseStatus.SUCCESS,</span><br><span class="line">        message=<span class="string">&quot;mark successfully&quot;</span>,</span><br><span class="line">        result=resultMarked.results</span><br><span class="line">    ))</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="创建公共用的常量包"><a href="#创建公共用的常量包" class="headerlink" title="创建公共用的常量包"></a>创建公共用的常量包</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428192943.png" alt="20200428192943"></p>
+<ul>
+<li><p>ImagePositionCoordinates.py 这个文件保存了验证码里8个子图片的坐标</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_POSITION_COORDINATES = [</span><br><span class="line">    [(<span class="number">5</span>, <span class="number">12</span> + <span class="number">30</span>), (<span class="number">72</span>, <span class="number">79</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">5</span>, <span class="number">84</span> + <span class="number">30</span>), (<span class="number">72</span>, <span class="number">151</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">77</span>, <span class="number">12</span> + <span class="number">30</span>), (<span class="number">142</span>, <span class="number">79</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">77</span>, <span class="number">84</span> + <span class="number">30</span>), (<span class="number">142</span>, <span class="number">151</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">147</span>, <span class="number">12</span> + <span class="number">30</span>), (<span class="number">214</span>, <span class="number">79</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">147</span>, <span class="number">84</span> + <span class="number">30</span>), (<span class="number">214</span>, <span class="number">151</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">221</span>, <span class="number">12</span> + <span class="number">30</span>), (<span class="number">286</span>, <span class="number">79</span> + <span class="number">30</span>)],</span><br><span class="line">    [(<span class="number">221</span>, <span class="number">84</span> + <span class="number">30</span>), (<span class="number">286</span>, <span class="number">151</span> + <span class="number">30</span>)]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResponseStatus.py 接口相应状态</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ResponseStatus</span>(<span class="title class_ inherited__">Enum</span>):</span><br><span class="line"></span><br><span class="line">    SUCCESS = <span class="string">&quot;success&quot;</span></span><br><span class="line">    FAILED = <span class="string">&quot;failed&quot;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="测试API"><a href="#测试API" class="headerlink" title="测试API"></a>测试API</h2><ul>
+<li>运行项目</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428193614.png" alt="20200428193614"></p>
+<ul>
+<li>测试获取验证码</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428193842.png" alt="20200428193842"></p>
+<ul>
+<li>查看获取到的验证码</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194044.png" alt="20200428194044"></p>
+<ul>
+<li>我们用刚才获取到的base64字符串测试标记接口</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194208.png" alt="20200428194208"></p>
+<ul>
+<li>可以看到标记成功了</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194353.png" alt="20200428194353"></p>
+<ul>
+<li>并且给出了结果</li>
+</ul>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428194432.png" alt="20200428194432"></p>
+<ul>
+<li>图标的标号为</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+</tr>
+<tr>
+<td>1</td>
+<td>3</td>
+<td>5</td>
+<td>7</td>
+</tr>
+</tbody></table>
+<p>大功告成</p>
+<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p><a target="_blank" rel="noopener" href="https://github.com/wudinaonao/FlaskMark12306Captcha"> <svg t="1588074680802" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1914" width="24" height="24"><path d="M512 128C299.872 128 128 299.872 128 512c0 169.6 110.016 313.6 262.624 364.384 19.264 3.52 26.24-8.256 26.24-18.496 0-9.152-0.352-33.28-0.48-65.28-106.88 23.136-129.376-51.488-129.376-51.488-17.504-44.384-42.624-56.256-42.624-56.256-34.88-23.744 2.624-23.232 2.624-23.232 38.496 2.752 58.752 39.488 58.752 39.488 34.24 58.752 89.856 41.76 111.744 32 3.52-24.864 13.504-41.76 24.384-51.36-85.248-9.632-174.88-42.624-174.88-189.76 0-42.016 15.008-76.256 39.488-103.136-3.872-9.6-17.12-48.736 3.744-101.6 0 0 32.256-10.24 105.632 39.36A367.584 367.584 0 0 1 512 313.76c32.64 0.128 65.504 4.352 96.128 12.864 73.376-49.6 105.504-39.36 105.504-39.36 20.992 52.864 7.872 92 3.84 101.6 24.64 26.88 39.392 61.12 39.392 103.136 0 147.52-89.728 179.872-175.232 189.504 13.76 11.744 25.984 35.232 25.984 71.008 0 51.36-0.352 92.736-0.352 105.376 0 10.24 6.848 22.24 26.368 18.496C786.112 825.504 896 681.6 896 512c0-212.128-171.872-384-384-384z" p-id="1915" fill="#2c2c2c"></path></svg></a></p>
+<p><a target="_blank" rel="noopener" href="https://mark12306captcha.wudinaonao.com">搭建好的接口</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="wudinaonao 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="wudinaonao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>wudinaonao
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.wudinaonao.com/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" title="使用Flask部署Keras模型并提供Restful接口">https://blog.wudinaonao.com/2020/04/28/使用Flask部署Keras模型并提供Restful接口/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/Keras/" rel="tag"><i class="fa fa-tag"></i> Keras</a>
+              <a href="/tags/Flask/" rel="tag"><i class="fa fa-tag"></i> Flask</a>
+              <a href="/tags/Tensorflow/" rel="tag"><i class="fa fa-tag"></i> Tensorflow</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/" rel="prev" title="Next 主题设置代码高亮">
+      <i class="fa fa-chevron-left"></i> Next 主题设置代码高亮
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/28/ESXI-%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E9%80%9F%E7%8E%87%E5%B9%B6%E8%AE%BE%E7%BD%AE%E8%84%9A%E6%9C%AC/" rel="next" title="ESXI 更改网卡速率并设置脚本">
+      ESXI 更改网卡速率并设置脚本 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.</span> <span class="nav-text">使用Flask部署Keras模型并提供Restful接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.2.</span> <span class="nav-text">新建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E5%85%B7%E6%A8%A1%E5%9D%97"><span class="nav-number">1.3.</span> <span class="nav-text">创建工具模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%B1%82%E6%A8%A1%E5%9D%97"><span class="nav-number">1.4.</span> <span class="nav-text">创建控制层模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BD%93%E5%8C%85%E8%A3%85%E6%95%B0%E6%8D%AE"><span class="nav-number">1.5.</span> <span class="nav-text">创建实体包装数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.6.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%A8%A1%E5%9D%97"><span class="nav-number">1.7.</span> <span class="nav-text">创建配置和初始化模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAAPI"><span class="nav-number">1.8.</span> <span class="nav-text">创建API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E5%85%B1%E7%94%A8%E7%9A%84%E5%B8%B8%E9%87%8F%E5%8C%85"><span class="nav-number">1.9.</span> <span class="nav-text">创建公共用的常量包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95API"><span class="nav-number">1.10.</span> <span class="nav-text">测试API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80"><span class="nav-number">1.11.</span> <span class="nav-text">项目地址</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="wudinaonao"
+      src="/images/avatar-0.gif">
+  <p class="site-author-name" itemprop="name">wudinaonao</p>
+  <div class="site-description" itemprop="description">Naonao Life Record</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wudinaonao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wudinaonao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wudinaonao250@gmail.com" title="E-Mail → mailto:wudinaonao250@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.youtube.com/channel/UCFX7jvxEj6iH3iZwtf4FWtw?view_as=subscriber" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCFX7jvxEj6iH3iZwtf4FWtw?view_as&#x3D;subscriber" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/wudinaonao250/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;wudinaonao250&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wen-lu-zhao" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wen-lu-zhao" rel="noopener" target="_blank"><i class="fab fa-quora fa-fw"></i>知乎</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">晋ICP备20001113号 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Copyright © 2020 Naonao Studio All Rights Reserved.</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"EurBG3R2dEPassgsKv84FDke-gzGzoHsz","app_key":"JnxaQTx5D6cf5KLNxfsylE65","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'EurBG3R2dEPassgsKv84FDke-gzGzoHsz',
+      appKey     : 'JnxaQTx5D6cf5KLNxfsylE65',
+      placeholder: "说点什么",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

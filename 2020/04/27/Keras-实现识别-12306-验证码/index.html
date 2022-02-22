@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.wudinaonao.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Python+Keras 实现识别12306验证码前言CNN卷积神经网络在图像识别领域大放异彩使图形验证码的防护作用大大下降，我们需要寻找一种新的方式来代替传统的验证方式，识别操作者究竟是屏幕前的真人还是网络中的机器人。 本文旨在通过识别12306验证码为例来验证，来探讨图形验证码在当下深度学习技术的支持下，究竟还有多少用武之地。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keras 实现识别 12306 验证码">
+<meta property="og:url" content="https://blog.wudinaonao.com/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/index.html">
+<meta property="og:site_name" content="Naonao Blog">
+<meta property="og:description" content="Python+Keras 实现识别12306验证码前言CNN卷积神经网络在图像识别领域大放异彩使图形验证码的防护作用大大下降，我们需要寻找一种新的方式来代替传统的验证方式，识别操作者究竟是屏幕前的真人还是网络中的机器人。 本文旨在通过识别12306验证码为例来验证，来探讨图形验证码在当下深度学习技术的支持下，究竟还有多少用武之地。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/origin.jpg">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427144133.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427145437.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427151337.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427151427.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427152003.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427154441.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427162056.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427142550.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427160055.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427155647.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427161654.png">
+<meta property="og:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427161846.png">
+<meta property="article:published_time" content="2020-04-26T18:24:22.000Z">
+<meta property="article:modified_time" content="2020-04-26T18:24:22.000Z">
+<meta property="article:author" content="wudinaonao">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Keras">
+<meta property="article:tag" content="Tensorflow">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="验证码识别">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/origin.jpg">
+
+<link rel="canonical" href="https://blog.wudinaonao.com/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Keras 实现识别 12306 验证码 | Naonao Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165348730-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-165348730-2');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a1ff7056e50cd944195678f962b5740b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband">
+        
+    </div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Naonao Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Welcome to Naonao Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">37</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">55</span></a>
+
+  </li>
+        <li class="menu-item menu-item-留言板">
+
+    <a href="/messagebox/" rel="section"><i class="fas fa-comment fa-fw"></i>留言板</a>
+
+  </li>
+        <li class="menu-item menu-item-摄影集">
+
+    <a href="https://photo.wudinaonao.com/" rel="noopener" target="_blank"><i class="fas fa-camera fa-fw"></i>摄影集</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Keras 实现识别 12306 验证码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-27 02:24:22" itemprop="dateCreated datePublished" datetime="2020-04-27T02:24:22+08:00">2020-04-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/" class="post-meta-item leancloud_visitors" data-flag-title="Keras 实现识别 12306 验证码" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Python-Keras-实现识别12306验证码"><a href="#Python-Keras-实现识别12306验证码" class="headerlink" title="Python+Keras 实现识别12306验证码"></a>Python+Keras 实现识别12306验证码</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>CNN卷积神经网络在图像识别领域大放异彩使图形验证码的防护作用大大下降，我们需要寻找一种新的方式来代替传统的验证方式，识别操作者究竟是屏幕前的真人还是网络中的机器人。</p>
+<p>本文旨在通过识别12306验证码为例来验证，来探讨图形验证码在当下深度学习技术的支持下，究竟还有多少用武之地。</p>
+<span id="more"></span>
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>tensorflow-gpu 2.1.0</li>
+<li>keras 2.3.1</li>
+<li>python 3.7.4</li>
+<li>flask 1.1.1</li>
+</ul>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/origin.jpg" alt=""></p>
+<p>分析12306的验证码，我们发现识别分为两个部分。第一步识别文字部分，然后再根据文字部分识别图片部分。</p>
+<p>以及通过大量的观察，我们发现验证码图片类型分为80个类。</p>
+<h2 id="获取样本"><a href="#获取样本" class="headerlink" title="获取样本"></a>获取样本</h2><p>12306 验证码接口</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>kyfw.<span class="number">12306</span>.cn<span class="regexp">/passport/</span>captcha/captcha-image64</span><br></pre></td></tr></table></figure>
+
+<p>返回的结果是一串base64编码后的图片</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427144133.png" alt=""></p>
+<p>我们可以编写一个脚本批量下载验证码。<br>编写 GetCapcha.py 并在当前目录下新建文件夹 originCaptcha 用于保存验证码图片</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;https://kyfw.12306.cn/passport/captcha/captcha-image64&quot;</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>:<span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getCaptcha</span>(<span class="params">savePath</span>):</span><br><span class="line">    <span class="keyword">try</span>：</span><br><span class="line">        req = requests.get(url=url, headers=headers)</span><br><span class="line">        imageBase64str = json.loads(req.content)[<span class="string">&quot;image&quot;</span>]</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(imageBase64str, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(base64.b64decode(imageBase64str))</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ = <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 下载验证码的数量</span></span><br><span class="line">    downloadCount = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 验证码保存目录</span></span><br><span class="line">    saveDir = os.path.join(os.getcwd(), <span class="string">&quot;originCaptcha&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(downloadCount):</span><br><span class="line">        savePath = os.path.join(saveDir, <span class="built_in">str</span>(i) + <span class="string">&quot;.jpg&quot;</span>)</span><br><span class="line">        getCaptcha(savePath)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;&#123;&#125;/&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>, downloadCount))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>拿到的验证码样本</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427145437.png" alt=""></p>
+<h2 id="分割样本"><a href="#分割样本" class="headerlink" title="分割样本"></a>分割样本</h2><p>分割样本，分别提取label部分和image部分</p>
+<p>这里使用了一个Python图像处理库PIL和进度显示库tqdm，安装方式。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip <span class="keyword">install</span> pillow</span><br><span class="line">pip <span class="keyword">install</span> tqdm</span><br></pre></td></tr></table></figure>
+
+<h3 id="分割Label部分"><a href="#分割Label部分" class="headerlink" title="分割Label部分"></a>分割Label部分</h3><p>新建 CutCaptcha.py 以及 cutedCaptcha 目录进行保存</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageFile</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_img_sha1</span>(<span class="params">img</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    计算图像的sha1值为文件名</span></span><br><span class="line"><span class="string">    :param img:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    img = np.asarray(img)</span><br><span class="line">    sha1obj = hashlib.sha1()</span><br><span class="line">    sha1obj.update(img)</span><br><span class="line">    <span class="built_in">hash</span> = sha1obj.hexdigest()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span>(<span class="built_in">hash</span>).upper()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cut_label</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    切割标签</span></span><br><span class="line"><span class="string">    :param path:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    image = Image.<span class="built_in">open</span>(path)</span><br><span class="line">    x = <span class="number">117</span></span><br><span class="line">    y = <span class="number">0</span></span><br><span class="line">    w = <span class="number">180</span></span><br><span class="line">    h = <span class="number">30</span></span><br><span class="line">    <span class="keyword">return</span> image.crop((x, y, w, h))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cut_image</span>(<span class="params">path</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    切割图片</span></span><br><span class="line"><span class="string">    :param path:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    image = Image.<span class="built_in">open</span>(path)</span><br><span class="line">    space = <span class="number">67</span> + <span class="number">5</span></span><br><span class="line">    x0, y0, w0, h0 = <span class="number">0</span>*space+<span class="number">5</span>, <span class="number">0</span>*space+<span class="number">41</span>, <span class="number">1</span>*space, <span class="number">0</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x1, y1, w1, h1 = <span class="number">0</span>*space+<span class="number">5</span>, <span class="number">1</span>*space+<span class="number">41</span>, <span class="number">1</span>*space, <span class="number">1</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x2, y2, w2, h2 = <span class="number">1</span>*space+<span class="number">5</span>, <span class="number">0</span>*space+<span class="number">41</span>, <span class="number">2</span>*space, <span class="number">0</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x3, y3, w3, h3 = <span class="number">1</span>*space+<span class="number">5</span>, <span class="number">1</span>*space+<span class="number">41</span>, <span class="number">2</span>*space, <span class="number">1</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x4, y4, w4, h4 = <span class="number">2</span>*space+<span class="number">5</span>, <span class="number">0</span>*space+<span class="number">41</span>, <span class="number">3</span>*space, <span class="number">0</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x5, y5, w5, h5 = <span class="number">2</span>*space+<span class="number">5</span>, <span class="number">1</span>*space+<span class="number">41</span>, <span class="number">3</span>*space, <span class="number">1</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x6, y6, w6, h6 = <span class="number">3</span>*space+<span class="number">5</span>, <span class="number">0</span>*space+<span class="number">41</span>, <span class="number">4</span>*space, <span class="number">0</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    x7, y7, w7, h7 = <span class="number">3</span>*space+<span class="number">5</span>, <span class="number">1</span>*space+<span class="number">41</span>, <span class="number">4</span>*space, <span class="number">1</span>*space+<span class="number">41</span>+<span class="number">67</span></span><br><span class="line">    image0 = image.crop((x0, y0, w0, h0))</span><br><span class="line">    image1 = image.crop((x1, y1, w1, h1))</span><br><span class="line">    image2 = image.crop((x2, y2, w2, h2))</span><br><span class="line">    image3 = image.crop((x3, y3, w3, h3))</span><br><span class="line">    image4 = image.crop((x4, y4, w4, h4))</span><br><span class="line">    image5 = image.crop((x5, y5, w5, h5))</span><br><span class="line">    image6 = image.crop((x6, y6, w6, h6))</span><br><span class="line">    image7 = image.crop((x7, y7, w7, h7))</span><br><span class="line">    <span class="keyword">return</span> image0, image1, image2, image3, image4, image5, image6, image7</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化各个参数</span></span><br><span class="line">ImageFile.LOAD_TRUNCATED_IMAGES = <span class="literal">True</span></span><br><span class="line">captcha_path_list = []</span><br><span class="line">captcha_input_dir = os.path.join(os.getcwd(), <span class="string">&quot;originCaptcha&quot;</span>)</span><br><span class="line">captcha_output_dir = os.path.join(os.getcwd(), <span class="string">&quot;cutedCaptcha&quot;</span>)</span><br><span class="line"><span class="comment"># 遍历验证码目录获取路径列表</span></span><br><span class="line"><span class="keyword">for</span> root, dirs, imgs <span class="keyword">in</span> os.walk(captcha_input_dir):</span><br><span class="line">    <span class="keyword">for</span> img <span class="keyword">in</span> imgs:</span><br><span class="line">        captcha_path_list.append(os.path.join(root, img))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分割验证码</span></span><br><span class="line"><span class="keyword">with</span> tqdm(total=<span class="built_in">len</span>(captcha_path_list), desc=<span class="string">&quot;Cut captcha&quot;</span>) <span class="keyword">as</span> pbar:</span><br><span class="line">    <span class="keyword">for</span> captcha_input_path <span class="keyword">in</span> captcha_path_list:</span><br><span class="line">        original_captcha_name = os.path.basename(captcha_input_path).split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>]</span><br><span class="line">        captcha_output_dir_second = os.path.join(captcha_output_dir, original_captcha_name)</span><br><span class="line">        image = [ n <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>)]</span><br><span class="line">        image_name = [ <span class="built_in">str</span>(n) <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>)]</span><br><span class="line">        image[<span class="number">0</span>], image[<span class="number">1</span>], image[<span class="number">2</span>], image[<span class="number">3</span>], image[<span class="number">4</span>], image[<span class="number">5</span>], image[<span class="number">6</span>], image[<span class="number">7</span>] = cut_image(captcha_input_path)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(image)):</span><br><span class="line">            image_name[i] = get_img_sha1(image[i])</span><br><span class="line">        <span class="keyword">for</span> i, img <span class="keyword">in</span> <span class="built_in">enumerate</span>(image):</span><br><span class="line">            captcha_output_path = os.path.join(captcha_output_dir_second, <span class="built_in">str</span>(image_name[i]) + <span class="string">&quot;.jpg&quot;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(captcha_output_dir_second):</span><br><span class="line">                os.makedirs(captcha_output_dir_second)</span><br><span class="line">            img.save(captcha_output_path)</span><br><span class="line">        captcha_output_label_name = <span class="string">&quot;label_&quot;</span> + <span class="built_in">str</span>(original_captcha_name) + <span class="string">&quot;.jpg&quot;</span></span><br><span class="line">        captcha_output_label_path = os.path.join(captcha_output_dir_second, captcha_output_label_name)</span><br><span class="line">        cut_label(captcha_input_path).save(<span class="built_in">str</span>(captcha_output_label_path))</span><br><span class="line">        pbar.update()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>每个目录保存一个切割后的验证码的label部分和image部分。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427151337.png" alt=""></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427151427.png" alt=""></p>
+<p>我们先把label部分提取出来放在一个目录</p>
+<p>新建 CopyLabel.py 和 label 目录</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> root, <span class="built_in">dir</span>, imgs <span class="keyword">in</span> os.walk(<span class="string">&quot;cutedCaptcha&quot;</span>):</span><br><span class="line">    <span class="keyword">for</span> img <span class="keyword">in</span> imgs:</span><br><span class="line">        img_path = os.path.join(root, img)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;label&quot;</span> <span class="keyword">in</span> img:</span><br><span class="line">            new_img_path = os.path.join(os.getcwd(), <span class="string">&quot;label&quot;</span>, img)</span><br><span class="line">            shutil.copy(img_path, new_img_path)</span><br><span class="line">            <span class="built_in">print</span>(new_img_path)</span><br></pre></td></tr></table></figure>
+<p>结果如下</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427152003.png" alt=""></p>
+<p>接下来就到了最枯燥的时候了，我们需要预先标记一些样本，标记成这样的。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427154441.png" alt=""></p>
+<h3 id="分割Image部分"><a href="#分割Image部分" class="headerlink" title="分割Image部分"></a>分割Image部分</h3><p>图像部分同理，处理成如下格式</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427162056.png" alt=""></p>
+<h2 id="创建字符集"><a href="#创建字符集" class="headerlink" title="创建字符集"></a>创建字符集</h2><p>新建一个 Python Package 命名为 charset，并在里面新建一个label.py文件用于保存图像分类标签</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427142550.png" alt=""></p>
+<p>label.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">LABEL = [</span><br><span class="line">    <span class="string">&quot;蒸笼&quot;</span>,</span><br><span class="line">    <span class="string">&quot;蚂蚁&quot;</span>,</span><br><span class="line">    <span class="string">&quot;篮球&quot;</span>,</span><br><span class="line">    <span class="string">&quot;苍蝇拍&quot;</span>,</span><br><span class="line">    <span class="string">&quot;菠萝&quot;</span>,</span><br><span class="line">    <span class="string">&quot;薯条&quot;</span>,</span><br><span class="line">    <span class="string">&quot;耳塞&quot;</span>,</span><br><span class="line">    <span class="string">&quot;剪纸&quot;</span>,</span><br><span class="line">    <span class="string">&quot;绿豆&quot;</span>,</span><br><span class="line">    <span class="string">&quot;蜥蜴&quot;</span>,</span><br><span class="line">    <span class="string">&quot;热水袋&quot;</span>,</span><br><span class="line">    <span class="string">&quot;红酒&quot;</span>,</span><br><span class="line">    <span class="string">&quot;红枣&quot;</span>,</span><br><span class="line">    <span class="string">&quot;漏斗&quot;</span>,</span><br><span class="line">    <span class="string">&quot;公交卡&quot;</span>,</span><br><span class="line">    <span class="string">&quot;红豆&quot;</span>,</span><br><span class="line">    <span class="string">&quot;金字塔&quot;</span>,</span><br><span class="line">    <span class="string">&quot;狮子&quot;</span>,</span><br><span class="line">    <span class="string">&quot;文具盒&quot;</span>,</span><br><span class="line">    <span class="string">&quot;棉棒&quot;</span>,</span><br><span class="line">    <span class="string">&quot;海鸥&quot;</span>,</span><br><span class="line">    <span class="string">&quot;开瓶器&quot;</span>,</span><br><span class="line">    <span class="string">&quot;沙拉&quot;</span>,</span><br><span class="line">    <span class="string">&quot;电线&quot;</span>,</span><br><span class="line">    <span class="string">&quot;盘子&quot;</span>,</span><br><span class="line">    <span class="string">&quot;网球拍&quot;</span>,</span><br><span class="line">    <span class="string">&quot;烛台&quot;</span>,</span><br><span class="line">    <span class="string">&quot;老虎&quot;</span>,</span><br><span class="line">    <span class="string">&quot;药片&quot;</span>,</span><br><span class="line">    <span class="string">&quot;订书机&quot;</span>,</span><br><span class="line">    <span class="string">&quot;中国结&quot;</span>,</span><br><span class="line">    <span class="string">&quot;双面胶&quot;</span>,</span><br><span class="line">    <span class="string">&quot;茶几&quot;</span>,</span><br><span class="line">    <span class="string">&quot;挂钟&quot;</span>,</span><br><span class="line">    <span class="string">&quot;档案袋&quot;</span>,</span><br><span class="line">    <span class="string">&quot;创可贴&quot;</span>,</span><br><span class="line">    <span class="string">&quot;安全帽&quot;</span>,</span><br><span class="line">    <span class="string">&quot;樱桃&quot;</span>,</span><br><span class="line">    <span class="string">&quot;调色板&quot;</span>,</span><br><span class="line">    <span class="string">&quot;冰箱&quot;</span>,</span><br><span class="line">    <span class="string">&quot;钟表&quot;</span>,</span><br><span class="line">    <span class="string">&quot;黑板&quot;</span>,</span><br><span class="line">    <span class="string">&quot;卷尺&quot;</span>,</span><br><span class="line">    <span class="string">&quot;印章&quot;</span>,</span><br><span class="line">    <span class="string">&quot;手掌印&quot;</span>,</span><br><span class="line">    <span class="string">&quot;话梅&quot;</span>,</span><br><span class="line">    <span class="string">&quot;铃铛&quot;</span>,</span><br><span class="line">    <span class="string">&quot;牌坊&quot;</span>,</span><br><span class="line">    <span class="string">&quot;蜜蜂&quot;</span>,</span><br><span class="line">    <span class="string">&quot;茶盅&quot;</span>,</span><br><span class="line">    <span class="string">&quot;路灯&quot;</span>,</span><br><span class="line">    <span class="string">&quot;锦旗&quot;</span>,</span><br><span class="line">    <span class="string">&quot;雨靴&quot;</span>,</span><br><span class="line">    <span class="string">&quot;刺绣&quot;</span>,</span><br><span class="line">    <span class="string">&quot;本子&quot;</span>,</span><br><span class="line">    <span class="string">&quot;拖把&quot;</span>,</span><br><span class="line">    <span class="string">&quot;珊瑚&quot;</span>,</span><br><span class="line">    <span class="string">&quot;锅铲&quot;</span>,</span><br><span class="line">    <span class="string">&quot;海苔&quot;</span>,</span><br><span class="line">    <span class="string">&quot;锣&quot;</span>,</span><br><span class="line">    <span class="string">&quot;排风机&quot;</span>,</span><br><span class="line">    <span class="string">&quot;龙舟&quot;</span>,</span><br><span class="line">    <span class="string">&quot;鞭炮&quot;</span>,</span><br><span class="line">    <span class="string">&quot;仪表盘&quot;</span>,</span><br><span class="line">    <span class="string">&quot;跑步机&quot;</span>,</span><br><span class="line">    <span class="string">&quot;日历&quot;</span>,</span><br><span class="line">    <span class="string">&quot;毛线&quot;</span>,</span><br><span class="line">    <span class="string">&quot;打字机&quot;</span>,</span><br><span class="line">    <span class="string">&quot;电饭煲&quot;</span>,</span><br><span class="line">    <span class="string">&quot;海报&quot;</span>,</span><br><span class="line">    <span class="string">&quot;高压锅&quot;</span>,</span><br><span class="line">    <span class="string">&quot;沙包&quot;</span>,</span><br><span class="line">    <span class="string">&quot;护腕&quot;</span>,</span><br><span class="line">    <span class="string">&quot;口哨&quot;</span>,</span><br><span class="line">    <span class="string">&quot;电子秤&quot;</span>,</span><br><span class="line">    <span class="string">&quot;辣椒酱&quot;</span>,</span><br><span class="line">    <span class="string">&quot;航母&quot;</span>,</span><br><span class="line">    <span class="string">&quot;蜡烛&quot;</span>,</span><br><span class="line">    <span class="string">&quot;啤酒&quot;</span>,</span><br><span class="line">    <span class="string">&quot;风铃&quot;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h2><p>新建一个 Config.py 文件方便我们把需要用的配置拿出来统一处理</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427160055.png" alt=""></p>
+<p>Config.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> charset <span class="keyword">import</span> LABEL</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置配置文件的工作目录</span></span><br><span class="line">CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 项目设置</span></span><br><span class="line">ITEM_NAME = <span class="string">&quot;Label_12306_SmallCNN4&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 图像尺寸以及放大倍率</span></span><br><span class="line">IMAGE_MAGNIFICATION = <span class="number">1</span></span><br><span class="line">IMAGE_HEIGHT = <span class="number">30</span> * IMAGE_MAGNIFICATION</span><br><span class="line">IMAGE_WIDTH = <span class="number">63</span> * IMAGE_MAGNIFICATION</span><br><span class="line">IMAGE_CHANNEL = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 字符集</span></span><br><span class="line">CHAR_SET_LIST = LABEL</span><br><span class="line"><span class="comment"># 验证码长度</span></span><br><span class="line">CAPTCHA_LENGTH = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练设置</span></span><br><span class="line"><span class="comment"># INIT_EPOCHS 如果不是第一次训练, 可以设置初始化EPOCHS, 这样可以避免Tensorboard显示混乱</span></span><br><span class="line">INIT_EPOCHS = <span class="number">0</span></span><br><span class="line"><span class="comment"># INIT_EPOCHS = 31</span></span><br><span class="line">EPOCHS = <span class="number">200</span></span><br><span class="line">BATCH_SIZE = <span class="number">32</span></span><br><span class="line">STEP = <span class="number">500</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型保存路径</span></span><br><span class="line">MODEL_SAVE_PATH = os.path.join(CURRENT_DIR, <span class="string">&quot;model&quot;</span>, ITEM_NAME + <span class="string">&quot;.model&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据集目录</span></span><br><span class="line">DATA_SET_DIR = <span class="string">&quot;这里写训练数据集的目录&quot;</span></span><br><span class="line">VALID_SET_DIR = <span class="string">&quot;这里写验证数据集的目录&quot;</span></span><br><span class="line">TEST_SET_DIR = <span class="string">&quot;这里写测试数据集的目录&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># tensor board 目录</span></span><br><span class="line">TENSOR_BOARD_DIR = os.path.join(CURRENT_DIR, <span class="string">&quot;tensorboard&quot;</span>, ITEM_NAME)</span><br><span class="line"></span><br><span class="line"><span class="comment"># CSV 文件保存路径, 用于可视化训练过程</span></span><br><span class="line">CSV_SAVE_PATH = os.path.join(CURRENT_DIR, <span class="string">&quot;csv&quot;</span>, ITEM_NAME + <span class="string">&quot;.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型结构图</span></span><br><span class="line">MODEL_STRUCTURE_IMAGE_DIR = os.path.join(CURRENT_DIR, <span class="string">&quot;model_structure_image&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><p>新建 net_model 包并在里面新建 SmallCNN.py 用于定义一个简单的CNN模型</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427155647.png" alt=""></p>
+<p>SmallCNN.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> keras.regularizers <span class="keyword">import</span> l2</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dropout, Input, Lambda, Activation, Conv2D, MaxPooling2D, ZeroPadding2D, Reshape, Concatenate, Flatten, Dense, BatchNormalization, MaxPool2D</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> SGD, Adam</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> optimizers</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_l2_reg = <span class="number">0.0005</span>  <span class="comment"># L2 正则化</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_conv2d</span>(<span class="params"><span class="built_in">input</span>, filters, kernel_size, name</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    创建卷积层</span></span><br><span class="line"><span class="string">    :param input:</span></span><br><span class="line"><span class="string">    :param filters: 整数, 输出空间的维度, 卷积中滤波器的输出数量</span></span><br><span class="line"><span class="string">    :param kernel_size: 一个整数, 或者是2个整数表示的元组或列表, 指明2D卷积窗口的宽度和高度, 可以是一个整数, 为所有空间维度指定相同的值</span></span><br><span class="line"><span class="string">    :param name: 卷积层的名字</span></span><br><span class="line"><span class="string">    :return: 卷积层</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> Conv2D(</span><br><span class="line">        filters,</span><br><span class="line">        kernel_size,</span><br><span class="line">        activation=<span class="string">&quot;relu&quot;</span>,</span><br><span class="line">        padding=<span class="string">&quot;same&quot;</span>,</span><br><span class="line">        kernel_initializer=<span class="string">&quot;he_normal&quot;</span>,</span><br><span class="line">        kernel_regularizer=l2(_l2_reg),</span><br><span class="line">        name=name</span><br><span class="line">    )(<span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_pooling</span>(<span class="params"><span class="built_in">input</span>, name</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    池化层</span></span><br><span class="line"><span class="string">    :param name:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> MaxPooling2D(</span><br><span class="line">        pool_size=(<span class="number">1</span>, <span class="number">2</span>),</span><br><span class="line">        strides=(<span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">        padding=<span class="string">&quot;same&quot;</span>,</span><br><span class="line">        name=name</span><br><span class="line">    )(<span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">layres=<span class="number">2</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    构建一个简单CNN网络</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    input_tensor = Input((Config.IMAGE_HEIGHT, Config.IMAGE_WIDTH, Config.IMAGE_CHANNEL))</span><br><span class="line">    x = input_tensor</span><br><span class="line">    layresList = [<span class="number">2</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(layres)]</span><br><span class="line">    <span class="keyword">for</span> i, n_cnn <span class="keyword">in</span> <span class="built_in">enumerate</span>(layresList):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n_cnn):</span><br><span class="line">            x = Conv2D(<span class="number">32</span> * <span class="number">2</span> ** <span class="built_in">min</span>(i, <span class="number">3</span>), kernel_size=<span class="number">3</span>, padding=<span class="string">&#x27;same&#x27;</span>, kernel_initializer=<span class="string">&#x27;he_uniform&#x27;</span>)(x)</span><br><span class="line">            x = BatchNormalization()(x)</span><br><span class="line">            x = Activation(<span class="string">&#x27;relu&#x27;</span>)(x)</span><br><span class="line">        x = MaxPooling2D(<span class="number">2</span>)(x)</span><br><span class="line">        x = Dropout(rate=<span class="number">0.5</span>)(x)</span><br><span class="line"></span><br><span class="line">    x = Flatten()(x)</span><br><span class="line">    x = [</span><br><span class="line">        Dense(<span class="built_in">len</span>(Config.CHAR_SET_LIST), activation=<span class="string">&#x27;softmax&#x27;</span>, name=<span class="string">&#x27;c%d&#x27;</span> % (i + <span class="number">1</span>))(x)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(Config.CAPTCHA_LENGTH)</span><br><span class="line">    ]</span><br><span class="line">    model = Model(inputs=input_tensor, outputs=x, name=<span class="string">&quot;SmallCNN-Layers-&#123;&#125;&quot;</span>.<span class="built_in">format</span>(layres))</span><br><span class="line">    model.summary()</span><br><span class="line">    model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>,</span><br><span class="line">                  optimizer=Adam(<span class="number">1e-3</span>, amsgrad=<span class="literal">True</span>),</span><br><span class="line">                  metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    model = build(layres=<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="新建一个工具类"><a href="#新建一个工具类" class="headerlink" title="新建一个工具类"></a>新建一个工具类</h2><p>新建一个工具类用于图像处理的操作</p>
+<p>Utils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CheckInvalid</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">delete</span>(<span class="params">cls, dstDir</span>):</span><br><span class="line">        pathList = []</span><br><span class="line">        <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(dstDir):</span><br><span class="line">            <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">                pathList.append(os.path.join(root, file))</span><br><span class="line">        total = <span class="built_in">len</span>(pathList)</span><br><span class="line">        removed = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, imagePath <span class="keyword">in</span> <span class="built_in">enumerate</span>(pathList):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                Image.<span class="built_in">open</span>(imagePath).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> OSError:</span><br><span class="line">                os.remove(imagePath)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;remove ---&gt; &quot;</span>, imagePath)</span><br><span class="line">                removed += <span class="number">1</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;&#123;&#125;/&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>, total))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;remove number &quot;</span>, removed)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Preprocess</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">convertImageToArrayByChannel</span>(<span class="params">cls, image</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        input image (PIL) object convert to array by channel</span></span><br><span class="line"><span class="string">        :param image: image obj</span></span><br><span class="line"><span class="string">        :return:      numpy array obj</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> Config.IMAGE_CHANNEL == <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> np.array(image.convert(<span class="string">&quot;RGB&quot;</span>))</span><br><span class="line">        <span class="keyword">if</span> Config.IMAGE_CHANNEL == <span class="number">1</span>:</span><br><span class="line">            imageArray = np.array(image.convert(<span class="string">&quot;L&quot;</span>))</span><br><span class="line">            imageArray = np.expand_dims(imageArray, axis=<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">return</span> imageArray</span><br><span class="line">        <span class="keyword">return</span> np.array(image.convert(<span class="string">&quot;RGB&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">convertImageFormat</span>(<span class="params">cls, image, <span class="built_in">format</span>=<span class="string">&quot;PNG&quot;</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        input image obj, convert to png format</span></span><br><span class="line"><span class="string">        :param image: image obj</span></span><br><span class="line"><span class="string">        :return:      image obj</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> image <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">&quot;image object is none.&quot;</span>)</span><br><span class="line">        <span class="keyword">with</span> BytesIO() <span class="keyword">as</span> imageIO:</span><br><span class="line">            image.save(imageIO, <span class="built_in">format</span>=<span class="built_in">format</span>)</span><br><span class="line">            imageByte = imageIO.getvalue()</span><br><span class="line">        <span class="keyword">return</span> Image.<span class="built_in">open</span>(BytesIO(imageByte))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h2><p>创建一个读取数据的类</p>
+<p>LoadData.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras.utils <span class="keyword">import</span> <span class="type">Sequence</span></span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">import</span> Utils</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoadTrainData</span>(<span class="title class_ inherited__">Sequence</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,</span></span><br><span class="line"><span class="params">                 dataSetDir,</span></span><br><span class="line"><span class="params">                 characters=Config.CHAR_SET_LIST,</span></span><br><span class="line"><span class="params">                 batchSize=Config.BATCH_SIZE,</span></span><br><span class="line"><span class="params">                 steps=Config.STEP,</span></span><br><span class="line"><span class="params">                 n_len=Config.CAPTCHA_LENGTH,</span></span><br><span class="line"><span class="params">                 width=Config.IMAGE_WIDTH,</span></span><br><span class="line"><span class="params">                 height=Config.IMAGE_HEIGHT,</span></span><br><span class="line"><span class="params">                 isGRU=<span class="literal">False</span></span>):</span><br><span class="line"></span><br><span class="line">        self.dataSetDir = dataSetDir</span><br><span class="line">        self.characters = characters</span><br><span class="line">        self.batchSize = batchSize</span><br><span class="line">        self.steps = steps</span><br><span class="line">        self.n_len = n_len</span><br><span class="line">        self.width = width</span><br><span class="line">        self.height = height</span><br><span class="line">        self.n_class = <span class="built_in">len</span>(characters)</span><br><span class="line">        <span class="comment"># self.generator = ImageCaptcha(width=width, height=height)</span></span><br><span class="line">        self.dataSetlist = self._getDataSetList()</span><br><span class="line">        self.isGRU = isGRU</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_parseImageText</span>(<span class="params">self, image_path</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        解析验证码的标签.</span></span><br><span class="line"><span class="string">        验证码格式为 --&gt;  标签_XXX.png</span></span><br><span class="line"><span class="string">        XXX为一串随机数, 后缀任意格式, PIL 或 cv2 会自动解析</span></span><br><span class="line"><span class="string">        :param image_path: c:/123_XXX.jpg</span></span><br><span class="line"><span class="string">        :return:XXX</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">return</span> os.path.basename(image_path).split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;_&quot;</span>)[<span class="number">0</span>].strip()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_getDataSetList</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        获取全部验证码路径用于喂数据</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        dataSetList = []</span><br><span class="line">        <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(self.dataSetDir):</span><br><span class="line">            <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">                imagePath = os.path.join(root, file)</span><br><span class="line">                dataSetList.append(&#123;</span><br><span class="line">                    <span class="string">&quot;tag&quot;</span>: self._parseImageText(imagePath),</span><br><span class="line">                    <span class="string">&quot;image_path&quot;</span>: imagePath</span><br><span class="line">                &#125;)</span><br><span class="line">        <span class="keyword">return</span> dataSetList</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.steps</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):</span><br><span class="line">        x = np.zeros((self.batchSize, self.height, self.width, Config.IMAGE_CHANNEL), dtype=np.float32)</span><br><span class="line">        y = [np.zeros((self.batchSize, self.n_class), dtype=np.uint8) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(self.n_len)]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.batchSize):</span><br><span class="line">            entity = random.choice(self.dataSetlist)</span><br><span class="line">            tag = entity[<span class="string">&quot;tag&quot;</span>]</span><br><span class="line">            <span class="comment"># 加载图片</span></span><br><span class="line">            image = Image.<span class="built_in">open</span>(entity[<span class="string">&quot;image_path&quot;</span>]).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">            <span class="comment"># 统一图片格式, 默认: PNG</span></span><br><span class="line">            image = Utils.Preprocess.convertImageFormat(image)</span><br><span class="line">            <span class="comment"># 缩放图片到指定尺寸</span></span><br><span class="line">            image = image.resize((Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT), Image.ANTIALIAS)</span><br><span class="line">            <span class="comment"># 检测通道数并转换</span></span><br><span class="line">            imageArray = Utils.Preprocess.convertImageToArrayByChannel(image)</span><br><span class="line">            <span class="comment"># 把色度值压缩到 0-1 区间</span></span><br><span class="line">            x[i] = imageArray / <span class="number">255.0</span></span><br><span class="line">            <span class="comment"># 编码验证码标签</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(Config.CAPTCHA_LENGTH):</span><br><span class="line">                y[j][i, :] = <span class="number">0</span></span><br><span class="line">                y[j][i, self.characters.index(tag)] = <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> x, y</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoadPredictData</span>():</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">self, y, isIndefiniteLength=<span class="literal">False</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        将向量列表解码成字符</span></span><br><span class="line"><span class="string">        :param y:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> isIndefiniteLength:</span><br><span class="line">            y = np.array(y)</span><br><span class="line">            y = np.argmax(y, axis=<span class="number">2</span>)[:, <span class="number">0</span>]</span><br><span class="line">            text = <span class="string">&quot;&quot;</span></span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> y:</span><br><span class="line">                <span class="keyword">if</span> x &lt; <span class="built_in">len</span>(Config.CHAR_SET_LIST):</span><br><span class="line">                    text += Config.CHAR_SET_LIST[x]</span><br><span class="line">            <span class="keyword">return</span> text</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            y = np.array(y)</span><br><span class="line">            y = np.argmax(y, axis=<span class="number">2</span>)[:, <span class="number">0</span>]</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([Config.CHAR_SET_LIST[x] <span class="keyword">for</span> x <span class="keyword">in</span> y])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_parseImageText</span>(<span class="params">self, imagePath</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        解析验证码的标签.</span></span><br><span class="line"><span class="string">        验证码格式为 --&gt;  XXX_标签.png</span></span><br><span class="line"><span class="string">        XXX为一串随机数, 后缀任意格式, PIL 或 cv2 会自动解析</span></span><br><span class="line"><span class="string">        :param image_path:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        image_name = os.path.basename(imagePath)</span><br><span class="line">        tag = image_name.split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;_&quot;</span>)[<span class="number">0</span>].strip()</span><br><span class="line">        <span class="keyword">return</span> tag</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 多通道</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getPredictDataFromPath</span>(<span class="params">self, imagePath</span>):</span><br><span class="line">        x = np.zeros((<span class="number">1</span>, Config.IMAGE_HEIGHT, Config.IMAGE_WIDTH, Config.IMAGE_CHANNEL), dtype=np.float32)</span><br><span class="line">        image = Image.<span class="built_in">open</span>(imagePath).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        <span class="comment"># 统一格式, 训练和预测的格式不同会导致准确率急剧下降(我也不知道为啥)</span></span><br><span class="line">        image = Utils.Preprocess.convertImageFormat(image)</span><br><span class="line">        <span class="comment"># 缩放图片到指定尺寸</span></span><br><span class="line">        image = image.resize((Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT), Image.ANTIALIAS)</span><br><span class="line">        <span class="comment"># 检测通道数并转换</span></span><br><span class="line">        imageArray = Utils.Preprocess.convertImageToArrayByChannel(image)</span><br><span class="line">        <span class="comment"># 把色度值压缩到 0-1 区间</span></span><br><span class="line">        x[<span class="number">0</span>] = imageArray / <span class="number">255.0</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getPredictDataFromByte</span>(<span class="params">self, imageByte</span>):</span><br><span class="line">        x = np.zeros((<span class="number">1</span>, Config.IMAGE_HEIGHT, Config.IMAGE_WIDTH, Config.IMAGE_CHANNEL), dtype=np.float32)</span><br><span class="line">        image = Image.<span class="built_in">open</span>(BytesIO(imageByte)).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        image = Utils.Preprocess.convertImageFormat(image)</span><br><span class="line">        image = image.resize((Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT), Image.ANTIALIAS)</span><br><span class="line">        imageArray = Utils.Preprocess.convertImageToArrayByChannel(image)</span><br><span class="line">        x[<span class="number">0</span>] = imageArray / <span class="number">255.0</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getPredictDataFromIO</span>(<span class="params">self, imageIO</span>):</span><br><span class="line">        x = np.zeros((<span class="number">1</span>, Config.IMAGE_HEIGHT, Config.IMAGE_WIDTH, Config.IMAGE_CHANNEL), dtype=np.float32)</span><br><span class="line">        image = Image.<span class="built_in">open</span>(imageIO).convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        image = Utils.Preprocess.convertImageFormat(image)</span><br><span class="line">        image = image.resize((Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT), Image.ANTIALIAS)</span><br><span class="line">        imageArray = Utils.Preprocess.convertImageToArrayByChannel(image)</span><br><span class="line">        x[<span class="number">0</span>] = imageArray / <span class="number">255.0</span></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><p>新建 Training.py 用于训练模型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> keras.callbacks <span class="keyword">import</span> EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau, TensorBoard</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> LoadData <span class="keyword">import</span> LoadTrainData</span><br><span class="line"><span class="keyword">import</span> net_model.ResNet <span class="keyword">as</span> ResNet</span><br><span class="line"><span class="keyword">import</span> net_model.SmallCNN <span class="keyword">as</span> SmallCNN</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Training</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 构建模型</span></span><br><span class="line">        <span class="comment"># self.model = SmallCNN.build(layres=4)</span></span><br><span class="line">        <span class="comment"># self.model = ResNet.build(numberOfLayers=32)</span></span><br><span class="line">        self.model = SmallCNN.build(layres=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 读取已构建的模型继续训练</span></span><br><span class="line">        <span class="comment"># self.model = load_model(Config.MODEL_SAVE_PATH)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取训练和验证数据序列</span></span><br><span class="line">        self.trainSetSequence = LoadTrainData(Config.DATA_SET_DIR)</span><br><span class="line">        self.validSetSequence = LoadTrainData(Config.VALID_SET_DIR)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 创建回调</span></span><br><span class="line">        callbacks = [</span><br><span class="line">            <span class="comment"># 当监测值不再改善时，该回调函数将中止训练</span></span><br><span class="line">            EarlyStopping(patience=<span class="number">20</span>),</span><br><span class="line">            <span class="comment"># 将epoch的训练结果保存在csv文件中，支持所有可被转换为string的值，包括1D的可迭代数值如np.ndarray.</span></span><br><span class="line">            CSVLogger(Config.CSV_SAVE_PATH),</span><br><span class="line">            <span class="comment"># 该回调函数将在每个epoch后保存模型到filepath</span></span><br><span class="line">            ModelCheckpoint(Config.MODEL_SAVE_PATH, save_best_only=<span class="literal">True</span>),</span><br><span class="line">            <span class="comment"># 当评价指标不在提升时，减少学习率</span></span><br><span class="line">            ReduceLROnPlateau(factor=<span class="number">0.1</span>, patience=<span class="number">5</span>),</span><br><span class="line">            <span class="comment"># 该回调函数是一个可视化的展示器</span></span><br><span class="line">            TensorBoard(Config.TENSOR_BOARD_DIR)</span><br><span class="line">        ]</span><br><span class="line">        <span class="comment"># 训练</span></span><br><span class="line">        self.model.fit_generator(</span><br><span class="line">            generator=self.trainSetSequence,</span><br><span class="line">            <span class="comment"># 训练多少步, step = data set size / batch size</span></span><br><span class="line">            steps_per_epoch=Config.STEP,</span><br><span class="line">            <span class="comment"># 迭代多少遍数据集</span></span><br><span class="line">            epochs=Config.EPOCHS,</span><br><span class="line">            validation_data=self.validSetSequence,</span><br><span class="line">            validation_steps=<span class="number">64</span>,</span><br><span class="line">            callbacks=callbacks,</span><br><span class="line">            workers=<span class="number">2</span>,</span><br><span class="line">            use_multiprocessing=<span class="literal">False</span>,</span><br><span class="line">            initial_epoch=Config.INIT_EPOCHS</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">prediction</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">evaluation</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    task = Training()</span><br><span class="line">    task.train()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>在我的GTX980ti上训练了20个epoch准确率达到0.99</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427161654.png" alt=""></p>
+<h2 id="测试模型"><a href="#测试模型" class="headerlink" title="测试模型"></a>测试模型</h2><p>新建 Prediction.py </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> keras.callbacks <span class="keyword">import</span> EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau, TensorBoard</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> LoadData <span class="keyword">import</span> LoadPredictData</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Prediction</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 读取已构建的模型</span></span><br><span class="line">        self.model = load_model(Config.MODEL_SAVE_PATH)</span><br><span class="line">        <span class="comment"># self.model = load_model(&quot;./model/itgood_resnet20.model&quot;)</span></span><br><span class="line">        self.loadData = LoadPredictData()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predictFromImagePath</span>(<span class="params">self, imagePath</span>):</span><br><span class="line">        X = self.loadData.getPredictDataFromPath(imagePath)</span><br><span class="line">        y_pred = self.model.predict(X)</span><br><span class="line">        origin = os.path.basename(imagePath).split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;_&quot;</span>)[<span class="number">0</span>].strip()</span><br><span class="line">        <span class="keyword">if</span> Config.CAPTCHA_LENGTH == <span class="number">1</span>:</span><br><span class="line">            predict = self.loadData.decode([y_pred])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            predict = self.loadData.decode(y_pred, isIndefiniteLength=<span class="literal">True</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;original:&#123;0: &lt;10&#125; prediction:&#123;1: &lt;10&#125;&quot;</span>.<span class="built_in">format</span>(origin, predict))</span><br><span class="line">        <span class="keyword">if</span> origin.lower() == predict.lower():</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predictFromImageByte</span>(<span class="params">self, imageByte</span>):</span><br><span class="line">        X = self.loadData.getPredictDataFromByte(imageByte)</span><br><span class="line">        y_pred = self.model.predict(X)</span><br><span class="line">        origin = os.path.basename(imageByte).split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;_&quot;</span>)[-<span class="number">1</span>].strip()</span><br><span class="line">        <span class="keyword">if</span> Config.CAPTCHA_LENGTH == <span class="number">1</span>:</span><br><span class="line">            predict = self.loadData.decode([y_pred])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            predict = self.loadData.decode(y_pred)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;original:&#123;&#125;  prediction:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(origin, predict))</span><br><span class="line">        <span class="keyword">return</span> self.loadData.decode(y_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predictFromImageDir</span>(<span class="params">self, imageDir</span>):</span><br><span class="line">        imageNameList = os.listdir(imageDir)</span><br><span class="line">        total = <span class="built_in">len</span>(imageNameList)</span><br><span class="line">        error = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, imageName <span class="keyword">in</span> <span class="built_in">enumerate</span>(imageNameList):</span><br><span class="line">            imagePath = os.path.join(imageDir, imageName)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> self.predictFromImagePath(imagePath):</span><br><span class="line">                error += <span class="number">1</span></span><br><span class="line">        correct = total - error</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;sample total: &#123;&#125;   accuracy: &#123;:.5f&#125;&quot;</span>.<span class="built_in">format</span>(<span class="built_in">len</span>(imageNameList), correct / total))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    t1 = time.time()</span><br><span class="line">    task = Prediction()</span><br><span class="line"></span><br><span class="line">    task.predictFromImageDir(Config.TEST_SET_DIR)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>准确率基本为1.0</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200427161846.png" alt=""></p>
+<h2 id="训练图像部分"><a href="#训练图像部分" class="headerlink" title="训练图像部分"></a>训练图像部分</h2><p>同训练Label部分一样。</p>
+<p>略</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.png" alt="wudinaonao 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="wudinaonao 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>wudinaonao
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.wudinaonao.com/2020/04/27/Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB-12306-%E9%AA%8C%E8%AF%81%E7%A0%81/" title="Keras 实现识别 12306 验证码">https://blog.wudinaonao.com/2020/04/27/Keras-实现识别-12306-验证码/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/Keras/" rel="tag"><i class="fa fa-tag"></i> Keras</a>
+              <a href="/tags/Tensorflow/" rel="tag"><i class="fa fa-tag"></i> Tensorflow</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag"><i class="fa fa-tag"></i> 神经网络</a>
+              <a href="/tags/%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/" rel="tag"><i class="fa fa-tag"></i> 验证码识别</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/26/Spring-Boot-%E9%9B%86%E6%88%90%E5%89%8D%E7%AB%AF/" rel="prev" title="Spring Boot 集成 React 前端路由问题">
+      <i class="fa fa-chevron-left"></i> Spring Boot 集成 React 前端路由问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/27/Next-%E4%B8%BB%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE/" rel="next" title="Next 主题设置代码高亮">
+      Next 主题设置代码高亮 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-Keras-%E5%AE%9E%E7%8E%B0%E8%AF%86%E5%88%AB12306%E9%AA%8C%E8%AF%81%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">Python+Keras 实现识别12306验证码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">1.2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.4.</span> <span class="nav-text">获取样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%89%B2%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.5.</span> <span class="nav-text">分割样本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%89%B2Label%E9%83%A8%E5%88%86"><span class="nav-number">1.5.1.</span> <span class="nav-text">分割Label部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%89%B2Image%E9%83%A8%E5%88%86"><span class="nav-number">1.5.2.</span> <span class="nav-text">分割Image部分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="nav-number">1.6.</span> <span class="nav-text">创建字符集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.7.</span> <span class="nav-text">新建配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.8.</span> <span class="nav-text">定义模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">1.9.</span> <span class="nav-text">新建一个工具类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">1.10.</span> <span class="nav-text">读取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.11.</span> <span class="nav-text">训练模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.12.</span> <span class="nav-text">测试模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E5%9B%BE%E5%83%8F%E9%83%A8%E5%88%86"><span class="nav-number">1.13.</span> <span class="nav-text">训练图像部分</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="wudinaonao"
+      src="/images/avatar-0.gif">
+  <p class="site-author-name" itemprop="name">wudinaonao</p>
+  <div class="site-description" itemprop="description">Naonao Life Record</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wudinaonao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wudinaonao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wudinaonao250@gmail.com" title="E-Mail → mailto:wudinaonao250@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.youtube.com/channel/UCFX7jvxEj6iH3iZwtf4FWtw?view_as=subscriber" title="YouTube → https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCFX7jvxEj6iH3iZwtf4FWtw?view_as&#x3D;subscriber" rel="noopener" target="_blank"><i class="fab fa-youtube fa-fw"></i>YouTube</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/wudinaonao250/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;wudinaonao250&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/wen-lu-zhao" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;wen-lu-zhao" rel="noopener" target="_blank"><i class="fab fa-quora fa-fw"></i>知乎</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">晋ICP备20001113号 </a>
+      <img src="/images/beian.png" style="display: inline-block;">
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Copyright © 2020 Naonao Studio All Rights Reserved.</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"EurBG3R2dEPassgsKv84FDke-gzGzoHsz","app_key":"JnxaQTx5D6cf5KLNxfsylE65","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'EurBG3R2dEPassgsKv84FDke-gzGzoHsz',
+      appKey     : 'JnxaQTx5D6cf5KLNxfsylE65',
+      placeholder: "说点什么",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
