@@ -2394,7 +2394,12 @@
 
 <h2 id="临时添加"><a href="#临时添加" class="headerlink" title="临时添加"></a>临时添加</h2><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>
 
-<h2 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h2><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>profile</span><br></pre></td></tr></table></figure>
+<h2 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h2><h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h3><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>profile</span><br></pre></td></tr></table></figure>
+
+<p>在文件底部添加</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>
+
+<h3 id="Method-2"><a href="#Method-2" class="headerlink" title="Method 2"></a>Method 2</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>在文件底部添加</p>
 <figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>]]></content>

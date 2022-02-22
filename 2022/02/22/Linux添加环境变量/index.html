@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.wudinaonao.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="比如要添加一个环境变量 1NAME&#x3D;NAONAO  临时添加1export NAME&#x3D;NAONAO  永久添加1nano &#x2F;etc&#x2F;profile  在文件底部添加 1export NAME&#x3D;NAONAO">
+  <meta name="description" content="比如要添加一个环境变量 1NAME&#x3D;NAONAO  临时添加1export NAME&#x3D;NAONAO  永久添加Method 11nano &#x2F;etc&#x2F;profile  在文件底部添加 1export NAME&#x3D;NAONAO  Method 21nano ~&#x2F;.bashrc  在文件底部添加 1export NAME&#x3D;NAONAO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux添加环境变量">
 <meta property="og:url" content="https://blog.wudinaonao.com/2022/02/22/Linux%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/index.html">
 <meta property="og:site_name" content="Naonao Blog">
-<meta property="og:description" content="比如要添加一个环境变量 1NAME&#x3D;NAONAO  临时添加1export NAME&#x3D;NAONAO  永久添加1nano &#x2F;etc&#x2F;profile  在文件底部添加 1export NAME&#x3D;NAONAO">
+<meta property="og:description" content="比如要添加一个环境变量 1NAME&#x3D;NAONAO  临时添加1export NAME&#x3D;NAONAO  永久添加Method 11nano &#x2F;etc&#x2F;profile  在文件底部添加 1export NAME&#x3D;NAONAO  Method 21nano ~&#x2F;.bashrc  在文件底部添加 1export NAME&#x3D;NAONAO">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-22T15:23:53.000Z">
 <meta property="article:modified_time" content="2022-02-22T15:23:53.000Z">
@@ -288,7 +288,12 @@
 
 <h2 id="临时添加"><a href="#临时添加" class="headerlink" title="临时添加"></a>临时添加</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>
 
-<h2 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>profile</span><br></pre></td></tr></table></figure>
+<h2 id="永久添加"><a href="#永久添加" class="headerlink" title="永久添加"></a>永久添加</h2><h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>profile</span><br></pre></td></tr></table></figure>
+
+<p>在文件底部添加</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>
+
+<h3 id="Method-2"><a href="#Method-2" class="headerlink" title="Method 2"></a>Method 2</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>在文件底部添加</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">NAME</span>=NAONAO</span><br></pre></td></tr></table></figure>
@@ -406,7 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.</span> <span class="nav-text">临时添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.</span> <span class="nav-text">永久添加</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E6%B7%BB%E5%8A%A0"><span class="nav-number">1.</span> <span class="nav-text">临时添加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E6%B7%BB%E5%8A%A0"><span class="nav-number">2.</span> <span class="nav-text">永久添加</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-1"><span class="nav-number">2.1.</span> <span class="nav-text">Method 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-2"><span class="nav-number">2.2.</span> <span class="nav-text">Method 2</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
