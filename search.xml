@@ -2444,7 +2444,7 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>Restful API设计最佳实践</title>
     <url>/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</url>
     <content><![CDATA[<h1 id="Restful-API设计最佳实践"><a href="#Restful-API设计最佳实践" class="headerlink" title="Restful API设计最佳实践"></a>Restful API设计最佳实践</h1><h2 id="Restful-API成熟度"><a href="#Restful-API成熟度" class="headerlink" title="Restful API成熟度"></a>Restful API成熟度</h2><p>在<a href="https://martinfowler.com/articles/richardsonMaturityModel.html#level0">Richardson Maturity Model</a>模型中，将RESTful分为4个等级：</p>
 <p><img data-src="/resource/img/2022/03/restful/overview.png" alt=""></p>
