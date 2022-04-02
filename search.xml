@@ -2686,4 +2686,26 @@
         <tag>OpenWRT</tag>
       </tags>
   </entry>
+  <entry>
+    <title>electron安装</title>
+    <url>/2022/04/02/electron%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<p>错误信息</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">error C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electron: Co</span><br><span class="line">Exit code: <span class="number">1</span></span><br><span class="line">Command: <span class="keyword">node</span> <span class="title">install</span>.js</span><br><span class="line">Arguments: </span><br><span class="line">Directory: C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electro</span><br><span class="line">Output:</span><br><span class="line">RequestError: <span class="keyword">read</span> ECONNRESET</span><br><span class="line">    at ClientRequest.<span class="tag">&lt;anonymous&gt;</span> (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at Object.onceWrapper (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">646</span>:<span class="number">26</span>)</span><br><span class="line">    at ClientRequest.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">538</span>:<span class="number">35</span>)</span><br><span class="line">    at ClientRequest.origin.emit (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at TLSSocket.socketErrorListener (<span class="keyword">node</span><span class="title">:_http_client</span>:<span class="number">442</span>:<span class="number">9</span>)</span><br><span class="line">    at TLSSocket.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">526</span>:<span class="number">28</span>)</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>node install.js</code>失败</p>
+<p>分析错误原因 <code>RequestError: read ECONNRESET</code> 连接重置</p>
+<p>这个原因大概率是因为被墙了</p>
+<p>解决方案, 更换为国内源, 例如淘宝镜像</p>
+<p>npm</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">npm config set ELECTRON_MIRROR http:<span class="regexp">//</span>npm.taobao.org<span class="regexp">/mirrors/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>yarn</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">yarn config set electron_mirror https:<span class="regexp">//</span>cdn.npm.taobao.org<span class="regexp">/dist/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://www.talktocomputer.site/blogs/139/">https://www.talktocomputer.site/blogs/139/</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
