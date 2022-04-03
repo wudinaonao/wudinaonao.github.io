@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.wudinaonao.com/2022/04/04/Javascript-%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A5%87%E6%80%AA%E7%9A%84%E7%AC%A6%E5%8F%B7/</loc>
+    <lastmod>2022-04-03</lastmod>
+  </url>
+  <url>
     <loc>https://blog.wudinaonao.com/2022/04/02/electron%E5%AE%89%E8%A3%85/</loc>
     <lastmod>2022-04-02</lastmod>
   </url>
