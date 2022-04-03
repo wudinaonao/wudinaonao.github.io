@@ -522,6 +522,53 @@
       </tags>
   </entry>
   <entry>
+    <title>Javascript 中那些奇怪的符号</title>
+    <url>/2022/04/04/Javascript-%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A5%87%E6%80%AA%E7%9A%84%E7%AC%A6%E5%8F%B7/</url>
+    <content><![CDATA[<p>摘自</p>
+<blockquote>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript</a></p>
+</blockquote>
+<h2 id="展开语法-Spread-syntax"><a href="#展开语法-Spread-syntax" class="headerlink" title="展开语法(Spread syntax)"></a>展开语法(Spread syntax)</h2><p>展开语法(Spread syntax), 可以在函数调用/数组构造时, 将数组表达式或者string在语法层面展开；还可以在构造字面量对象时, 将对象表达式按key-value的方式展开。(译者注: 字面量一般指 [1, 2, 3] 或者 {name: “mdn”} 这种简洁的构造方式)</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sum</span>(<span class="params">x, y, z</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sum</span>(...numbers));</span><br><span class="line"><span class="comment">// expected output: 6</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sum.<span class="title function_">apply</span>(<span class="literal">null</span>, numbers));</span><br><span class="line"><span class="comment">// expected output: 6</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数组拷贝"><a href="#数组拷贝" class="headerlink" title="数组拷贝"></a>数组拷贝</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [...arr]; <span class="comment">// like arr.slice()</span></span><br><span class="line">arr2.<span class="title function_">push</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// arr2 此时变成 [1, 2, 3, 4]</span></span><br><span class="line"><span class="comment">// arr 不受影响</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>实际上, 展开语法和 Object.assign() 行为一致, 执行的都是浅拷贝(只遍历一层)。如果想对多维数组进行深拷贝, 下面的示例就有些问题了。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]];</span><br><span class="line"><span class="keyword">var</span> b = [...a];</span><br><span class="line">b.<span class="title function_">shift</span>().<span class="title function_">shift</span>(); <span class="comment">// 1</span></span><br><span class="line"><span class="comment">// Now array a is affected as well: [[2], [3]]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="链接多个数组"><a href="#链接多个数组" class="headerlink" title="链接多个数组"></a>链接多个数组</h3><p><code>Array.concat</code>函数常用于将一个数组连接到另一个数组的后面。如果不使用展开语法, 代码可能是下面这样的</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr1 = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="comment">// 将 arr2 中所有元素附加到 arr1 后面并返回</span></span><br><span class="line"><span class="keyword">var</span> arr3 = arr1.<span class="title function_">concat</span>(arr2);</span><br></pre></td></tr></table></figure>
+
+<p>使用展开语法:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr1 = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">var</span> arr3 = [...arr1, ...arr2];</span><br></pre></td></tr></table></figure>
+
+<p>详情参考</p>
+<blockquote>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax</a></p>
+</blockquote>
+<h2 id="可选链操作符"><a href="#可选链操作符" class="headerlink" title="可选链操作符(?.)"></a>可选链操作符(?.)</h2><p><strong>可选链操作符( ?. )</strong>允许读取位于连接对象链深处的属性的值，而不必明确验证链中的每个引用是否有效。?. 操作符的功能类似于 . 链式操作符，不同之处在于，在引用为空(<code>nullish</code>) (<code>null</code>或者<code>undefined</code>) 的情况下不会引起错误，该表达式短路返回值是 <code>undefined</code>。与函数调用一起使用时，如果给定的函数不存在，则返回 <code>undefined</code>。</p>
+<p>当尝试访问可能不存在的对象属性时，可选链操作符将会使表达式更短、更简明。在探索一个对象的内容时，如果不能确定哪些属性必定存在，可选链操作符也是很有帮助的。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> adventurer = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Alice&#x27;</span>,</span><br><span class="line">  <span class="attr">cat</span>: &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Dinah&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dogName = adventurer.<span class="property">dog</span>?.<span class="property">name</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(dogName);</span><br><span class="line"><span class="comment">// expected output: undefined</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(adventurer.<span class="property">someNonExistentMethod</span>?.());</span><br><span class="line"><span class="comment">// expected output: undefined</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">obj?.<span class="property">prop</span></span><br><span class="line">obj?.[expr]</span><br><span class="line">arr?.[index]</span><br><span class="line">func?.(args)</span><br></pre></td></tr></table></figure>
+
+<p>详情参考</p>
+<blockquote>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining</a></p>
+</blockquote>
+<h2 id="空值合并运算符"><a href="#空值合并运算符" class="headerlink" title="空值合并运算符(??)"></a>空值合并运算符(??)</h2><p>空值合并操作符（<code>??</code>）是一个逻辑操作符，当左侧的操作数为 <code>null</code> 或者 <code>undefined</code> 时，返回其右侧操作数，否则返回左侧操作数。</p>
+<p>与逻辑或操作符（<code>||</code>）不同，逻辑或操作符会在左侧操作数为假值时返回右侧操作数。也就是说，如果使用 <code>||</code> 来为某些变量设置默认值，可能会遇到意料之外的行为。比如为假值（例如，<code>&#39;&#39;</code> 或 <code>0</code>）时。见下面的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="literal">null</span> ?? <span class="string">&#x27;default string&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo);</span><br><span class="line"><span class="comment">// expected output: &quot;default string&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz = <span class="number">0</span> ?? <span class="number">42</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(baz);</span><br><span class="line"><span class="comment">// expected output: 0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="语法格式-1"><a href="#语法格式-1" class="headerlink" title="语法格式"></a>语法格式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">leftExpr ?? rightExpr</span><br></pre></td></tr></table></figure>
+
+<p>详情参考</p>
+<blockquote>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
     <title>Jupyter 无法连接到 Python</title>
     <url>/2022/02/22/Jupyter-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%88%B0-Python/</url>
     <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">kernel connecting</span></span><br></pre></td></tr></table></figure>
@@ -887,6 +934,21 @@
       </tags>
   </entry>
   <entry>
+    <title>SQLAlchemy default 不更新</title>
+    <url>/2022/03/20/SQLAlchemy-default-%E4%B8%8D%E6%9B%B4%E6%96%B0/</url>
+    <content><![CDATA[<p>错误示例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid())</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_uuid</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">return</span> str(uuid.uuid4())</span><br></pre></td></tr></table></figure>
+
+<p>正确示例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid)</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>default 这个参数后可以指定一个函数</p>
+<p>例如 default=generate_uuid, 如果 default=generate_uuid() 则设定为该函数的一个返回值, 即这样是设置了一个常量</p>
+]]></content>
+  </entry>
+  <entry>
     <title>Restful API设计最佳实践</title>
     <url>/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</url>
     <content><![CDATA[<h1 id="Restful-API设计最佳实践"><a href="#Restful-API设计最佳实践" class="headerlink" title="Restful API设计最佳实践"></a>Restful API设计最佳实践</h1><h2 id="Restful-API成熟度"><a href="#Restful-API成熟度" class="headerlink" title="Restful API成熟度"></a>Restful API成熟度</h2><p>在<a href="https://martinfowler.com/articles/richardsonMaturityModel.html#level0">Richardson Maturity Model</a>模型中，将RESTful分为4个等级：</p>
@@ -1127,21 +1189,6 @@
 </li>
 </ol>
 <p>转载自: <a href="http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>SQLAlchemy default 不更新</title>
-    <url>/2022/03/20/SQLAlchemy-default-%E4%B8%8D%E6%9B%B4%E6%96%B0/</url>
-    <content><![CDATA[<p>错误示例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid())</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_uuid</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">return</span> str(uuid.uuid4())</span><br></pre></td></tr></table></figure>
-
-<p>正确示例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid)</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<p>default 这个参数后可以指定一个函数</p>
-<p>例如 default=generate_uuid, 如果 default=generate_uuid() 则设定为该函数的一个返回值, 即这样是设置了一个常量</p>
 ]]></content>
   </entry>
   <entry>
@@ -1694,6 +1741,28 @@
 <td>屏幕</td>
 </tr>
 </tbody></table>
+]]></content>
+  </entry>
+  <entry>
+    <title>electron安装</title>
+    <url>/2022/04/02/electron%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<p>错误信息</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">error C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electron: Co</span><br><span class="line">Exit code: <span class="number">1</span></span><br><span class="line">Command: <span class="keyword">node</span> <span class="title">install</span>.js</span><br><span class="line">Arguments: </span><br><span class="line">Directory: C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electro</span><br><span class="line">Output:</span><br><span class="line">RequestError: <span class="keyword">read</span> ECONNRESET</span><br><span class="line">    at ClientRequest.<span class="tag">&lt;anonymous&gt;</span> (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at Object.onceWrapper (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">646</span>:<span class="number">26</span>)</span><br><span class="line">    at ClientRequest.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">538</span>:<span class="number">35</span>)</span><br><span class="line">    at ClientRequest.origin.emit (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at TLSSocket.socketErrorListener (<span class="keyword">node</span><span class="title">:_http_client</span>:<span class="number">442</span>:<span class="number">9</span>)</span><br><span class="line">    at TLSSocket.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">526</span>:<span class="number">28</span>)</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>node install.js</code>失败</p>
+<p>分析错误原因 <code>RequestError: read ECONNRESET</code> 连接重置</p>
+<p>这个原因大概率是因为被墙了</p>
+<p>解决方案, 更换为国内源, 例如淘宝镜像</p>
+<p>npm</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">npm config set ELECTRON_MIRROR http:<span class="regexp">//</span>npm.taobao.org<span class="regexp">/mirrors/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>yarn</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">yarn config set electron_mirror https:<span class="regexp">//</span>cdn.npm.taobao.org<span class="regexp">/dist/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://www.talktocomputer.site/blogs/139/">https://www.talktocomputer.site/blogs/139/</a></p>
+</blockquote>
 ]]></content>
   </entry>
   <entry>
@@ -2685,74 +2754,5 @@
       <tags>
         <tag>OpenWRT</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>electron安装</title>
-    <url>/2022/04/02/electron%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<p>错误信息</p>
-<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">error C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electron: Co</span><br><span class="line">Exit code: <span class="number">1</span></span><br><span class="line">Command: <span class="keyword">node</span> <span class="title">install</span>.js</span><br><span class="line">Arguments: </span><br><span class="line">Directory: C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electro</span><br><span class="line">Output:</span><br><span class="line">RequestError: <span class="keyword">read</span> ECONNRESET</span><br><span class="line">    at ClientRequest.<span class="tag">&lt;anonymous&gt;</span> (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at Object.onceWrapper (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">646</span>:<span class="number">26</span>)</span><br><span class="line">    at ClientRequest.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">538</span>:<span class="number">35</span>)</span><br><span class="line">    at ClientRequest.origin.emit (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at TLSSocket.socketErrorListener (<span class="keyword">node</span><span class="title">:_http_client</span>:<span class="number">442</span>:<span class="number">9</span>)</span><br><span class="line">    at TLSSocket.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">526</span>:<span class="number">28</span>)</span><br></pre></td></tr></table></figure>
-
-<p>运行<code>node install.js</code>失败</p>
-<p>分析错误原因 <code>RequestError: read ECONNRESET</code> 连接重置</p>
-<p>这个原因大概率是因为被墙了</p>
-<p>解决方案, 更换为国内源, 例如淘宝镜像</p>
-<p>npm</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">npm config set ELECTRON_MIRROR http:<span class="regexp">//</span>npm.taobao.org<span class="regexp">/mirrors/</span>electron/</span><br></pre></td></tr></table></figure>
-
-<p>yarn</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">yarn config set electron_mirror https:<span class="regexp">//</span>cdn.npm.taobao.org<span class="regexp">/dist/</span>electron/</span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p><a href="https://www.talktocomputer.site/blogs/139/">https://www.talktocomputer.site/blogs/139/</a></p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>Javascript 中那些奇怪的符号</title>
-    <url>/2022/04/04/Javascript-%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A5%87%E6%80%AA%E7%9A%84%E7%AC%A6%E5%8F%B7/</url>
-    <content><![CDATA[<p>摘自</p>
-<blockquote>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript</a></p>
-</blockquote>
-<h2 id="展开语法-Spread-syntax"><a href="#展开语法-Spread-syntax" class="headerlink" title="展开语法(Spread syntax)"></a>展开语法(Spread syntax)</h2><p>展开语法(Spread syntax), 可以在函数调用/数组构造时, 将数组表达式或者string在语法层面展开；还可以在构造字面量对象时, 将对象表达式按key-value的方式展开。(译者注: 字面量一般指 [1, 2, 3] 或者 {name: “mdn”} 这种简洁的构造方式)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sum</span>(<span class="params">x, y, z</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sum</span>(...numbers));</span><br><span class="line"><span class="comment">// expected output: 6</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sum.<span class="title function_">apply</span>(<span class="literal">null</span>, numbers));</span><br><span class="line"><span class="comment">// expected output: 6</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="数组拷贝"><a href="#数组拷贝" class="headerlink" title="数组拷贝"></a>数组拷贝</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [...arr]; <span class="comment">// like arr.slice()</span></span><br><span class="line">arr2.<span class="title function_">push</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// arr2 此时变成 [1, 2, 3, 4]</span></span><br><span class="line"><span class="comment">// arr 不受影响</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>实际上, 展开语法和 Object.assign() 行为一致, 执行的都是浅拷贝(只遍历一层)。如果想对多维数组进行深拷贝, 下面的示例就有些问题了。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]];</span><br><span class="line"><span class="keyword">var</span> b = [...a];</span><br><span class="line">b.<span class="title function_">shift</span>().<span class="title function_">shift</span>(); <span class="comment">// 1</span></span><br><span class="line"><span class="comment">// Now array a is affected as well: [[2], [3]]</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="链接多个数组"><a href="#链接多个数组" class="headerlink" title="链接多个数组"></a>链接多个数组</h3><p><code>Array.concat</code>函数常用于将一个数组连接到另一个数组的后面。如果不使用展开语法, 代码可能是下面这样的</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr1 = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="comment">// 将 arr2 中所有元素附加到 arr1 后面并返回</span></span><br><span class="line"><span class="keyword">var</span> arr3 = arr1.<span class="title function_">concat</span>(arr2);</span><br></pre></td></tr></table></figure>
-
-<p>使用展开语法:</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> arr1 = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> arr2 = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">var</span> arr3 = [...arr1, ...arr2];</span><br></pre></td></tr></table></figure>
-
-<p>详情参考</p>
-<blockquote>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax</a></p>
-</blockquote>
-<h2 id="可选链操作符"><a href="#可选链操作符" class="headerlink" title="可选链操作符(?.)"></a>可选链操作符(?.)</h2><p><strong>可选链操作符( ?. )</strong>允许读取位于连接对象链深处的属性的值，而不必明确验证链中的每个引用是否有效。?. 操作符的功能类似于 . 链式操作符，不同之处在于，在引用为空(<code>nullish</code>) (<code>null</code>或者<code>undefined</code>) 的情况下不会引起错误，该表达式短路返回值是 <code>undefined</code>。与函数调用一起使用时，如果给定的函数不存在，则返回 <code>undefined</code>。</p>
-<p>当尝试访问可能不存在的对象属性时，可选链操作符将会使表达式更短、更简明。在探索一个对象的内容时，如果不能确定哪些属性必定存在，可选链操作符也是很有帮助的。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> adventurer = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Alice&#x27;</span>,</span><br><span class="line">  <span class="attr">cat</span>: &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Dinah&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> dogName = adventurer.<span class="property">dog</span>?.<span class="property">name</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(dogName);</span><br><span class="line"><span class="comment">// expected output: undefined</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(adventurer.<span class="property">someNonExistentMethod</span>?.());</span><br><span class="line"><span class="comment">// expected output: undefined</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">obj?.<span class="property">prop</span></span><br><span class="line">obj?.[expr]</span><br><span class="line">arr?.[index]</span><br><span class="line">func?.(args)</span><br></pre></td></tr></table></figure>
-
-<p>详情参考</p>
-<blockquote>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining</a></p>
-</blockquote>
-<h2 id="空值合并运算符"><a href="#空值合并运算符" class="headerlink" title="空值合并运算符(??)"></a>空值合并运算符(??)</h2><p>空值合并操作符（<code>??</code>）是一个逻辑操作符，当左侧的操作数为 <code>null</code> 或者 <code>undefined</code> 时，返回其右侧操作数，否则返回左侧操作数。</p>
-<p>与逻辑或操作符（<code>||</code>）不同，逻辑或操作符会在左侧操作数为假值时返回右侧操作数。也就是说，如果使用 <code>||</code> 来为某些变量设置默认值，可能会遇到意料之外的行为。比如为假值（例如，<code>&#39;&#39;</code> 或 <code>0</code>）时。见下面的例子。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="literal">null</span> ?? <span class="string">&#x27;default string&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo);</span><br><span class="line"><span class="comment">// expected output: &quot;default string&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> baz = <span class="number">0</span> ?? <span class="number">42</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(baz);</span><br><span class="line"><span class="comment">// expected output: 0</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="语法格式-1"><a href="#语法格式-1" class="headerlink" title="语法格式"></a>语法格式</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">leftExpr ?? rightExpr</span><br></pre></td></tr></table></figure>
-
-<p>详情参考</p>
-<blockquote>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator</a></p>
-</blockquote>
-]]></content>
   </entry>
 </search>
