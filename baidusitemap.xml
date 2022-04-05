@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.wudinaonao.com/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2022-04-05</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/05/Vue-warn-Non-function-value-encountered-for-default-slot/</loc>
+    <lastmod>2022-04-05</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/04/npm-install-save-core-js-modules-es-error-cause-js-%E6%8A%A5%E9%94%99/</loc>
+    <lastmod>2022-04-04</lastmod>
+  </url>
+  <url>
     <loc>https://blog.wudinaonao.com/2022/04/04/Javascript-%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A5%87%E6%80%AA%E7%9A%84%E7%AC%A6%E5%8F%B7/</loc>
     <lastmod>2022-04-03</lastmod>
   </url>

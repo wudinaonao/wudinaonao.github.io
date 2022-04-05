@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">60</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">63</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,325 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/" class="post-title-link" itemprop="url">Openwrt通过SSH启动接口</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-25 00:21:36" itemprop="dateCreated datePublished" datetime="2020-05-25T00:21:36+08:00">2020-05-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/" class="post-meta-item leancloud_visitors" data-flag-title="Openwrt通过SSH启动接口" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>如果你像我一样，把lan口关闭了导致无法通过web进入后台。那么你可以进入通过SSH来重新启用这个接口。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/etc/</span>config</span><br><span class="line">vi network</span><br></pre></td></tr></table></figure>
+
+<p>找到你的lan口<br>更改</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">option</span> <span class="keyword">auto</span> <span class="comment">&#x27;0&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>为</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">option</span> <span class="keyword">auto</span> <span class="comment">&#x27;1&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">service network restart</span></span><br></pre></td></tr></table></figure>
+
+<p>这样lan口便重新启用，可以登录后台了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Gitlab 迁移服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-22 22:45:53" itemprop="dateCreated datePublished" datetime="2020-05-22T22:45:53+08:00">2020-05-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Gitlab 迁移服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="确定版本"><a href="#确定版本" class="headerlink" title="确定版本"></a>确定版本</h1><p>确定源服务器和目标服务器的版本。不然恢复备份时候会出现版本不一致的问题。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522224718.png" alt="20200522224718"></p>
+<p>基于Docker的Gitlab，可以先更新一下镜像。再进行备份。或者目标服务器拉取指定版本的镜像。</p>
+<h1 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h1><p>进入镜像，执行命令生成备份</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:create <span class="attribute">RAILS_ENV</span>=production </span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522225121.png" alt="20200522225121"></p>
+<p>备份完成。<strong>注意！gitlab.rb 这个配置文件需要手动复制到目标服务器。</strong></p>
+<h1 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h1><p>找到备份的配置文件。在你挂载的/data/backups目录下</p>
+<p>例如我的位置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522225742.png" alt="20200522225742"></p>
+<p>拷贝到目标服务器的相同目录下，例如</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522230003.png" alt="20200522230003"></p>
+<p>进入容器执行</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore <span class="attribute">RAILS_ENV</span>=production   <span class="attribute">BACKUP</span>=1590159208_2020_05_22_13.0.0</span><br></pre></td></tr></table></figure>
+<p><strong>注意BACKUP的时间标记。</strong>为你需要恢复的备份。</p>
+<p>复制gitlab.rb这个文件到目标服务器。</p>
+<p>重启Gitlab</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br><span class="line"><span class="attribute">gitlab-ctl restart</span></span><br></pre></td></tr></table></figure>
+
+<p>迁移完成。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" class="post-title-link" itemprop="url">Ubuntu 20.04 配置静态IP</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-22 19:58:13" itemprop="dateCreated datePublished" datetime="2020-05-22T19:58:13+08:00">2020-05-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu 20.04 配置静态IP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200022.png" alt="20200522200022"></p>
+<p>查看你的网卡名称</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ifconfig</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200141.png" alt="20200522200141"></p>
+<p>例如我要更改 ens160 这个网卡</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/etc/</span>netplan</span><br></pre></td></tr></table></figure>
+
+<p>找到文件，名字可能不一样</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200353.png" alt="20200522200353"></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">nano</span> <span class="number">00</span>-installer-config.yaml</span><br></pre></td></tr></table></figure>
+
+<p>更改配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is the network config written by &#x27;subiquity&#x27;n</span></span><br><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">ens160:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.1</span><span class="number">.6</span><span class="string">/24</span>]</span><br><span class="line">      <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">gateway4:</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span></span><br><span class="line">      <span class="attr">nameservers:</span> </span><br><span class="line">        <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>,<span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span>]</span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>配置</p>
+<ul>
+<li>ip地址：192.168.1.6</li>
+<li>子网掩码： 255.255.255.0</li>
+<li>网关：192.168.1.1</li>
+<li>DNS服务器：192.168.1.1， 8.8.8.8</li>
+</ul>
+<p>应用更改</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netplan <span class="built_in">apply</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -859,319 +1178,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">用Nginx搭建自己的私有Git服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-30 15:47:29" itemprop="dateCreated datePublished" datetime="2020-04-30T15:47:29+08:00">2020-04-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="用Nginx搭建自己的私有Git服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="用Nginx搭建自己的私有Git服务器"><a href="#用Nginx搭建自己的私有Git服务器" class="headerlink" title="用Nginx搭建自己的私有Git服务器"></a>用Nginx搭建自己的私有Git服务器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在Github的私有仓库已经无限制免费了，但是Geek精神总是在召唤我似乎可以自己搭建一台自己的私有Git服务器？（你甚至可以写个后台前端搭建一个自己的Github！额，貌似是Gitlab？）</p>
-<p>说干就干！</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/30/%E7%94%A8Nginx%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A7%81%E6%9C%89Git%E6%9C%8D%E5%8A%A1%E5%99%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">Flask集成React前端部署</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-29 23:37:07" itemprop="dateCreated datePublished" datetime="2020-04-29T23:37:07+08:00">2020-04-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" class="post-meta-item leancloud_visitors" data-flag-title="Flask集成React前端部署" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flask集成React前端部署"><a href="#Flask集成React前端部署" class="headerlink" title="Flask集成React前端部署"></a>Flask集成React前端部署</h1><h2 id="Build-React-文件"><a href="#Build-React-文件" class="headerlink" title="Build React 文件"></a>Build React 文件</h2><ul>
-<li><p>打包 React</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">run</span> build</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>得到build目录下的静态文件</p>
-</li>
-</ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234258.png" alt="20200429234258"></p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234325.png" alt="20200429234325"></p>
-<h2 id="设置-Flask"><a href="#设置-Flask" class="headerlink" title="设置 Flask"></a>设置 Flask</h2><p>Flask 默认静态资源在static目录，html文件在template目录，我们设置成我们自定义的路径。</p>
-<ul>
-<li><p>例如我们的目录结构</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234735.png" alt="20200429234735"></p>
-</li>
-<li><p>我们构建好的静态文件放在/frontend/flask-mark-12306-captcha-frontend/build这个目录里</p>
-</li>
-<li><p>我们的在 App.py （你的应用程序入口）里面设置</p>
- <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, render_template</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> mark</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> get</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> errorHandler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态文件目录</span></span><br><span class="line">frontEndDir = os.path.join(<span class="string">&quot;frontend&quot;</span>, <span class="string">&quot;flask-mark-12306-captcha-frontend&quot;</span>, <span class="string">&quot;build&quot;</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__, static_url_path=<span class="string">&#x27;&#x27;</span>, static_folder=frontEndDir)</span><br><span class="line">app.register_blueprint(errorHandler)</span><br><span class="line">app.register_blueprint(mark)</span><br><span class="line">app.register_blueprint(get)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 渲染 index.html</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line"><span class="keyword">return</span> render_template(<span class="string">&quot;index.html&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">app.run()</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>这样我们就设置好了。</p>
-</li>
-<li><p>跑一下项目看一下。</p>
-</li>
-<li><p>问题解决。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429235845.png" alt="20200429235845"></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Flask部署Keras模型遇到的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-28 20:02:22" itemprop="dateCreated datePublished" datetime="2020-04-28T20:02:22+08:00">2020-04-28</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Flask部署Keras模型遇到的问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/28/Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flask部署Keras模型遇到的问题"><a href="#Flask部署Keras模型遇到的问题" class="headerlink" title="Flask部署Keras模型遇到的问题"></a>Flask部署Keras模型遇到的问题</h1><h2 id="AttributeError-‘-thread-local’-object-has-no-attribute-‘value’"><a href="#AttributeError-‘-thread-local’-object-has-no-attribute-‘value’" class="headerlink" title="AttributeError: ‘_thread._local’ object has no attribute ‘value’"></a>AttributeError: ‘_thread._local’ object has no attribute ‘value’</h2><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200312.png" alt="20200428200312"></p>
-<ul>
-<li><p>定位到 <code>tensorflow_backend.py</code> 这个文件</p>
-</li>
-<li><p>在这个位置</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(<span class="params">func</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">symbolic_fn_wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>增加</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>变成这样</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@functools.wraps(<span class="params">func</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">symbolic_fn_wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">    _SYMBOLIC_SCOPE.value = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> _SYMBOLIC_SCOPE.value:</span><br><span class="line">        <span class="keyword">with</span> get_graph().as_default():</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"><span class="keyword">return</span> symbolic_fn_wrapper</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>问题解决</p>
-</li>
-</ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200428200702.png" alt="20200428200702"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1243,7 +1249,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

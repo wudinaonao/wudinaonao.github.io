@@ -2755,4 +2755,62 @@
         <tag>OpenWRT</tag>
       </tags>
   </entry>
+  <entry>
+    <title>npm install --save core-js/modules/es.error.cause.js 报错</title>
+    <url>/2022/04/04/npm-install-save-core-js-modules-es-error-cause-js-%E6%8A%A5%E9%94%99/</url>
+    <content><![CDATA[<p>在启动项目时，出现 npm install –save core-js/modules/es.error.cause.js 的错误</p>
+<p>解决方案</p>
+<p>先删除 <code>node_modules</code> 依赖</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm <span class="built_in">rm</span> -rf node_modules </span><br></pre></td></tr></table></figure>
+
+<p>首先安装 <code>报错的插件</code></p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">npm install <span class="comment">--save core-js</span></span><br></pre></td></tr></table></figure>
+
+<p>最后再 <code>npm install</code> 或者 <code>yarn install</code></p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">npm <span class="keyword">install</span> </span><br><span class="line">yarn <span class="keyword">install</span></span><br></pre></td></tr></table></figure>
+
+<p>最后 <code>npm run dev</code> 运行启动</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">npm <span class="built_in">run</span> dev</span><br></pre></td></tr></table></figure>
+
+<p>转载</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/Missbelover/article/details/123221351">https://blog.csdn.net/Missbelover/article/details/123221351</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>PowerShell设置全局代理</title>
+    <url>/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>在 PowerShell 里输入环境变量</p>
+<p>格式</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line"><span class="variable">$env</span><span class="symbol">:HTTP_PROXY=<span class="string">&quot;http://域名:端口&quot;</span></span></span><br><span class="line"><span class="variable">$env</span><span class="symbol">:HTTPS_PROXY=<span class="string">&quot;http://域名:端口&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line"><span class="variable">$env</span><span class="symbol">:HTTP_PROXY=<span class="string">&quot;http://127.0.0.1:10809&quot;</span></span></span><br><span class="line"><span class="variable">$env</span><span class="symbol">:HTTPS_PROXY=<span class="string">&quot;http://127.0.0.1:10809&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/weixin_44120025/article/details/110950434">https://blog.csdn.net/weixin_44120025/article/details/110950434</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>[Vue warn]: Non-function value encountered for default slot</title>
+    <url>/2022/04/05/Vue-warn-Non-function-value-encountered-for-default-slot/</url>
+    <content><![CDATA[<p>开发工具警告信息:</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">[Vue warn]: Non-<span class="keyword">function</span> <span class="title">value</span> encountered for default slot. Prefer <span class="keyword">function</span> <span class="title">slots</span> for better performance.</span><br></pre></td></tr></table></figure>
+
+<p>原因是组件插槽所插入的是插槽内容，而非函数值。Vue3 推荐使用函数式插槽，以便获得更佳的性能。</p>
+<p>不推荐的写法</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">h</span><span class="params">(AtActionSheetHeader, null, props.title)</span></span> <span class="comment">// 不推荐的写法</span></span><br></pre></td></tr></table></figure>
+
+<p>推荐的写法</p>
+<figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line">h(AtActionSheetHeader, <span class="literal">null</span>, &#123; default: <span class="function"><span class="params">()</span> =&gt;</span> props.title &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://github.com/b2nil/taro-ui-vue3/issues/3">https://github.com/b2nil/taro-ui-vue3/issues/3</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
