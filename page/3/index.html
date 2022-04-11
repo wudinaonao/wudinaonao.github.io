@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">63</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,812 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/Shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/Shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Shell 字符串操作</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-21 21:31:04" itemprop="dateCreated datePublished" datetime="2022-02-21T21:31:04+08:00">2022-02-21</time>
+            </span>
+
+          
+            <span id="/2022/02/21/Shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/" class="post-meta-item leancloud_visitors" data-flag-title="Shell 字符串操作" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/21/Shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/Shell-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="截取"><a href="#截取" class="headerlink" title="截取"></a>截取</h1><h2 id="从指定位置开始截取"><a href="#从指定位置开始截取" class="headerlink" title="从指定位置开始截取"></a>从指定位置开始截取</h2><h3 id="从字符串左边开始截取"><a href="#从字符串左边开始截取" class="headerlink" title="从字符串左边开始截取"></a>从字符串左边开始截取</h3><p>格式</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span>&#123;string:<span class="built_in">start</span>:<span class="keyword">end</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;c.biancheng.net&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url: 2: 9&#125;</span></span><br><span class="line">biancheng</span><br></pre></td></tr></table></figure>
+
+<p>end 省略则截取到末尾</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;c.biancheng.net&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url: 2&#125;</span>          <span class="comment">#省略 length，截取到字符串末尾</span></span><br><span class="line">biancheng.net</span><br></pre></td></tr></table></figure>
+
+<h3 id="从右边开始截取"><a href="#从右边开始截取" class="headerlink" title="从右边开始截取"></a>从右边开始截取</h3><p>格式</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="built_in">string</span>: <span class="number">0</span>-start :<span class="built_in">length</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;c.biancheng.net&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url: 0-13: 9&#125;</span></span><br><span class="line">biancheng</span><br></pre></td></tr></table></figure>
+
+<p>end 省略</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;c.biancheng.net&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url: 0-13&#125;</span>  <span class="comment">#省略 length，直接截取到字符串末尾</span></span><br><span class="line">biancheng.net</span><br></pre></td></tr></table></figure>
+
+<h2 id="从指定字符-串-开始截取"><a href="#从指定字符-串-开始截取" class="headerlink" title="从指定字符(串)开始截取"></a>从指定字符(串)开始截取</h2><h3 id="使用-号截取右边字符"><a href="#使用-号截取右边字符" class="headerlink" title="使用 # 号截取右边字符"></a>使用 # 号截取右边字符</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="built_in">string</span><span class="comment">#*chars&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>例</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;http://c.biancheng.net/index.html&quot;</span></span><br><span class="line">echo <span class="variable">$&#123;url#*:&#125;</span></span><br><span class="line"><span class="regexp">//</span>c.biancheng.net/index.html</span><br></pre></td></tr></table></figure>
+
+<p>注意，以上写法遇到第一个匹配的字符（子字符串）就结束了。例如</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url=<span class="string">&quot;http://c.biancheng.net/index.html&quot;</span></span><br><span class="line">echo <span class="variable">$&#123;url#*/&#125;</span></span><br><span class="line"><span class="regexp">/c.biancheng.net/i</span>ndex.html</span><br></pre></td></tr></table></figure>
+
+<p>如果希望直到最后一个指定字符（子字符串）再匹配结束，那么可以使用##，具体格式为</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="built_in">string</span><span class="comment">##*chars&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">url=<span class="string">&quot;http://c.biancheng.net/index.html&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url#*/&#125;</span>    <span class="comment">#结果为 /c.biancheng.net/index.html</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url##*/&#125;</span>   <span class="comment">#结果为 index.html</span></span><br><span class="line">str=<span class="string">&quot;---aa+++aa@@@&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;str#*aa&#125;</span>   <span class="comment">#结果为 +++aa@@@</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;str##*aa&#125;</span>  <span class="comment">#结果为 @@@</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-截取左边字符"><a href="#使用-截取左边字符" class="headerlink" title="使用 % 截取左边字符"></a>使用 % 截取左边字符</h2><p>使用%号可以截取指定字符（或者子字符串）左边的所有字符，具体格式如下：</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="keyword">string</span>%chars*&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请注意<em>的位置，因为要截取 chars 左边的字符，而忽略 chars 右边的字符，所以</em>应该位于 chars 的右侧。其他方面%和#的用法相同，这里不再赘述，仅举例说明：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">url=<span class="string">&quot;http://c.biancheng.net/index.html&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url%/*&#125;</span>  <span class="comment">#结果为 http://c.biancheng.net</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;url%%/*&#125;</span>  <span class="comment">#结果为 http:</span></span><br><span class="line">str=<span class="string">&quot;---aa+++aa@@@&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;str%aa*&#125;</span>  <span class="comment">#结果为 ---aa+++</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;str%%aa*&#125;</span>  <span class="comment">#结果为 ---</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th>格式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>${string: start :length}</td>
+<td>从 string 字符串的左边第 start 个字符开始，向右截取 length 个字符。</td>
+</tr>
+<tr>
+<td>${string: start}</td>
+<td>从 string 字符串的左边第 start 个字符开始截取，直到最后。</td>
+</tr>
+<tr>
+<td>${string: 0-start :length}</td>
+<td>从 string 字符串的右边第 start 个字符开始，向右截取 length 个字符</td>
+</tr>
+<tr>
+<td>${string: 0-start}</td>
+<td>从 string 字符串的右边第 start 个字符开始截取，直到最后</td>
+</tr>
+<tr>
+<td>${string#*chars}</td>
+<td>从 string 字符串第一次出现 *chars 的位置开始，截取 *chars 右边的所有字符</td>
+</tr>
+<tr>
+<td>${string##*chars}</td>
+<td>从 string 字符串最后一次出现 *chars 的位置开始，截取 *chars 右边的所有字符</td>
+</tr>
+<tr>
+<td>${string%*chars}</td>
+<td>从 string 字符串第一次出现 *chars 的位置开始，截取 *chars 左边的所有字符</td>
+</tr>
+<tr>
+<td>${string%%*chars}</td>
+<td>从 string 字符串最后一次出现 *chars 的位置开始，截取 *chars 左边的所有字符</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>参考链接</p>
+<p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/1120.html">http://c.biancheng.net/view/1120.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">hexo部署项目报错解决：The mode argument must be integer(无需node降版本)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-21 18:45:54" itemprop="dateCreated datePublished" datetime="2022-02-21T18:45:54+08:00">2022-02-21</time>
+            </span>
+
+          
+            <span id="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="hexo部署项目报错解决：The mode argument must be integer(无需node降版本)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">FATAL</span> <span class="variable">Something</span><span class="operator">&#x27;</span><span class="variable">s</span> <span class="variable">wrong</span><span class="operator">.</span> <span class="variable">Maybe</span> <span class="variable">you</span> <span class="variable">can</span> <span class="variable">find</span> <span class="variable">the</span> <span class="variable">solution</span> <span class="variable">here</span><span class="operator">:</span> <span class="variable">https</span><span class="operator">://</span><span class="variable">hexo</span><span class="operator">.</span><span class="variable">io</span><span class="operator">/</span><span class="variable">docs</span><span class="operator">/</span><span class="variable">troubleshooting</span><span class="operator">.</span><span class="variable">html</span></span><br><span class="line"><span class="variable">TypeError</span> <span class="punctuation">[</span><span class="type">ERR_INVALID</span><span class="type">_ARG</span><span class="type">_TYPE</span><span class="punctuation">]</span><span class="operator">:</span> <span class="variable">The</span> <span class="string">&quot;mode&quot;</span> <span class="variable">argument</span> <span class="variable">must</span> <span class="variable">be</span> <span class="variable">integer</span><span class="operator">.</span> <span class="variable">Received</span> <span class="variable">an</span> <span class="variable">instance</span> <span class="variable">of</span> <span class="variable">Object</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">copyFile</span> <span class="punctuation">(</span><span class="variable">fs</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">1890</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">tryCatcher</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">util</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">16</span><span class="operator">:</span><span class="number">23</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">ret</span> <span class="punctuation">(</span><span class="variable">eval</span> <span class="variable">at</span> <span class="variable">makeNodePromisifiedEval</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promisify</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">184</span><span class="operator">:</span><span class="number">12</span><span class="punctuation">)</span><span class="operator">,</span> <span class="operator">&lt;</span><span class="variable">anonymous</span><span class="operator">&gt;:</span><span class="number">13</span><span class="operator">:</span><span class="number">39</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">hexo</span><span class="operator">-</span><span class="variable">deployer</span><span class="operator">-</span><span class="variable">git</span>\<span class="type">node_modules</span>\<span class="variable">hexo</span><span class="operator">-</span><span class="variable">fs</span>\<span class="variable">lib</span>\<span class="variable">fs</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">144</span><span class="operator">:</span><span class="number">39</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">tryCatcher</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">util</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">16</span><span class="operator">:</span><span class="number">23</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromiseFromHandler</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">517</span><span class="operator">:</span><span class="number">31</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">574</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise0</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">619</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromises</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">699</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">fulfill</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">643</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">resolveCallback</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">437</span><span class="operator">:</span><span class="number">57</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromiseFromHandler</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">529</span><span class="operator">:</span><span class="number">17</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">574</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise0</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">619</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromises</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">699</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">fulfill</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">643</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>解决办法是修改<code>package.json</code>文件，升级<code>hexo-renderer-stylus</code>到<code>2.0.0</code>版本</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://evestorm.github.io/posts/430/">https://evestorm.github.io/posts/430/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.4spaces.org/hexo-mode-argument-must-be-integer-error/">https://www.4spaces.org/hexo-mode-argument-must-be-integer-error/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-title-link" itemprop="url">文件系统特定的 LookupAndOpen[file] 实施失败</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-21 18:33:56" itemprop="dateCreated datePublished" datetime="2022-02-21T18:33:56+08:00">2022-02-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/ESXI/" itemprop="url" rel="index"><span itemprop="name">ESXI</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-meta-item leancloud_visitors" data-flag-title="文件系统特定的 LookupAndOpen[file] 实施失败" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>错误描述</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">对象类型需要托管的 I/O</span><br><span class="line">无法打开磁盘“<span class="regexp">/vmfs/</span>volumes<span class="regexp">/5ec70d97-8b7959b3-d45b-ecf4bbe3557c/</span>openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk”或其所依赖的快照磁盘之一。</span><br><span class="line">模块“Disk”打开电源失败。</span><br><span class="line">无法启动虚拟机。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>解决方案, 找到对应的磁盘文件(可以在网页里查看到磁盘的挂载路径)</p>
+<p>例如</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[datastore1]</span> openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined<span class="selector-class">.vmdk</span> </span><br></pre></td></tr></table></figure>
+
+<p>尝试修复</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -x repair <span class="regexp">/vmfs/</span>volumes<span class="regexp">/&lt;datastorepath&gt;/</span>&lt;vm name&gt;/&lt;vm name main base disk&gt;.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到该目录下</span></span><br><span class="line">cd <span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastore1/</span>openwrt</span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">vmkfstools -x repair openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Disk was successfully repaired.</span><br></pre></td></tr></table></figure>
+
+<p>磁盘修复成功, 可以打开了.</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://kb.vmware.com/s/article/2149438?lang=zh_CN">https://kb.vmware.com/s/article/2149438?lang=zh_CN</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Jupyter配合Nginx反向代理的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-22 00:30:43" itemprop="dateCreated datePublished" datetime="2021-09-22T00:30:43+08:00">2021-09-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/Docker/Jupyter/" itemprop="url" rel="index"><span itemprop="name">Jupyter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Jupyter配合Nginx反向代理的问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="SSL-Error"><a href="#SSL-Error" class="headerlink" title="SSL Error"></a>SSL Error</h1><p>当 jupyter 配置了 SSL 时, Nginx 反向代理时也需要用 https 协议</p>
+<p>例如, 反向代理到本地的 10000 端口</p>
+<p>错误示范</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>正确示范</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass https:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Websocket-连接问题"><a href="#Websocket-连接问题" class="headerlink" title="Websocket 连接问题"></a>Websocket 连接问题</h1><p>在基于 Docker 部署 jupyter 工作环境时, 可能会发生可以打开网页, 可以创建文件, 但是无法与后端 python 连接的情况.</p>
+<p>查看 jupyter 日志显示</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jupyter    | [W 2021-09-21 16:09:24.778 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.21ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:26.418 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.13ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:28.696 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.28ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:30.660 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.24ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:37.605 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.15ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:41.758 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.11ms <span class="attribute">referer</span>=None</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当我尝试用 jupyter 提供的 terminal 时, 发现以上日志.</p>
+<p>这说明这个请求没有成功, 400 状态码参考 MDN</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">HTTP</span> <span class="number">400</span> Bad Request 响应状态码表示由于语法无效，服务器无法理解该请求。 客户端不应该在未经修改的情况下重复此请求。</span><br></pre></td></tr></table></figure>
+
+<p>所以应该是 nginx 在与 jupyter 通信时发生了问题.</p>
+<p>Google …</p>
+<p>找到以下解决方案, 一个可用的 Nginx 反向代理配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">location</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* /(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?</span> &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># WebSocket support</span></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注意添加这三项</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/jupyter/notebook/issues/625">https://github.com/jupyter/notebook/issues/625</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/latest/config.html#options">https://jupyter-notebook.readthedocs.io/en/latest/config.html#options</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/cboettig/8643341bd3c93b62b5c2">https://gist.github.com/cboettig/8643341bd3c93b62b5c2</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/29/crontab-%E6%8E%92%E9%94%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" class="post-title-link" itemprop="url">crontab 排错</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-29 18:17:25" itemprop="dateCreated datePublished" datetime="2021-05-29T18:17:25+08:00">2021-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" class="post-meta-item leancloud_visitors" data-flag-title="crontab 排错" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/29/crontab-%E6%8E%92%E9%94%99/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在用 crontab 定时备份 gitlab 时, 发现任务总是不成功. 😱😱😱 </p>
+<p>命令如下</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> * * * /root/docker/gitlab/backup-gitlab.sh &gt;&gt; /root/docker/gitlab/backup-gitlab.<span class="keyword">log</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>测试后发现日志总是没有任何输出, 说明这个命令没有被执行. 🤔🤔🤔</p>
+<p>随便写了条命令测试</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * echo <span class="string">&quot;`date`&quot;</span> &gt; <span class="regexp">/root/</span>crontest.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<p>发现有输出…. 😲😲😲</p>
+<p>那么说明 crontab 确实工作了…. 😵😵😵</p>
+<p>沉思…. 🤔🤔🤔</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>虽然我不太清楚是什么原因, 但是当我把以下配置加入 crontab 后他开始工作了. 😄😄😄</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SHELL=<span class="regexp">/bin/bash</span></span><br><span class="line">PATH=<span class="regexp">/sbin:/bin</span><span class="symbol">:/usr/sbin</span><span class="symbol">:/usr/bin</span></span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p>也许是因为显式指定了 shell, 以及一些其他的一些参数, 导致可以正常工作, 因为我之前一直怀疑是权限的问题. 🤣🤣🤣</p>
+<p>参考连接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://my.oschina.net/leejun2005/blog/1788342">https://my.oschina.net/leejun2005/blog/1788342</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">编译Openwrt以及遇到的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-09 21:28:35" itemprop="dateCreated datePublished" datetime="2021-05-09T21:28:35+08:00">2021-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linuxe/" itemprop="url" rel="index"><span itemprop="name">Linuxe</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="编译Openwrt以及遇到的问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题以及解决方案"><a href="#问题以及解决方案" class="headerlink" title="问题以及解决方案"></a>问题以及解决方案</h1><h2 id="you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check"><a href="#you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check" class="headerlink" title="you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)"></a>you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)</h2><p>错误提示:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you should <span class="keyword">not</span> <span class="built_in">run</span> configure as root (<span class="built_in">set</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1 <span class="keyword">in</span> environment <span class="keyword">to</span> bypass this check)</span><br></pre></td></tr></table></figure>
+
+<p>如果你以root用户运行编译, 会有这个提示. 有两个解决方案, 你可以换一个非root用户, 或者接忽略提示.</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tx422/article/details/78593860">https://blog.csdn.net/tx422/article/details/78593860</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/" class="post-title-link" itemprop="url">gitlab本地自动定时备份</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 23:12:15" itemprop="dateCreated datePublished" datetime="2021-05-06T23:12:15+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/" class="post-meta-item leancloud_visitors" data-flag-title="gitlab本地自动定时备份" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/gitlab%E6%9C%AC%E5%9C%B0%E8%87%AA%E5%8A%A8%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>项目基于 docker 搭建.</p>
+<p>编辑 gitlab.rb 文件</p>
+<p>该文件在容器里的路径为</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/gi</span>tlab/gitlab.rb</span><br></pre></td></tr></table></figure>
+
+<p>编辑一下内容</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">&#x27;manage_backup_path&#x27;</span>] = <span class="literal">true</span></span><br><span class="line"><span class="meta"># gitlab备份目录</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;backup_path&#x27;</span>] = <span class="string">&quot;/var/opt/gitlab/backups&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 生成的备份文件权限</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;backup_archive_permissions&#x27;</span>] = <span class="number">0644</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 备份保留天数，秒计算, 86400 * 7 = 604800 保留 7 天</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;backup_keep_time&#x27;</span>] = <span class="number">604800</span></span><br></pre></td></tr></table></figure>
+
+<p>更新 gitlab 配置</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
+
+<p>使用 crontab 添加定时任务</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">crontab -e</span></span><br></pre></td></tr></table></figure>
+
+<p>添加配置, 每天 0 点备份</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> * * * /opt/gitlab/bin/gitlab-rake gitlab:backup:create</span><br></pre></td></tr></table></figure>
+
+<p>查看备份文件, 备份目录在容器里的路径</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/var/</span>opt<span class="regexp">/gitlab/</span>backups</span><br></pre></td></tr></table></figure>
+
+<p>查看</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/var/</span>opt<span class="regexp">/gitlab/</span>backups</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
+
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/rdp1305442102/article/details/105768441">https://blog.csdn.net/rdp1305442102/article/details/105768441</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -427,793 +1233,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" class="post-title-link" itemprop="url">shell用ssh在远程主机执行命令时如何退出</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-06 19:54:29" itemprop="dateCreated datePublished" datetime="2021-05-06T19:54:29+08:00">2021-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" class="post-meta-item leancloud_visitors" data-flag-title="shell用ssh在远程主机执行命令时如何退出" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在 shell 脚本里使用 ssh 在远程主机执行脚本时无法关闭连接</p>
-<p>例如</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@ipaddress</span> <span class="string">&#x27;~/my_script.sh&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>脚本执行完毕连接不会关闭, 需要你手动 Ctrl + C 关闭连接.</p>
-<p>解决方案 </p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@ipaddress</span> <span class="string">&#x27;~/my_script.sh &amp;&amp; exit&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>当你在远程主机执行的脚本由本地主机推送的话</p>
-<p>例如</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@remoteNode</span> &lt; test.sh</span><br></pre></td></tr></table></figure>
-
-<p>你可以在本地脚本里添加</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -SIGHUP <span class="variable">$PPID</span></span><br></pre></td></tr></table></figure>
-
-<p>kill 掉当前的 ssh</p>
-<p>但是这样会导致, 你尝试捕获 SSH 是否成功执行时, 总是得到失败的结果.</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://superuser.com/questions/207453/ssh-and-shell-through-ssh-how-to-exit?noredirect=1&amp;lq=1">https://superuser.com/questions/207453/ssh-and-shell-through-ssh-how-to-exit?noredirect=1&amp;lq=1</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-title-link" itemprop="url">SSH第一次登录免输入yes</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-06 19:48:35" itemprop="dateCreated datePublished" datetime="2021-05-06T19:48:35+08:00">2021-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linuxe/" itemprop="url" rel="index"><span itemprop="name">Linuxe</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-meta-item leancloud_visitors" data-flag-title="SSH第一次登录免输入yes" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>连接时加入StrictHostKeyChecking=no</p>
-<p>例如</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> -o StrictHostKeyChecking=<span class="literal">no</span> root@<span class="number">192.168.1.100</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">gitlab 502 错误排查</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-06 02:07:28" itemprop="dateCreated datePublished" datetime="2021-05-06T02:07:28+08:00">2021-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-meta-item leancloud_visitors" data-flag-title="gitlab 502 错误排查" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="动态查看日志"><a href="#动态查看日志" class="headerlink" title="动态查看日志"></a>动态查看日志</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f  <span class="regexp">/var/</span>log<span class="regexp">/gitlab/gi</span>tlab-rails/production.log</span><br></pre></td></tr></table></figure>
-
-<h2 id="迁移或恢复备份后部分操作服务端响应500"><a href="#迁移或恢复备份后部分操作服务端响应500" class="headerlink" title="迁移或恢复备份后部分操作服务端响应500"></a>迁移或恢复备份后部分操作服务端响应500</h2><p>进入容器, 运行</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-rails dbconsole</span></span><br></pre></td></tr></table></figure>
-
-<p>依次清除 token, 注意! 这样会清除全部的 token, 不过解决问题简单粗暴</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- clear project tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> projects <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear group tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> namespaces <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear instance tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> application_settings <span class="keyword">SET</span> runners_registration_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-
-<p>造成这个问题的原因是因为没有备份这个文件</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-secrets.json</span><br></pre></td></tr></table></figure>
-
-<p>以后操作的时候还是要多看看官方文档, 文档说的很清楚…</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
-</blockquote>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">When <span class="keyword">the</span> secrets <span class="built_in">file</span> is lost</span><br><span class="line">If you didn’t back up <span class="keyword">the</span> secrets <span class="built_in">file</span>, you must complete several steps <span class="built_in">to</span> <span class="built_in">get</span> GitLab working properly again.</span><br><span class="line"></span><br><span class="line">The secrets <span class="built_in">file</span> is responsible <span class="keyword">for</span> storing <span class="keyword">the</span> encryption key <span class="keyword">for</span> <span class="keyword">the</span> columns that contain required, sensitive information. If <span class="keyword">the</span> key is lost, GitLab can’t <span class="built_in">decrypt</span> those columns, preventing access <span class="built_in">to</span> <span class="keyword">the</span> following <span class="keyword">items</span>:</span><br><span class="line"></span><br><span class="line">CI/CD variables</span><br><span class="line">Kubernetes / GCP integration</span><br><span class="line">Custom Pages domains</span><br><span class="line">Project error tracking</span><br><span class="line">Runner authentication</span><br><span class="line">Project mirroring</span><br><span class="line">Web hooks</span><br><span class="line">In cases like CI/CD variables <span class="keyword">and</span> runner authentication, you can experience unexpected behaviors, such <span class="keyword">as</span>:</span><br><span class="line"></span><br><span class="line">Stuck jobs.</span><br><span class="line"><span class="number">500</span> errors.</span><br></pre></td></tr></table></figure>
-
-<h2 id="Whoops-GitLab-is-currently-unavailable"><a href="#Whoops-GitLab-is-currently-unavailable" class="headerlink" title="Whoops, GitLab is currently unavailable."></a>Whoops, GitLab is currently unavailable.</h2><p>可以正常查看项目列表, 但是无法进入项目, 错误提示</p>
-<figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Whoops, GitLab <span class="keyword">is</span> currently unavailable.</span><br></pre></td></tr></table></figure>
-
-<p>项目基于docker容器部署, 首先查看日志, 发现一条错误, 权限拒绝.</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;error&quot;</span><span class="punctuation">:</span><span class="string">&quot;open /var/opt/gitlab/gitaly/gitaly.pid: permission denied&quot;</span><span class="punctuation">,</span><span class="attr">&quot;level&quot;</span><span class="punctuation">:</span><span class="string">&quot;fatal&quot;</span><span class="punctuation">,</span><span class="attr">&quot;msg&quot;</span><span class="punctuation">:</span><span class="string">&quot;find gitaly&quot;</span><span class="punctuation">,</span><span class="attr">&quot;time&quot;</span><span class="punctuation">:</span><span class="string">&quot;2021-05-05T18:05:26Z&quot;</span><span class="punctuation">,</span><span class="attr">&quot;wrapper&quot;</span><span class="punctuation">:</span><span class="number">3514</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>google 发现, 这个文件在 docker 容器里的权限应该是 git:git</p>
-<p>但是我进入容器后发现该文件的权限为 root:root</p>
-<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 63 </span>May <span class="number"> 5 </span>16:51 RUBY_VERSION</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 23 </span>May <span class="number"> 5 </span>17:56 VERSION</span><br><span class="line">-rw-r-----<span class="number"> 1 </span>root git  <span class="number"> 819 </span>May <span class="number"> 5 </span>17:56 config.toml</span><br><span class="line">-rw-------<span class="number"> 1 </span>root root   <span class="number"> 3 </span>Mar <span class="number"> 8 </span>18:57 gitaly.pid</span><br><span class="line">srwxr-xr-x<span class="number"> 1 </span>root root   <span class="number"> 0 </span>Mar <span class="number"> 8 </span>18:57 gitaly.socket</span><br><span class="line">drwx------<span class="number"> 2 </span>git  root<span class="number"> 4096 </span>Mar <span class="number"> 8 </span>18:57 internal_sockets</span><br></pre></td></tr></table></figure>
-
-<p>修改权限</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> git:git gitaly.pid</span><br></pre></td></tr></table></figure>
-
-<h2 id="Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories"><a href="#Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories" class="headerlink" title="Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories"></a>Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories</h2><p>备份的时候出现这个问题, 十有八九是权限问题.</p>
-<p>直接 </p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> -R <span class="number">777</span> bakcups</span><br></pre></td></tr></table></figure>
-
-<p>参考连接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19">https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19</a><br><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Cloudflare CDN 的一些问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-24 13:15:59" itemprop="dateCreated datePublished" datetime="2021-04-24T13:15:59+08:00">2021-04-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Cloudflare CDN 的一些问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Cloudflare 免费版的 CDN 似乎不支持三级域名.</p>
-<p>例如 </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; www<span class="selector-class">.abc</span><span class="selector-class">.xxx</span><span class="selector-class">.com</span></span><br><span class="line">B -&gt; abc<span class="selector-class">.xxx</span>.com</span><br></pre></td></tr></table></figure>
-
-<p>访问 A 域名时会提示 SSL 错误, 访问 B 则一切正常.</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/third-level-domain/63383">https://community.cloudflare.com/t/third-level-domain/63383</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">Koolshare Clash 更新 Clash 版本</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-22 16:38:55" itemprop="dateCreated datePublished" datetime="2021-04-22T16:38:55+08:00">2021-04-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="Koolshare Clash 更新 Clash 版本" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Koolshare-Clash 的 Github 地址</p>
-<p><code>https://github.com/SukkaW/Koolshare-Clash</code></p>
-<p>这个项目已经两年没更新了, 项目自带的 Clash 版本为 Clash v0.20.0 已经很旧了.</p>
-<p>目前为止 Clash 的最新版本为 Clash v1.5.0</p>
-<p>笔者尝试更新 Clash 版本, 但是遇到的一些问题, 这里记录一下解决方案.</p>
-<h2 id="更新-Clash-版本"><a href="#更新-Clash-版本" class="headerlink" title="更新 Clash 版本"></a>更新 Clash 版本</h2><p>笔者的路由器为LEDE_X86 for linux, 首先通过 SSH 登录后台.</p>
-<p>切换到目录</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/koolshare/</span>bin</span><br></pre></td></tr></table></figure>
-
-<p>去 Github 下载对应的平台的最新的 Clash </p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash</span><br></pre></td></tr></table></figure>
-
-<p>删除旧的 Clash</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> clash</span><br></pre></td></tr></table></figure>
-
-<p>把新的 Clash 拷贝进去, 然后更改权限</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> <span class="number">755</span> clash</span><br></pre></td></tr></table></figure>
-
-<p>然后去 Koolshare 重启 Clash</p>
-<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="访问代理后台看不见配置的代理"><a href="#访问代理后台看不见配置的代理" class="headerlink" title="访问代理后台看不见配置的代理"></a>访问代理后台看不见配置的代理</h3><p>出现这种原因是因为 0.20.0 的配置文件和 1.5.0 配置文件有些字段更改了, 需要更改 Clash 的配置文件</p>
-<p>访问该网址可以查看最新的配置文件规则</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash<span class="regexp">/wiki/</span>configuration</span><br></pre></td></tr></table></figure>
-
-<p>一些差异</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxies</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy Group</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxy-groups</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Rule</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; rules</span><br></pre></td></tr></table></figure>
-
-<p>配置文件从1.0.0版本开始更改.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">Docker删除None镜像</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-21 12:58:25" itemprop="dateCreated datePublished" datetime="2021-04-21T12:58:25+08:00">2021-04-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Docker删除None镜像" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 停止docker</span><br><span class="line">docker stop <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除docker</span><br><span class="line">docker rm <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除images</span><br><span class="line">docker rmi <span class="constructor">$(<span class="params">docker</span> <span class="params">images</span> | <span class="params">grep</span> <span class="string">&quot;none&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $3&#125;&#x27;)</span></span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p> <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d06830de219f">https://www.jianshu.com/p/d06830de219f</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">opentracker搭建自己的BT Tracker服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-24 21:25:13" itemprop="dateCreated datePublished" datetime="2020-12-24T21:25:13+08:00">2020-12-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="opentracker搭建自己的BT Tracker服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>生命不息，折腾不止。在老家布置了一台服务器用于家庭影音中心，现在在新家，与老家相隔3000多公里，但是新家的服务器因为新装一无所有。此时此刻，突发奇想，我怎么能把老家的服务器里下载好的资源同步到新家的服务器上？</p>
-<p>解决方案：</p>
-<ul>
-<li><ol>
-<li><del>把老家服务器搬过来</del></li>
-</ol>
-</li>
-<li><ol start="2">
-<li>从新家访问老家的NAS，然后通过HTTP下载</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>自己写个同步程序部署在两台服务器上</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>或许可以用BT下载的方式从老家下载过来</li>
-</ol>
-</li>
-</ul>
-<p>方案1直接pass。</p>
-<p>方案2虽然也可以，但是群晖的连接好像直接复制到Aria2里下载不了，我可忍受不了下载一部50G的电影用浏览器自带的下载工具，而且还没有进度提示</p>
-<p>方案3，emmmm……等有空再说</p>
-<p>方案4，自己假设一台BT Trakcer服务器，然后做个种子下载，目前能想到的一个最佳方案</p>
-<p>查阅相关资料，看看有没有现成的工具可以使用。</p>
-<p>Searching …</p>
-<p>！！！可以使用 <strong>OpenTracker</strong> 这个现成的工具来搭建。</p>
-<p>那么问题来了，为了不搞乱服务器的环境，有没有现成的Docker镜像？</p>
-<p>Continue searching …</p>
-<p>在笔者孜孜不倦的努力下，真的发现了有人已经做好了镜像。</p>
-<p>直接拉取镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull lednerb/opentracker-docker</span><br></pre></td></tr></table></figure>
-
-<p>那么接下来如何启动一个容器？，我推荐<code>docker-compose</code></p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">opentracker</span><span class="punctuation">:</span></span><br><span class="line">        <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">lednerb/opentracker-docker</span></span><br><span class="line">        <span class="attribute">restart</span><span class="punctuation">:</span> <span class="string">unless-stopped</span></span><br><span class="line">        <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">6969:6969</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">6969:6969/udp</span></span><br></pre></td></tr></table></figure>
-
-<p>当然你也可以直接</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker</span> run -dit --name opentracker -p <span class="number">6969</span>:<span class="number">6969</span>/udp -p <span class="number">6969</span>:<span class="number">6969</span> lednerb/opentracker-docker</span><br></pre></td></tr></table></figure>
-
-<p>好了。大功告成。</p>
-<p>那么我怎么知道它运行了没有，怎么查看状态？</p>
-<p>举个栗子，比如我假设在了<code>yourhostname.com</code>这台主机上，那么访问</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://yourhostname.com:<span class="number">6969</span>/<span class="keyword">state</span></span><br></pre></td></tr></table></figure>
-
-<p>或者访问更详细的内容</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://yourhostname.com:<span class="number">6969</span>/<span class="keyword">state</span>?mode=everything</span><br></pre></td></tr></table></figure>
-
-<p>即可看到这家伙有没有在认真工作咯！</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224220240.png" alt="20201224220240"></p>
-<p>emmmmm…..刚搭建好，还没传种子。</p>
-<p>我们创建一个种子，传上去试试看。</p>
-<p>创建种子的时候Tracker服务器填：</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//y</span>ourhostname.com:<span class="number">6969</span>/announce</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udp:<span class="regexp">//y</span>ourhostname.com:<span class="number">6969</span>/announce</span><br></pre></td></tr></table></figure>
-
-<p>在Transmission里看一下。。。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224221255.png" alt="20201224221255"></p>
-<p>一切OK。。。</p>
-<p>到后台看一下</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224221518.png" alt="20201224221518"></p>
-<p>一切OK。。。可以看到已经增加了一个种子。</p>
-<p>下载试试看。。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224222117.png" alt="20201224222117"></p>
-<p>OK。。。已经出现一个peer了！</p>
-<p>接下来就像下载BT一样，不过并不会有更多的peer出现，因为只有我自己在做种自己在下。。。</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/lednerb/opentracker-docker/">https://hub.docker.com/r/lednerb/opentracker-docker/</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1281,7 +1304,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

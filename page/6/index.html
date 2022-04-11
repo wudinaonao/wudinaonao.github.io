@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">63</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">70</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,697 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" class="post-title-link" itemprop="url">Ubuntu20.04开机启动</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-07 15:13:04" itemprop="dateCreated datePublished" datetime="2020-06-07T15:13:04+08:00">2020-06-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu20.04开机启动" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/07/Ubuntu20-04%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ln -fs /lib/systemd/system/rc-local.service /etc/systemd/system/rc-local.service</span><br><span class="line">cd /etc/systemd/system/</span><br><span class="line">nano rc-local.service</span><br></pre></td></tr></table></figure>
+
+<p>rc-local.service 内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># </span><span class="language-bash"> SPDX-License-Identifier: LGPL-2.1+</span></span><br><span class="line"><span class="meta">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment">#  This file is part of systemd.</span></span></span><br><span class="line"><span class="meta">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment">#  systemd is free software; you can redistribute it and/or modify it</span></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"> under the terms of the GNU Lesser General Public License as published by</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"> the Free Software Foundation; either version 2.1 of the License, or</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash"> (at your option) any later version.</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">This unit gets pulled automatically into multi-user.target by</span></span><br><span class="line"><span class="meta"># </span><span class="language-bash">systemd-rc-local-generator <span class="keyword">if</span> /etc/rc.local is executable.</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=/etc/rc.local Compatibility</span><br><span class="line">Documentation=man:systemd-rc-local-generator(8)</span><br><span class="line">ConditionFileIsExecutable=/etc/rc.local</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/etc/rc.local start</span><br><span class="line">TimeoutSec=0</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line">GuessMainPID=no</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">Alias=rc-local.service</span><br></pre></td></tr></table></figure>
+
+<p>创建 rc.local 文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch <span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure>
+
+<p>赋予可执行权限</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod <span class="number">755</span> <span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure>
+
+<p>编辑 rc.local</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure>
+
+<p>文件内容 </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里开机执行的脚本</span></span><br><span class="line"><span class="comment"># 要卸载 exit 0 之前</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>完成。</p>
+<p>参考链接 <a target="_blank" rel="noopener" href="https://blog.csdn.net/zhengchaooo/article/details/80202599">https://blog.csdn.net/zhengchaooo/article/details/80202599</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" class="post-title-link" itemprop="url">Python获取环境变量</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-07 01:51:54" itemprop="dateCreated datePublished" datetime="2020-06-07T01:51:54+08:00">2020-06-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Python获取环境变量" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/07/Python%E8%8E%B7%E5%8F%96%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h1><p>返回值为字符串类型</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import <span class="built_in">os</span></span><br><span class="line"><span class="built_in">os</span>.<span class="built_in">getenv</span>(<span class="string">&quot;KEY&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>返回值为bytes类型</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="built_in">os</span></span><br><span class="line"><span class="built_in">os</span>.getenvb(<span class="string">&quot;KEY&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Python库apscheduler中时区的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-06 17:26:24" itemprop="dateCreated datePublished" datetime="2020-06-06T17:26:24+08:00">2020-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Python库apscheduler中时区的问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/06/Python%E5%BA%93apscheduler%E4%B8%AD%E6%97%B6%E5%8C%BA%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Traceback</span> (most recent call last):</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;Scheduler.py&quot;</span>, line <span class="number">96</span>, in &lt;<span class="keyword">module</span>&gt;</span><br><span class="line">    scheduler.<span class="built_in">start</span>()</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;Scheduler.py&quot;</span>, line <span class="number">78</span>, in start</span><br><span class="line">    CronTrigger.<span class="built_in">from_crontab</span>(Config.SPIDER_INTERVAL)</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/apscheduler/triggers/cron/__init__.py&quot;</span>, line <span class="number">103</span>, in from_crontab</span><br><span class="line">    day_of_week=values[<span class="number">4</span>], timezone=timezone)</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/apscheduler/triggers/cron/__init__.py&quot;</span>, line <span class="number">58</span>, in __init__</span><br><span class="line">    self.timezone = <span class="built_in">get_localzone</span>()</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/unix.py&quot;</span>, line <span class="number">165</span>, in get_localzone</span><br><span class="line">    _cache_tz = _get_localzone()</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/unix.py&quot;</span>, line <span class="number">90</span>, in _get_localzone</span><br><span class="line">    utils.<span class="built_in">assert_tz_offset</span>(tz)</span><br><span class="line">  <span class="built_in">File</span> <span class="string">&quot;/root/anaconda3/envs/caoliu/lib/python3.6/site-packages/tzlocal/utils.py&quot;</span>, line <span class="number">46</span>, in assert_tz_offset</span><br><span class="line">    raise <span class="built_in">ValueError</span>(msg)</span><br><span class="line">ValueError: Timezone offset does <span class="keyword">not</span> match system offset: <span class="number">0</span> != <span class="number">28800.</span> Please, check your config files.</span><br></pre></td></tr></table></figure>
+
+<p>开发机上一切正常，部署到服务器上出现这个问题。</p>
+<p>服务器的时区和apscheduler不一样。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="在-apscheuler-里指定时区"><a href="#在-apscheuler-里指定时区" class="headerlink" title="在 apscheuler 里指定时区"></a>在 apscheuler 里指定时区</h2><p>查看服务器上的时区</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="regexp">/etc/</span>timezone</span><br></pre></td></tr></table></figure>
+<p>在 apscheuler 里指定时区</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200606173447.png" alt="20200606173447"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" class="post-title-link" itemprop="url">Ubuntu修改时区</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-06 17:16:23" itemprop="dateCreated datePublished" datetime="2020-06-06T17:16:23+08:00">2020-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu修改时区" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/06/Ubuntu%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Ubuntu 版本 20.04 LTS</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">sudo tzselect</span></span><br></pre></td></tr></table></figure>
+
+<p>根据提示选择你需要的时区</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200606171802.png" alt="20200606171802"></p>
+<p>例如我选择的是Asia-China-Beijing Time</p>
+<p>创建一个软连接</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -sf <span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo/</span>Asia<span class="regexp">/Shanghai /</span>etc/localtime</span><br></pre></td></tr></table></figure>
+
+<p>查看结果</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">date</span> -R</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/06/Ubuntu%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E7%9B%AE%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/06/Ubuntu%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E7%9B%AE%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0/" class="post-title-link" itemprop="url">Ubuntu挂载远程目录到本地</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-06 02:41:52" itemprop="dateCreated datePublished" datetime="2020-06-06T02:41:52+08:00">2020-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/06/Ubuntu%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E7%9B%AE%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu挂载远程目录到本地" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/06/Ubuntu%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E7%9B%AE%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/06/Ubuntu%E6%8C%82%E8%BD%BD%E8%BF%9C%E7%A8%8B%E7%9B%AE%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>挂载远程目录<code>//192.168.1.3/download/porn</code>到本地<code>/download/porn</code></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t cifs <span class="regexp">//</span><span class="number">192.168</span>.<span class="number">1.3</span><span class="regexp">/download/</span>porn <span class="regexp">/download/</span>porn -o username=test,password=test,domain=DOMAIN,vers=<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">Python用Base64编码文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-05 02:10:27" itemprop="dateCreated datePublished" datetime="2020-06-05T02:10:27+08:00">2020-06-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Python用Base64编码文件" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="built_in">bytes</span> = <span class="string">b&quot;wudinaonao&quot;</span></span><br><span class="line">base64.b64encode(<span class="built_in">bytes</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;d3VkaW5hb25hbw==&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="built_in">bytes</span> = <span class="string">b&quot;wudinaonao&quot;</span></span><br><span class="line">encode = base64.b64encode(<span class="built_in">bytes</span>)</span><br><span class="line">base64.b64decode(encode, <span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;wudinaonao&#x27;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">ESXI下无损扩展Linux硬盘空间</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-03 16:03:10" itemprop="dateCreated datePublished" datetime="2020-06-03T16:03:10+08:00">2020-06-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/" class="post-meta-item leancloud_visitors" data-flag-title="ESXI下无损扩展Linux硬盘空间" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/03/ESXI%E4%B8%8B%E6%97%A0%E6%8D%9F%E6%89%A9%E5%B1%95Linux%E7%A1%AC%E7%9B%98%E7%A9%BA%E9%97%B4/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603160434.png" alt="20200603160434"></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在ESXI下扩容磁盘是非常简单的。例如，我制作了一个通用Ubuntu镜像。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603160729.png" alt="20200603160729"></p>
+<p>当我像创建一个基于Ubuntu的虚拟机时，我直接导入ESXI即可，不用重新安装一个，非常便捷。</p>
+<p>但是我制作的这个镜像文件设置磁盘大小只有16G，在长期使用后可能磁盘空间就不够了，这个时候我们需要对磁盘进行扩容。</p>
+<p>你可能会问为什么制作镜像的时候不设置个大点的硬盘空间？因为当ESXI进行硬盘扩容的时候，空间只能改大不能改小。</p>
+<h1 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h1><p>我们以Database这个虚拟机为例</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161130.png" alt="20200603161130"></p>
+<p>先使虚拟机处于关闭状态。然后点击编辑</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161200.png" alt="20200603161200"></p>
+<p>我们把<strong>硬盘1</strong>改成64GB，保存</p>
+<p>打开虚拟机。</p>
+<p>登录虚拟机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161352.png" alt="20200603161352"></p>
+<p>可以看到空间并没有增加。我们需要把扩容的空间无损增加到根目录。<strong>以下操作有风险，建议创建快照</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fdisk <span class="regexp">/dev/</span>sda</span><br><span class="line">d</span><br><span class="line"><span class="number">2</span></span><br><span class="line">n</span><br><span class="line">回车(默认)</span><br><span class="line">回车(默认)</span><br><span class="line">y</span><br><span class="line">wq</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，我的根目录挂载在/dev/sda2，所以删除的分区号是2</strong></p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603161840.png" alt="20200603161840"></p>
+<p>原理就是把之间个根目录挂载的分区删除了，然后重建一个扩容的分区。</p>
+<p>然后格式化磁盘</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resize2fs <span class="regexp">/dev/</span>sda2</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603162037.png" alt="20200603162037"></p>
+<p>查看一下结果。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200603162100.png" alt="20200603162100"></p>
+<p>可以看到已经扩容成功了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -427,761 +1118,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" class="post-title-link" itemprop="url">Ubuntu 20.04 配置静态IP</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-22 19:58:13" itemprop="dateCreated datePublished" datetime="2020-05-22T19:58:13+08:00">2020-05-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu 20.04 配置静态IP" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/22/Ubuntu-20-04-%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200022.png" alt="20200522200022"></p>
-<p>查看你的网卡名称</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ifconfig</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200141.png" alt="20200522200141"></p>
-<p>例如我要更改 ens160 这个网卡</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/etc/</span>netplan</span><br></pre></td></tr></table></figure>
-
-<p>找到文件，名字可能不一样</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522200353.png" alt="20200522200353"></p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">nano</span> <span class="number">00</span>-installer-config.yaml</span><br></pre></td></tr></table></figure>
-
-<p>更改配置</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># This is the network config written by &#x27;subiquity&#x27;n</span></span><br><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">ens160:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.1</span><span class="number">.6</span><span class="string">/24</span>]</span><br><span class="line">      <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">gateway4:</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span></span><br><span class="line">      <span class="attr">nameservers:</span> </span><br><span class="line">        <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>,<span class="number">8.8</span><span class="number">.8</span><span class="number">.8</span>]</span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>配置</p>
-<ul>
-<li>ip地址：192.168.1.6</li>
-<li>子网掩码： 255.255.255.0</li>
-<li>网关：192.168.1.1</li>
-<li>DNS服务器：192.168.1.1， 8.8.8.8</li>
-</ul>
-<p>应用更改</p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netplan <span class="built_in">apply</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/" class="post-title-link" itemprop="url">Valine评论系统增加邮件通知</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-08 02:05:08" itemprop="dateCreated datePublished" datetime="2020-05-08T02:05:08+08:00">2020-05-08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/" class="post-meta-item leancloud_visitors" data-flag-title="Valine评论系统增加邮件通知" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200508025008.png" alt="20200508025008"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/05/08/Valine%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%A2%9E%E5%8A%A0%E9%82%AE%E4%BB%B6%E9%80%9A%E7%9F%A5/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/" class="post-title-link" itemprop="url">树莓派ubuntu更换国内源</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-07 19:32:05" itemprop="dateCreated datePublished" datetime="2020-05-07T19:32:05+08:00">2020-05-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/" class="post-meta-item leancloud_visitors" data-flag-title="树莓派ubuntu更换国内源" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507193511.png" alt="20200507193511"></p>
-<h1 id="备份原始源"><a href="#备份原始源" class="headerlink" title="备份原始源"></a>备份原始源</h1><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/apt</span><br><span class="line"><span class="keyword">cp</span> sources<span class="meta">.list</span> sources<span class="meta">.list</span>.bak</span><br><span class="line">rm sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="更改源"><a href="#更改源" class="headerlink" title="更改源"></a>更改源</h1><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
-<p>然后填写以下内容。</p>
-<h2 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h2><h3 id="ubuntu-20-04-focal-配置如下"><a href="#ubuntu-20-04-focal-配置如下" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-updates main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-backports main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-security main restricted universe multiverse</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预发布软件源，不建议启用</span></span><br><span class="line"><span class="comment"># deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h2><h3 id="ubuntu-20-04-focal-配置如下-1"><a href="#ubuntu-20-04-focal-配置如下-1" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>其他版本根据版本号替换即可</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-<p>focal即版本号</p>
-<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt <span class="keyword">update</span> <span class="variable">&amp;&amp;</span> apt upgrade -y</span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507194302.png" alt="20200507194302"></p>
-<p>速度比官方源快很多。</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ubuntu-ports是Arm64，Armhf 等平台的 Ubuntu 软件仓库</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" class="post-title-link" itemprop="url">Gitlab添加邮箱</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-06 00:00:29" itemprop="dateCreated datePublished" datetime="2020-05-06T00:00:29+08:00">2020-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" class="post-meta-item leancloud_visitors" data-flag-title="Gitlab添加邮箱" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/06/Gitlab%E6%B7%BB%E5%8A%A0%E9%82%AE%E7%AE%B1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000117.png" alt="20200506000117"></p>
-<p>腾讯企业邮箱配置如下，其他邮箱同样适用。</p>
-<p>找到配置</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable&#x27;</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_address&#x27;</span>] = <span class="string">&quot;smtp.exmail.qq.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_port&#x27;</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_user_name&#x27;</span>] = <span class="string">&quot;gitlab@wudinaonao.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_password&#x27;</span>] = <span class="string">&quot;xxxxxxxxxxxxxxxxxx&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_domain&#x27;</span>] = <span class="string">&quot;wudinaonao.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_authentication&#x27;</span>] = <span class="string">&quot;login&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable_starttls_auto&#x27;</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_tls&#x27;</span>] = true</span><br></pre></td></tr></table></figure>
-
-<p>在找到配置</p>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># gitlab 发件邮箱</span></span><br><span class="line">gitlab_rails[&#x27;gitlab_email_from&#x27;] = &#x27;gitlab@wudinaonao.com&#x27;</span><br><span class="line"><span class="meta"># 默认标题</span></span><br><span class="line">gitlab_rails[&#x27;gitlab_email_display_name&#x27;] = &#x27;Gitlab&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>重载gitlab配置</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br></pre></td></tr></table></figure>
-
-<p>登录到你搭建的Gitlab发一封重置密码的邮件试试</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000733.png" alt="20200506000733"></p>
-<p>成功</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200506000803.png" alt="20200506000803"></p>
-<p>阿里云企业邮箱配置</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable&#x27;</span>] = true</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_address&#x27;</span>] = <span class="string">&quot;smtp.yourself.com&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_port&#x27;</span>] = <span class="number">465</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_user_name&#x27;</span>] = <span class="string">&quot;yourself user name&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_password&#x27;</span>] = <span class="string">&quot;yourself password&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_domain&#x27;</span>] = <span class="string">&quot;yourself hostname&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_authentication&#x27;</span>] = <span class="string">&quot;login&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_enable_starttls_auto&#x27;</span>] = false</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_tls&#x27;</span>] = true</span><br><span class="line"></span><br><span class="line">###! **<span class="symbol">Can</span> be: <span class="string">&#x27;none&#x27;</span>, <span class="string">&#x27;peer&#x27;</span>, <span class="string">&#x27;client_once&#x27;</span>, <span class="string">&#x27;fail_if_no_peer_cert&#x27;</span>**</span><br><span class="line">###! <span class="symbol">Docs</span>: http://api.rubyonrails.org/classes/<span class="symbol">ActionMailer</span>/<span class="symbol">Base</span>.html</span><br><span class="line">gitlab_rails[<span class="string">&#x27;smtp_openssl_verify_mode&#x27;</span>] = <span class="string">&#x27;none&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>更多邮箱配置参见官方</p>
-<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/omnibus/settings/smtp.html">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/omnibus/settings/smtp.html">https://docs.gitlab.com/omnibus/settings/smtp.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446">https://gitlab.com/gitlab-org/gitlab-foss/-/issues/446</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">用Docker搭建饥荒服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-03 21:03:52" itemprop="dateCreated datePublished" datetime="2020-05-03T21:03:52+08:00">2020-05-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Games/" itemprop="url" rel="index"><span itemprop="name">Games</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="用Docker搭建饥荒服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/03/%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="用Docker搭建饥荒服务器"><a href="#用Docker搭建饥荒服务器" class="headerlink" title="用Docker搭建饥荒服务器"></a>用Docker搭建饥荒服务器</h1><p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210534.png" alt="20200503210534"></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jamesits/dst-<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503210917.png" alt="20200503210917"></p>
-<p>拉取到的镜像</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213045.png" alt="20200503213045"></p>
-<p>如果没有安装docker-compose建议安装，方便书写配置文件。</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt <span class="keyword">install</span> docker-compose</span><br></pre></td></tr></table></figure>
-
-<p>新建一个目录用于存放数据文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br><span class="line"><span class="built_in">cd</span> /<span class="variable">$&#123;HOME&#125;</span>/dst</span><br></pre></td></tr></table></figure>
-
-<p>打开本机饥荒</p>
-<p>点账号</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213529.png" alt="20200503213529"></p>
-<p>查看我的游戏</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503213654.png" alt="20200503213654"></p>
-<p>选择饥荒</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214024.png" alt="20200503214024"></p>
-<p>添加一个新服务器，起一个用于识别的名字</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214359.png" alt="20200503214359"></p>
-<p>复制那串key</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503214424.png" alt="20200503214424"></p>
-<p>回到服务器</p>
-<p>创建<code>docker-compose.yml</code>文件</p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">cat &gt; docker-compose.yaml &lt;&lt;&quot;EOF&quot;</span></span><br><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3.5&#x27;</span></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">dst-server</span><span class="punctuation">:</span></span><br><span class="line">     <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">DST_CLUSTER_TOKEN=这里粘贴刚才复制的那串key</span></span><br><span class="line">     <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">jamesits/dst-server:latest</span></span><br><span class="line">     <span class="attribute">restart</span><span class="punctuation">:</span> <span class="string">&quot;on-failure:5&quot;</span></span><br><span class="line">     <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;10999-11000:10999-11000/udp&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;12346-12347:12346-12347/udp&quot;</span></span><br><span class="line">     <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">$&#123;HOME&#125;/.klei/DoNotStarveTogether:/data</span></span><br><span class="line">     <span class="attribute">stop_grace_period</span><span class="punctuation">:</span> <span class="string">6m</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<p>创建并运行容器</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker-compose up</span></span><br></pre></td></tr></table></figure>
-
-<p>看到这个</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503215417.png" alt="20200503215417"></p>
-<p><code>ctrl+c</code>退出容器编辑配置文件</p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line"><span class="keyword">cd</span> <span class="string">.klei/DoNotStarveTogether/DoNotStarveTogether/Cluster_1</span></span><br><span class="line">nano cluster.ini</span><br></pre></td></tr></table></figure>
-
-<p>简单配置下，这里基本是关于游戏模式和服务器的设置。你也可以在本地新建一个房间，然后把配置文件拿过来替换掉服务器上的配置。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220023.png" alt="20200503220023"></p>
-<p>后台运行</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span></span><br><span class="line">docker-compose <span class="keyword">up</span> -d</span><br></pre></td></tr></table></figure>
-
-<p>如果你的主机提供商有安全规则的话，你需要放行这样四个端口，UDP协议。</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">10999</span>-<span class="number">11000</span></span><br><span class="line"><span class="attribute">12346</span>-<span class="number">12347</span></span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220519.png" alt="20200503220519"></p>
-<h2 id="开始玩"><a href="#开始玩" class="headerlink" title="开始玩"></a>开始玩</h2><p>浏览游戏</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220813.png" alt="20200503220813"></p>
-<p>等待搜索完服务器列表</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503221138.png" alt="20200503221138"></p>
-<p>过滤器输入我们刚才配置的服务器名字 NaonaoTencenCloud</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503220848.png" alt="20200503220848"></p>
-<p>加入 </p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503222950.png" alt="20200503222950"></p>
-<p>创建角色</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200503223240.png" alt="20200503223240"></p>
-<p>可以愉快的玩耍了</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/jamesits/dst-server">https://hub.docker.com/r/jamesits/dst-server</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/" class="post-title-link" itemprop="url">Nginx反向代理HTTPS</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-01 23:43:38" itemprop="dateCreated datePublished" datetime="2020-05-01T23:43:38+08:00">2020-05-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/" class="post-meta-item leancloud_visitors" data-flag-title="Nginx反向代理HTTPS" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/01/Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86HTTPS/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Nginx反向代理HTTPS"><a href="#Nginx反向代理HTTPS" class="headerlink" title="Nginx反向代理HTTPS"></a>Nginx反向代理HTTPS</h1><h2 id="Nginx-Server-设置"><a href="#Nginx-Server-设置" class="headerlink" title="Nginx Server 设置"></a>Nginx Server 设置</h2><p>例如 转发到 <a target="_blank" rel="noopener" href="https://127.0.0.1:8848">https://127.0.0.1:8848</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">location ~/ &#123;</span><br><span class="line">    <span class="comment"># 如果代理到一个动态域名，这里需要设置解析DNS</span></span><br><span class="line">    <span class="comment"># 不然Nginx只在启动的时候解析一次</span></span><br><span class="line">    resolver 8.8.8.8 114.114.114.114 valid=10s;</span><br><span class="line">    resolver_timeout 3s;</span><br><span class="line">    假如你要代理到 127.0.0.1:8848</span><br><span class="line">    <span class="built_in">set</span> <span class="variable">$target</span> <span class="string">&quot;127.0.0.1:8848&quot;</span>;</span><br><span class="line">    <span class="comment"># 这里之前填写成 $proxy_host 导致代理失败</span></span><br><span class="line">    proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">    proxy_set_header X-Forwarder-For <span class="variable">$remote_addr</span>;</span><br><span class="line">    proxy_ssl_certificate        /xxx.crt   <span class="comment"># 证书路径;  </span></span><br><span class="line">    proxy_ssl_certificate_key    /xxx.key   <span class="comment">#私钥路径;</span></span><br><span class="line">    proxy_pass https://<span class="variable">$target</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Docker搭建Gitlab服务器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-01 22:35:49" itemprop="dateCreated datePublished" datetime="2020-05-01T22:35:49+08:00">2020-05-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Docker搭建Gitlab服务器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Docker搭建Gitlab服务器"><a href="#Docker搭建Gitlab服务器" class="headerlink" title="Docker搭建Gitlab服务器"></a>Docker搭建Gitlab服务器</h1><h2 id="获取-Gitlab-镜像"><a href="#获取-Gitlab-镜像" class="headerlink" title="获取 Gitlab 镜像"></a>获取 Gitlab 镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull gitlab/gitlab-ce</span><br></pre></td></tr></table></figure>
-
-<h2 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h2><p>映射端口，配置访问方式</p>
-<ul>
-<li>8443  https </li>
-<li>8080  http</li>
-<li>8022  ssh</li>
-</ul>
-<p>挂载3个volume到容器里，分别用于配置，持久化，日志。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/05/01/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1249,7 +1189,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

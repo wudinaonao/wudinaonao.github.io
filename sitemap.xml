@@ -2,6 +2,69 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/vue3-script-setup-%E8%AF%AD%E6%B3%95%E7%B3%96/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/%E4%BD%BF%E7%94%A8ts-node%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8Cts%E8%84%9A%E6%9C%AC/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/Javascript-%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/async-await%E8%AE%A9%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/vue%EF%BC%9AFailed-to-resolve-component-xxx/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/</loc>
+    
+    <lastmod>2022-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.wudinaonao.com/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/</loc>
     
     <lastmod>2022-04-05</lastmod>
@@ -616,7 +679,7 @@
 
   <url>
     <loc>https://blog.wudinaonao.com/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -624,259 +687,259 @@
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/CentOS8/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Docker/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Cloudflare/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Git/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Jupyter/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Vmware/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/ESXI/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Shell/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Linux/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Ubuntu/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Python/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Keras/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Flask/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/React/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Gitlab/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Tensorflow/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Clash/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Koolshare/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Hexo/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Nginx/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/LEDE/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Openwrt/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/MySQL/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/SSH/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Spring-Boot/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Java/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/VSCode/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/crontab/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/gitlab/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/BT-Tracker/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Raspberry/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Games/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/OpenWRT/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -885,84 +948,84 @@
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Linux/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/VMware/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Python/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Linux/Docker/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Linux/Docker/Jupyter/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Hexo/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Linuxe/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Java/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/VSCode/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Web/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Linux/ESXI/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.wudinaonao.com/categories/Games/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
