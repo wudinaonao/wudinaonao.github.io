@@ -984,7 +984,7 @@
 <p>并且 JSON 作为一种数据交换格式, 有其固定的数据类型.<br>有时候我们需要将我们编写的一个类序列化, 此时该怎么办?</p>
 <p><a href="http://www.json.org/json-zh.html">JSON 的介绍可以参考其官网说明</a></p>
 <h2 id="序列化非标准类型时遇到的问题"><a href="#序列化非标准类型时遇到的问题" class="headerlink" title="序列化非标准类型时遇到的问题"></a>序列化非标准类型时遇到的问题</h2><p>如果 <code>json.dumps</code> 一个非标准类型(例如一个我们编写的类)会发生什么事?</p>
-<p>我们先定义一个类<code>MyClass</code></p>
+<p>我们先定义一个类<code>Person</code></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.name = <span class="string">&quot;naonao&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>尝试用 json 序列化</p>
