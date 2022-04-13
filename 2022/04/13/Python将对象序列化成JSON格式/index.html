@@ -22,8 +22,8 @@
 
   <meta name="description" content="前言在 Python 中经常会做的一件事就是将某个对象序列化, 序列化有很多种方式, JSON 是最常用的其中一种(方便和前端交换数据). 但是一个明显的问题是, Python 标准库json, 仅仅能dumps其内置的基本数据类型, 例如 string, integer, boolean, list, dict … 并且 JSON 作为一种数据交换格式, 有其固定的数据类型.有时候我们需要将我们">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python json.dumps 对象">
-<meta property="og:url" content="https://blog.wudinaonao.com/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:title" content="Python将对象序列化成JSON格式">
+<meta property="og:url" content="https://blog.wudinaonao.com/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Naonao Blog">
 <meta property="og:description" content="前言在 Python 中经常会做的一件事就是将某个对象序列化, 序列化有很多种方式, JSON 是最常用的其中一种(方便和前端交换数据). 但是一个明显的问题是, Python 标准库json, 仅仅能dumps其内置的基本数据类型, 例如 string, integer, boolean, list, dict … 并且 JSON 作为一种数据交换格式, 有其固定的数据类型.有时候我们需要将我们">
 <meta property="og:locale" content="zh_CN">
@@ -33,7 +33,7 @@
 <meta property="article:tag" content="wudinaonao">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.wudinaonao.com/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/">
+<link rel="canonical" href="https://blog.wudinaonao.com/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Python json.dumps 对象 | Naonao Blog</title>
+  <title>Python将对象序列化成JSON格式 | Naonao Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165348730-2"></script>
     <script>
@@ -226,7 +226,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar-0.gif">
@@ -239,7 +239,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Python json.dumps 对象
+          Python将对象序列化成JSON格式
         </h1>
 
         <div class="post-meta">
@@ -253,7 +253,7 @@
             </span>
 
           
-            <span id="/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/" class="post-meta-item leancloud_visitors" data-flag-title="Python json.dumps 对象" title="阅读次数">
+            <span id="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Python将对象序列化成JSON格式" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -268,8 +268,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -385,7 +385,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://blog.wudinaonao.com/2022/04/13/Python-json-dumps-%E5%AF%B9%E8%B1%A1/" title="Python json.dumps 对象">https://blog.wudinaonao.com/2022/04/13/Python-json-dumps-对象/</a>
+    <a href="https://blog.wudinaonao.com/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" title="Python将对象序列化成JSON格式">https://blog.wudinaonao.com/2022/04/13/Python将对象序列化成JSON格式/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
