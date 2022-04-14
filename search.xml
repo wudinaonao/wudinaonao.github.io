@@ -3095,4 +3095,33 @@
         <tag>OpenWRT</tag>
       </tags>
   </entry>
+  <entry>
+    <title>vue router api.now is not a function</title>
+    <url>/2022/04/15/vue-router-api-now-is-not-a-function/</url>
+    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>记录一次奇怪的 DEBUG 过程</p>
+<p>事情的起因是我在搭建一个前端项目, 第一次打开可以, 但是如果再刷新页面则会报错.</p>
+<p>仔细查看我的代码, 发现没有什么问题, 最后跟踪错误到了<code>vue-router</code></p>
+<p>控制台报错</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Uncaught</span> (in promise) TypeError: api.now is not a function</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">2545</span>:<span class="number">31</span></span><br><span class="line">    <span class="attribute">at</span> triggerAfterEach (vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3166</span>:<span class="number">13</span>)</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3069</span>:<span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<p>继续跟踪</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">api.addTimelineEvent(&#123;</span><br><span class="line">                layerId: navigationsLayerId,</span><br><span class="line">                event: &#123;</span><br><span class="line">                    title: <span class="string">&#x27;End of navigation&#x27;</span>,</span><br><span class="line">                    subtitle: <span class="keyword">to</span>.fullPath,</span><br><span class="line">                    <span class="type">time</span>: api.now(), &lt;<span class="comment">--</span></span><br><span class="line">                    data,</span><br><span class="line">                    logType: failure ? <span class="string">&#x27;warning&#x27;</span> : <span class="string">&#x27;default&#x27;</span>,</span><br><span class="line">                    groupId: <span class="keyword">to</span>.meta.__navigationId,</span><br><span class="line">                &#125;,</span><br><span class="line">            &#125;); </span><br></pre></td></tr></table></figure>
+
+<p>如果出错的地方在业务逻辑, 则可以很容易的找出错误原因, 但是这个地方报错, 让我毫无头绪.</p>
+<p>Google …</p>
+<p>没想到还真的找到了解决方案, 而且还就在该文章发布时间的前半个月(还热乎着…)</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><figure class="highlight vbnet"><table><tr><td class="code"><pre><span class="line">That<span class="comment">&#x27;s from the Vue devtools plugin. And only happens if you are still on the 6.0 beta of Vue devtools.</span></span><br><span class="line"></span><br><span class="line">Happened <span class="keyword">to</span> <span class="keyword">me</span> today <span class="keyword">when</span> checking <span class="keyword">in</span> another browser that still was <span class="keyword">on</span> the <span class="number">6.0</span> beta version instead <span class="keyword">of</span> the stable one we released recently.</span><br><span class="line"></span><br><span class="line"><span class="symbol">Solution:</span> remove the beta, upgrade <span class="keyword">to</span> the stable release</span><br></pre></td></tr></table></figure>
+
+<p>大意是说, 如果你开发时使用了 Vue Devtools 这个插件, 并且还是 6.0 beta 版本时, 就会发生这个问题.</p>
+<p>解决方案也很简单, 卸载这个测试版, 安装稳定版</p>
+<p><a href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd">https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd</a></p>
+<p>现在想想, 这个插件我一年前装的, 然后就没管过, 我不清楚它会不会自动更新, 但是确实在我意想不到的地方给我挖了个大坑….</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个事情总结出什么经验呢? </p>
+<p>BUG 有时候就是发生的这么毫无逻辑…让人捉摸不定</p>
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://github.com/vuejs/router/issues/1338">https://github.com/vuejs/router/issues/1338</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>

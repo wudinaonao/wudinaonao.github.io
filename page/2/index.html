@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">73</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,97 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">SQLAlchemy 分离对象</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-11 12:21:33" itemprop="dateCreated datePublished" datetime="2022-04-11T12:21:33+08:00">2022-04-11</time>
+            </span>
+
+          
+            <span id="/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/" class="post-meta-item leancloud_visitors" data-flag-title="SQLAlchemy 分离对象" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/11/SQLAlchemy-%E5%88%86%E7%A6%BB%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">i = session.query(Model)</span><br><span class="line">session.expunge(i)</span><br><span class="line"></span><br><span class="line">old_id = i.<span class="built_in">id</span></span><br><span class="line">i.<span class="built_in">id</span> = <span class="literal">None</span></span><br><span class="line">session.add(i)</span><br><span class="line">session.flush()</span><br><span class="line"><span class="built_in">print</span>(i.<span class="built_in">id</span>) <span class="comment">#New ID</span></span><br></pre></td></tr></table></figure>
+
+<p>修改从 SQLAlchemy 查询出来的模型会提交的缓冲里, 例如上述代码会导致查询出来的模型<code>id</code>被修改为<code>None</code></p>
+<p>如何分离一份模型出来使其修改不影响数据库的提交?</p>
+<p>可以使用<code>make_transient()</code>函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span> make_transient</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">inst = session.query(Model).first()</span><br><span class="line">session.expunge(inst)</span><br><span class="line"></span><br><span class="line">make_transient(inst)</span><br><span class="line">inst.<span class="built_in">id</span> = <span class="literal">None</span></span><br><span class="line">session.add(inst)</span><br><span class="line">session.flush()</span><br><span class="line"><span class="built_in">print</span>(inst.<span class="built_in">id</span>) <span class="comment">#New ID</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.sqlalchemy.org/en/14/orm/session_api.html?highlight=make_transient#sqlalchemy.orm.make_transient">https://docs.sqlalchemy.org/en/14/orm/session_api.html?highlight=make_transient#sqlalchemy.orm.make_transient</a><br><a target="_blank" rel="noopener" href="https://qa.1r1g.com/sf/ask/1024533471/">https://qa.1r1g.com/sf/ask/1024533471/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1213,103 +1304,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/23/dev-null-2-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/23/dev-null-2-1/" class="post-title-link" itemprop="url">>/dev/null 2>&1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-23 03:08:17" itemprop="dateCreated datePublished" datetime="2022-02-23T03:08:17+08:00">2022-02-23</time>
-            </span>
-
-          
-            <span id="/2022/02/23/dev-null-2-1/" class="post-meta-item leancloud_visitors" data-flag-title=">/dev/null 2>&1" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/02/23/dev-null-2-1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/23/dev-null-2-1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <table>
-<thead>
-<tr>
-<th>命令</th>
-<th>标准输出</th>
-<th>错误输出</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&gt;/dev/null 2&gt;&amp;1</td>
-<td>丢弃</td>
-<td>丢弃</td>
-</tr>
-<tr>
-<td>2&gt;&amp;1 &gt;/dev/null</td>
-<td>丢弃</td>
-<td>屏幕</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1381,7 +1375,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

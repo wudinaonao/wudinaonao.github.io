@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">73</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">74</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,131 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" class="post-title-link" itemprop="url">基于Certbot docker部署letsencrypt证书</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-15 00:45:19" itemprop="dateCreated datePublished" datetime="2020-09-15T00:45:19+08:00">2020-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" class="post-meta-item leancloud_visitors" data-flag-title="基于Certbot docker部署letsencrypt证书" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>仓库地址</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>registry.hub.docker.com<span class="regexp">/r/</span>certbot/certbot</span><br></pre></td></tr></table></figure>
+
+<p>官方参考</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>certbot.eff.org<span class="regexp">/docs/i</span>nstall.html<span class="comment">#running-with-docker</span></span><br></pre></td></tr></table></figure>
+
+
+<p>pull 镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull certbot/certbot</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于内置webserver部署"><a href="#基于内置webserver部署" class="headerlink" title="基于内置webserver部署"></a>基于内置webserver部署</h2><p>这个方案的坏处是需要启动内置的nginx服务器占用80和443端口.</p>
+<p>创建两个目录</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>letsencrypt</span><br><span class="line"><span class="regexp">/var/</span>lib/letsencrypt</span><br></pre></td></tr></table></figure>
+
+<p>运行镜像</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="literal">it</span> --rm --name certbot <span class="string">\</span></span><br><span class="line">            -v <span class="string">&quot;/etc/letsencrypt:/etc/letsencrypt&quot;</span> <span class="string">\</span></span><br><span class="line">            -v <span class="string">&quot;/var/lib/letsencrypt:/var/lib/letsencrypt&quot;</span> <span class="string">\</span></span><br><span class="line">            -p <span class="number">80</span>:<span class="number">80</span> -p <span class="number">443</span>:<span class="number">443</span>  <span class="string">\</span></span><br><span class="line">            certbot/certbot certonly</span><br></pre></td></tr></table></figure>
+
+<p>提问用webserver部署或者用webroot</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">How would you like <span class="built_in">to</span> authenticate <span class="keyword">with</span> <span class="keyword">the</span> ACME CA?</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line"><span class="number">1</span>: Spin up <span class="keyword">a</span> temporary webserver (standalone)</span><br><span class="line"><span class="number">2</span>: Place <span class="built_in">files</span> <span class="keyword">in</span> webroot <span class="built_in">directory</span> (webroot)</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">Select <span class="keyword">the</span> appropriate <span class="built_in">number</span> [<span class="number">1</span><span class="number">-2</span>] <span class="keyword">then</span> [enter] (press <span class="string">&#x27;c&#x27;</span> <span class="built_in">to</span> <span class="built_in">cancel</span>): <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们用临时服务器方便点所以选择1, 如果用2的话需要自己设置验证文件.</p>
+<p>提示你输入邮箱</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Plugins selected: Authenticator standalone, Installer <span class="keyword">None</span></span><br><span class="line">Enter email address (used <span class="keyword">for</span> urgent renewal <span class="keyword">and</span> <span class="keyword">security</span> notices)</span><br><span class="line"> (Enter <span class="string">&#x27;c&#x27;</span> <span class="keyword">to</span> cancel):</span><br></pre></td></tr></table></figure>
+
+<p>不用看了,就是我已阅读并同意….</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Please <span class="built_in">read</span> <span class="keyword">the</span> Terms <span class="keyword">of</span> Service <span class="keyword">at</span></span><br><span class="line"><span class="keyword">https</span>://letsencrypt.org/documents/LE-SA-v1<span class="number">.2</span>-November<span class="number">-15</span><span class="number">-2017.</span>pdf. You must</span><br><span class="line">agree <span class="keyword">in</span> order <span class="built_in">to</span> register <span class="keyword">with</span> <span class="keyword">the</span> ACME server <span class="keyword">at</span></span><br><span class="line"><span class="keyword">https</span>://acme-v02.api.letsencrypt.org/<span class="built_in">directory</span></span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(A)gree/(C)ancel: <span class="keyword">a</span></span><br></pre></td></tr></table></figure>
+
+<p>想不想接受他给你发邮件</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Would you be willing, once your first certificate <span class="built_in">is</span> successfully issued, <span class="keyword">to</span></span><br><span class="line">share your email address <span class="keyword">with</span> the Electronic Frontier Foundation, a founding</span><br><span class="line">partner <span class="keyword">of</span> the <span class="keyword">Let</span><span class="comment">&#x27;s Encrypt project and the non-profit organization that</span></span><br><span class="line">develops Certbot? We<span class="comment">&#x27;d like to send you email about our work encrypting the web,</span></span><br><span class="line">EFF news, campaigns, <span class="built_in">and</span> ways <span class="keyword">to</span> support digital freedom.</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(Y)es/(N)o: y</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输入你的域名, 例如: yourself.hostname.xxx, 这里不要输错了, 输错无法后退, 只能重来.</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please enter in your domain name(s) (comma<span class="built_in"> and/or </span>space separated)  (Enter &#x27;c&#x27;</span><br><span class="line">to cancel): yourself.hostname.xxx</span><br></pre></td></tr></table></figure>
+
+<p>看到</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IMPORTANT NOTES:</span><br><span class="line"> - Congratulations! Your certificate and chain have been saved at:</span><br><span class="line">   <span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/fullchain.pem</span><br><span class="line">   Your key <span class="keyword">file</span> has been saved at:</span><br><span class="line">   <span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/privkey.pem</span><br><span class="line">   Your cert will expire on <span class="number">2020</span>-<span class="number">12</span>-<span class="number">13</span>. To obtain a <span class="keyword">new</span> or tweaked</span><br><span class="line">   version of <span class="keyword">this</span> certificate in the future, simply run certbot</span><br><span class="line">   again. To non-interactively renew *all* of your certificates, run</span><br><span class="line">   <span class="string">&quot;certbot renew&quot;</span></span><br><span class="line"> - <span class="keyword">If</span> you like Certbot, please consider supporting our work by:</span><br><span class="line"></span><br><span class="line">   Donating to ISRG <span class="regexp">/ Let&#x27;s Encrypt:   https:/</span><span class="regexp">/letsencrypt.org/</span>donate</span><br><span class="line">   Donating to EFF:                    https:<span class="comment">//eff.org/donate-le</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>完成</p>
+<p>证书保存在</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1096,101 +1221,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">Python用Base64编码文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-05 02:10:27" itemprop="dateCreated datePublished" datetime="2020-06-05T02:10:27+08:00">2020-06-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" class="post-meta-item leancloud_visitors" data-flag-title="Python用Base64编码文件" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/05/Python%E7%94%A8Base64%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="built_in">bytes</span> = <span class="string">b&quot;wudinaonao&quot;</span></span><br><span class="line">base64.b64encode(<span class="built_in">bytes</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;d3VkaW5hb25hbw==&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-<h1 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="built_in">bytes</span> = <span class="string">b&quot;wudinaonao&quot;</span></span><br><span class="line">encode = base64.b64encode(<span class="built_in">bytes</span>)</span><br><span class="line">base64.b64decode(encode, <span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>输出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;wudinaonao&#x27;</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1262,7 +1292,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
