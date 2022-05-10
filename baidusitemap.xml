@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.wudinaonao.com/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/</loc>
+    <lastmod>2022-05-10</lastmod>
+  </url>
+  <url>
     <loc>https://blog.wudinaonao.com/2022/04/15/vue-router-api-now-is-not-a-function/</loc>
     <lastmod>2022-04-14</lastmod>
   </url>
