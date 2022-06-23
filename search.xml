@@ -3426,7 +3426,31 @@
 <p>则上述条件可以变为</p>
 <figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">a * b * <span class="number">2</span> <span class="operator">=</span><span class="operator">=</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
 
-<p>则可知 a b 的可选值表<br>|a|b|<br>|-|-|<br>|1|35|<br>|35|1|<br>|5|7|<br>|7|5|</p>
+<p>则可知 a b 的可选值表</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>35</td>
+</tr>
+<tr>
+<td>35</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>7</td>
+<td>5</td>
+</tr>
+</tbody></table>
 <p>我们把</p>
 <figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="built_in">-</span>(<span class="built_in">--</span>(<span class="selector-attr">[,,,undefined]</span><span class="selector-class">.join</span>()).length)</span><br></pre></td></tr></table></figure>
 
