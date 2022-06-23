@@ -3493,8 +3493,8 @@
 
 <p>查看一下 <code>lastIndexOf</code> 方法的说明</p>
 <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf</a></p>
-<figure class="highlight processing"><table><tr><td class="code"><pre><span class="line"><span class="title function_">lastIndexOf</span>() 方法返回调用<span class="built_in">String</span> 对象的指定值最后一次出现的索引，在一个字符串中的指定位置 fromIndex处从后向前搜索。如果没找到这个特定值则返回<span class="number">-1</span> 。</span><br><span class="line"></span><br><span class="line">该方法将从尾到头地检索字符串 <span class="built_in">str</span>，看它是否含有子串 searchValue。开始检索的位置在字符串的 fromIndex 处或字符串的结尾（没有指定 fromIndex 时）。如果找到一个 searchValue，则返回 searchValue 的第一个字符在 <span class="built_in">str</span> 中的位置。<span class="built_in">str</span>中的字符位置是从 <span class="number">0</span> 开始的。</span><br></pre></td></tr></table></figure>
-
+<p>lastIndexOf() 方法返回调用String 对象的指定值最后一次出现的索引，在一个字符串中的指定位置 fromIndex处从后向前搜索。如果没找到这个特定值则返回-1 。</p>
+<p>该方法将从尾到头地检索字符串 str，看它是否含有子串 searchValue。开始检索的位置在字符串的 fromIndex 处或字符串的结尾（没有指定 fromIndex 时）。如果找到一个 searchValue，则返回 searchValue 的第一个字符在 str 中的位置。str中的字符位置是从 0 开始的。</p>
 <p>简单来讲, 就是想要</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> === pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 
