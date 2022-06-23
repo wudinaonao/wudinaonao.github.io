@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">75</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">77</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,417 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/02/electron%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/02/electron%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">electron安装</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-02 16:53:23" itemprop="dateCreated datePublished" datetime="2022-04-02T16:53:23+08:00">2022-04-02</time>
+            </span>
+
+          
+            <span id="/2022/04/02/electron%E5%AE%89%E8%A3%85/" class="post-meta-item leancloud_visitors" data-flag-title="electron安装" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/02/electron%E5%AE%89%E8%A3%85/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/02/electron%E5%AE%89%E8%A3%85/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>错误信息</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">error C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electron: Co</span><br><span class="line">Exit code: <span class="number">1</span></span><br><span class="line">Command: <span class="keyword">node</span> <span class="title">install</span>.js</span><br><span class="line">Arguments: </span><br><span class="line">Directory: C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electron\node_modules\electro</span><br><span class="line">Output:</span><br><span class="line">RequestError: <span class="keyword">read</span> ECONNRESET</span><br><span class="line">    at ClientRequest.<span class="tag">&lt;anonymous&gt;</span> (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at Object.onceWrapper (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">646</span>:<span class="number">26</span>)</span><br><span class="line">    at ClientRequest.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">538</span>:<span class="number">35</span>)</span><br><span class="line">    at ClientRequest.origin.emit (C:\Users\wlzaz\Desktop\Gitlab\vben-admin-electr</span><br><span class="line">    at TLSSocket.socketErrorListener (<span class="keyword">node</span><span class="title">:_http_client</span>:<span class="number">442</span>:<span class="number">9</span>)</span><br><span class="line">    at TLSSocket.emit (<span class="keyword">node</span><span class="title">:events</span>:<span class="number">526</span>:<span class="number">28</span>)</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>node install.js</code>失败</p>
+<p>分析错误原因 <code>RequestError: read ECONNRESET</code> 连接重置</p>
+<p>这个原因大概率是因为被墙了</p>
+<p>解决方案, 更换为国内源, 例如淘宝镜像</p>
+<p>npm</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set ELECTRON_MIRROR http:<span class="regexp">//</span>npm.taobao.org<span class="regexp">/mirrors/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>yarn</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn config set electron_mirror https:<span class="regexp">//</span>cdn.npm.taobao.org<span class="regexp">/dist/</span>electron/</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.talktocomputer.site/blogs/139/">https://www.talktocomputer.site/blogs/139/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">Restful API设计最佳实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-28 18:18:18" itemprop="dateCreated datePublished" datetime="2022-03-28T18:18:18+08:00">2022-03-28</time>
+            </span>
+
+          
+            <span id="/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="post-meta-item leancloud_visitors" data-flag-title="Restful API设计最佳实践" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/28/Restful-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Restful-API设计最佳实践"><a href="#Restful-API设计最佳实践" class="headerlink" title="Restful API设计最佳实践"></a>Restful API设计最佳实践</h1><h2 id="Restful-API成熟度"><a href="#Restful-API成熟度" class="headerlink" title="Restful API成熟度"></a>Restful API成熟度</h2><p>在<a target="_blank" rel="noopener" href="https://martinfowler.com/articles/richardsonMaturityModel.html#level0">Richardson Maturity Model</a>模型中，将RESTful分为4个等级：</p>
+<p><img data-src="/resource/img/2022/03/restful/overview.png" alt=""></p>
+<p>4个等级分别是：</p>
+<p><img data-src="/resource/img/2022/03/restful/level0.png" alt=""><br>第一级（Level 0）的 Web 服务仅使用 HTTP 作为传输方式，实际上只是远程方法调用（RPC）的一种具体形式。SOAP 和 XML-RPC 都属于此类。</p>
+<p><img data-src="/resource/img/2022/03/restful/level1.png" alt=""><br>第二级（Level 1）的 Web 服务引入了<strong>资源</strong>的概念。每个资源有对应的标识符和表达。</p>
+<p><img data-src="/resource/img/2022/03/restful/level2.png" alt=""><br>第三级（Level 2）的 Web 服务使用不同的 <strong>HTTP 方法</strong>来进行不同的操作，并且使用<strong>HTTP 状态码</strong>来表示不同的结果。如 HTTP GET 方法来获取资源，HTTP DELETE 方法来删除资源。</p>
+<p><img data-src="/resource/img/2022/03/restful/level3.png" alt=""><br>第四级（Level 3）的 Web 服务使用 <strong>HATEOAS</strong>。在资源的表达中包含了链接信息。客户端可以根据链接来发现可以执行的动作。</p>
+<h3 id="实践1：一类资源两个URL"><a href="#实践1：一类资源两个URL" class="headerlink" title="实践1：一类资源两个URL"></a>实践1：一类资源两个URL</h3><p>一个URL表示该类型资源集合，另一个URL用来表示特定的资源元素。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 资源集合：</span></span><br><span class="line">/epics</span><br><span class="line"><span class="comment"># 资源元素：</span></span><br><span class="line"><span class="regexp">/epics/</span><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实践2：使用一致的复数名词"><a href="#实践2：使用一致的复数名词" class="headerlink" title="实践2：使用一致的复数名词"></a>实践2：使用一致的复数名词</h3><p>避免混用复数和单数形式，只应该使用统一的复数名词来表达资源。</p>
+<p>反例：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /story</span><br><span class="line"><span class="built_in">GET</span> /story/3</span><br></pre></td></tr></table></figure>
+
+
+<p>正例：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /stories</span><br><span class="line"><span class="built_in">GET</span> /stories/3</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="实践3：使用名词而不是动词"><a href="#实践3：使用名词而不是动词" class="headerlink" title="实践3：使用名词而不是动词"></a>实践3：使用名词而不是动词</h3><p>使用Http方法来表达动作（增、删、改、查）：</p>
+<ol>
+<li>增（POST：非幂等性）: 使用POST方法创建新的资源。</li>
+<li>删（DELETE：幂等性）: 使用DELETE方法删除存在的资源。</li>
+<li>改（PUT：幂等性）: 使用PUT或PATCH方法来更新已存在的资源。</li>
+<li>查: 使用GET方法读取资源。（GET：幂等性）</li>
+</ol>
+<p>反例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/getAllEpics</span><br><span class="line">/getAllFinishedEpics</span><br><span class="line">/createEpic</span><br><span class="line">/updateEpic</span><br></pre></td></tr></table></figure>
+
+<p>正例：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /epics</span><br><span class="line"><span class="built_in">GET</span> /epics?<span class="attribute">state</span>=finished</span><br><span class="line">POST /epics</span><br><span class="line">PUT /epics/5</span><br></pre></td></tr></table></figure>
+
+<h3 id="实践4：将实际数据包装在data字段中"><a href="#实践4：将实际数据包装在data字段中" class="headerlink" title="实践4：将实际数据包装在data字段中"></a>实践4：将实际数据包装在data字段中</h3><p>GET /epics在数据字段中返回epic资源列表：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    &#123; <span class="string">&quot;id&quot;</span>: <span class="number">1</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;epic1&quot;</span> &#125;</span><br><span class="line">    , &#123; <span class="string">&quot;id&quot;</span>: <span class="number">2</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;epic2&quot;</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>GET /epic/1在数据字段中返回id为1的epic对象：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> </span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> </span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;epic1&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>PUT，POST和PATCH请求的有效负荷还应包含实际对象的数据字段。</p>
+<p>优点：</p>
+<ul>
+<li>还有空间扩展元数据</li>
+<li>一致性</li>
+<li>兼容<a target="_blank" rel="noopener" href="https://jsonapi.org/">JSON API标准</a></li>
+</ul>
+<h3 id="实践5：对可选及复杂参数使用查询字符串（？）"><a href="#实践5：对可选及复杂参数使用查询字符串（？）" class="headerlink" title="实践5：对可选及复杂参数使用查询字符串（？）"></a>实践5：对可选及复杂参数使用查询字符串（？）</h3><p>反例：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /employees</span><br><span class="line"><span class="built_in">GET</span> /externalEmployees</span><br><span class="line"><span class="built_in">GET</span> /internalEmployees</span><br><span class="line"><span class="built_in">GET</span> /internalAndSeniorEmployees</span><br></pre></td></tr></table></figure>
+
+<p>保持URL简单短小。 坚持使用基本URL，将复杂或可选参数移动到查询字符串。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /employees?<span class="attribute">state</span>=internal&amp;title=senior</span><br><span class="line"><span class="built_in">GET</span> /employees?<span class="attribute">id</span>=1,2</span><br></pre></td></tr></table></figure>
+
+<p>另外还可以使用JSON API方式过滤：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> /employees?<span class="keyword">filter</span>[state]=<span class="type">internal</span>&amp;<span class="keyword">filter</span>[title]=senior</span><br><span class="line"><span class="keyword">GET</span> /employees?<span class="keyword">filter</span>[id]=<span class="number">1</span>,<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="实践6：使用HTTP状态码"><a href="#实践6：使用HTTP状态码" class="headerlink" title="实践6：使用HTTP状态码"></a>实践6：使用HTTP状态码</h3><p>RESTful Web服务应使用合适的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">HTTP状态码</a>来响应客户端的请求。</p>
+<ul>
+<li>2xx  - 成功 - 一切正常。</li>
+<li>4xx  - 客户端错误 - 如果客户端的故障（例如：客户端发送无效请求或未经授权）</li>
+<li>5xx  - 服务器错误 - 服务端的故障（尝试处理请求时的错误，如数据库故障，依赖服务不可用，编码错误或不应发生的状态）</li>
+</ul>
+<p>请注意，使用所有过多的HTTP状态码可能会让API用户感到困惑。所以应该保持使用精简的HTTP状态码集。常用状态码如下：</p>
+<ul>
+<li>2xx：成功，操作被成功接收并处理<ul>
+<li>200：请求成功。一般用于GET与POST请求</li>
+<li>201：已创建。成功请求并创建了新的资源</li>
+</ul>
+</li>
+<li>3xx：重定向，需要进一步的操作以完成请求<ul>
+<li>301：永久移动。请求的资源已被永久的移动到新URI，返回信息会包括新的URI，浏览器会自动定向到新URI。今后任何新的请求都应使用新的URI代替</li>
+<li>304：未修改。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源</li>
+</ul>
+</li>
+<li>4xx：客户端错误，请求包含语法错误或无法完成请求<ul>
+<li>400：    客户端请求的语法错误，服务器无法理解</li>
+<li>401：请求要求用户的身份认证</li>
+<li>403：    服务器理解请求客户端的请求，但是拒绝执行此请求</li>
+<li>404：服务器无法根据客户端的请求找到资源（网页）。通过此代码，网站设计人员可设置”您所请求的资源无法找到”的个性页面</li>
+<li>410：客户端请求的资源已经不存在。410不同于404，如果资源以前有现在被永久删除了可使用410代码，网站设计人员可通过301代码指定资源的新位置</li>
+</ul>
+</li>
+<li>5xx：服务器错误，服务器在处理请求的过程中发生了错误<ul>
+<li>500：服务器内部错误，无法完成请求</li>
+</ul>
+</li>
+</ul>
+<p>不要过度使用404。状态码的使用要尽量精确。如果资源可用，但禁止用户访问，则返回403。如果资源曾经存在但现已被删除或停用，请使用410。</p>
+<h3 id="实践7：提供有用的错误消息"><a href="#实践7：提供有用的错误消息" class="headerlink" title="实践7：提供有用的错误消息"></a>实践7：提供有用的错误消息</h3><p>除了提供恰当的HTTP状态代码外，还应该在HTTP响应正文中提供有用且详细的错误描述。 如下所示：</p>
+<p>请求：</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /epics?<span class="keyword">state</span>=unknow</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 400 Bad Request</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;errors&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&quot;status&quot;</span>: <span class="number">400</span>,</span><br><span class="line">      <span class="string">&quot;detail&quot;</span>: <span class="string">&quot;Invalid state. Valid values are &#x27;</span>biz<span class="string">&#x27; or &#x27;</span>tech<span class="string">&#x27;&quot;</span>,</span><br><span class="line">      <span class="string">&quot;code&quot;</span>: <span class="number">352</span>,</span><br><span class="line">      <span class="string">&quot;links&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;about&quot;</span>: <span class="string">&quot;http://www.jira.com/rest/errorcode/352&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实践8：使用HATEOAS"><a href="#实践8：使用HATEOAS" class="headerlink" title="实践8：使用HATEOAS"></a>实践8：使用HATEOAS</h3><p>HATEOAS 是 Hypermedia As The Engine Of Application State 的缩写，从字面上理解是 “超媒体即是应用状态引擎” 。其原则就是客户端与服务器的交互完全由超媒体动态提供，客户端无需事先了解如何与数据或者服务器交互。相反的，在一些RPC服务或者Redis,Mysql等软件，需要事先了解接口定义或者特定的交互语法。举例如下：</p>
+<p>客户想要访问epic的用户故事清单。 因此，他必须知道他可以通过将查询参数stories附加到员工URL（例如/epics/21/stories）来访问用户故事清单。 这种字符串拼接易错，脆弱且难以维护。 如果更改了在REST API中访问salary语句的方式（例如，现在使用“storyStatements”或“userStories”），则所有客户端都将中断。</p>
+<p>更好的做法是在响应中提供客户可以跟进的链接。 例如，对GET /epic的响应可能如下所示：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">&quot;id&quot;</span>:<span class="number">1</span>,</span><br><span class="line">      <span class="string">&quot;name&quot;</span>:<span class="string">&quot;epic1&quot;</span>,</span><br><span class="line">      <span class="string">&quot;links&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">&quot;story&quot;</span>: <span class="string">&quot;http://www.domain.com/epics/21/stories&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>优点：</p>
+<ol>
+<li>如果API被更改，客户端依旧会获取有效的URL（只要保证在URL更改时更新链接）。 </li>
+<li>API变得更具自描述性，客户端不必经常查找文档。</li>
+</ol>
+<h3 id="实践9：恰当地设计关系"><a href="#实践9：恰当地设计关系" class="headerlink" title="实践9：恰当地设计关系"></a>实践9：恰当地设计关系</h3><p>假设每个story都有一个epic和几个sub task。 在API中设计关系基本上有三种常用选项：链接，侧载和嵌入。</p>
+<p>它们都是有效的，正确的选择取决于用例。 基本上，应根据客户端的访问模式以及可容忍的请求数量和有效负载大小来设计关系。</p>
+<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    &#123; </span><br><span class="line">      <span class="string">&quot;id&quot;</span>: <span class="number">1</span>, </span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;用户故事1&quot;</span>,</span><br><span class="line">      <span class="string">&quot;relationships&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;epic&quot;</span>: <span class="string">&quot;http://www.domain.com/story/1/epic&quot;</span>,</span><br><span class="line">        <span class="string">&quot;subTasks&quot;</span>: [ </span><br><span class="line">          <span class="string">&quot;http://www.domain.com/subTasks/12&quot;</span>,</span><br><span class="line">          <span class="string">&quot;http://www.domain.com/subTasks/13&quot;</span></span><br><span class="line">        ]</span><br><span class="line">        <span class="regexp">//</span>or <span class="string">&quot;subTasks&quot;</span>: <span class="string">&quot;http://www.domain.com/story/1/subTasks&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>有效负载小。</li>
+<li>许多请求。 </li>
+<li>客户端必须将数据拼接在一起才能获得所有数据。</li>
+</ul>
+<h4 id="侧载"><a href="#侧载" class="headerlink" title="侧载"></a>侧载</h4><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    &#123; </span><br><span class="line">      <span class="string">&quot;id&quot;</span>: <span class="number">1</span>, </span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;用户故事1&quot;</span>,</span><br><span class="line">      <span class="string">&quot;relationships&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;epic&quot;</span>:  <span class="number">5</span> , </span><br><span class="line">        <span class="string">&quot;subTask&quot;</span>: [ <span class="number">12</span>, <span class="number">13</span> ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;included&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;epic&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;id&quot;</span>: <span class="number">5</span>, </span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;epic5&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;subTasks&quot;</span>: [</span><br><span class="line">      &#123; <span class="string">&quot;id&quot;</span>: <span class="number">12</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;子任务12&quot;</span> &#125;</span><br><span class="line">      , &#123; <span class="string">&quot;id&quot;</span>: <span class="number">13</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;子任务13&quot;</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端还可以通过诸如<code>GET /stories？include=epic，subTasks</code>之类的查询参数来控制侧载实体。</p>
+<ul>
+<li>一次请求。</li>
+<li>定制的有效载荷大小。 没有重复（例如，即使被许多用户故事引用，也只用提供一次epic）</li>
+<li>客户端仍然必须将数据拼接在一起以便解决关系，这可能非常麻烦。</li>
+</ul>
+<h4 id="嵌入"><a href="#嵌入" class="headerlink" title="嵌入"></a>嵌入</h4><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    &#123; </span><br><span class="line">      <span class="string">&quot;id&quot;</span>: <span class="number">1</span>, </span><br><span class="line">      <span class="string">&quot;name&quot;</span>: <span class="string">&quot;用户故事1&quot;</span>,</span><br><span class="line">      <span class="string">&quot;epic&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: <span class="number">5</span>, </span><br><span class="line">        <span class="string">&quot;name&quot;</span>: <span class="string">&quot;epic5&quot;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">&quot;subTask&quot;</span>: [</span><br><span class="line">        &#123; <span class="string">&quot;id&quot;</span>: <span class="number">12</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;子任务12&quot;</span> &#125;</span><br><span class="line">        , &#123; <span class="string">&quot;id&quot;</span>: <span class="number">13</span>, <span class="string">&quot;name&quot;</span>: <span class="string">&quot;子任务13&quot;</span> &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对客户来说最方便。 是可以直接通过关系来获取实际数据。</li>
+<li>如果客户端不需要关系，白白加载关系。</li>
+<li>有效负载大小和重复增加。 可能多次嵌入引用的实体。</li>
+</ul>
+<h3 id="实践10：使用小驼峰命名法来命名属性"><a href="#实践10：使用小驼峰命名法来命名属性" class="headerlink" title="实践10：使用小驼峰命名法来命名属性"></a>实践10：使用小驼峰命名法来命名属性</h3><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;epic.dateOfCreated&quot;: 2019<span class="string">-05</span><span class="string">-16</span> &#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">//</span> 反例</span><br><span class="line">epic.created_date <span class="regexp">//</span> 违反JavaScript规范</span><br><span class="line">epic.DateOfCreated <span class="regexp">//</span> 建议用于构造方法</span><br><span class="line"></span><br><span class="line"><span class="regexp">//</span> 正例</span><br><span class="line">epic.dateOfCreated</span><br></pre></td></tr></table></figure>
+
+<h3 id="实践11：使用动词进行操作"><a href="#实践11：使用动词进行操作" class="headerlink" title="实践11：使用动词进行操作"></a>实践11：使用动词进行操作</h3><p>有时对API调用的响应不涉及资源（如计算，转义或变换）。 例：</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取</span></span><br><span class="line"><span class="built_in">GET</span> /translate?<span class="keyword">from</span>=de_DE&amp;<span class="keyword">to</span>=en_US&amp;<span class="built_in">text</span>=Hallo</span><br><span class="line"><span class="built_in">GET</span> /calculate?para2=<span class="number">23</span>&amp;para2=<span class="number">432</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 触发更改服务器端状态的操作</span></span><br><span class="line">POST /restartServer</span><br><span class="line"><span class="comment">// 无消息体</span></span><br><span class="line"></span><br><span class="line">POST /banUserFromChannel</span><br><span class="line">&#123; <span class="string">&quot;user&quot;</span>: <span class="string">&quot;123&quot;</span>, <span class="string">&quot;channel&quot;</span>: <span class="string">&quot;serious-chat-channel&quot;</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过动词来表达RPC风格API，它比尝试RESTful风格来进行操作更简单，更直观（例如PATCH / server with {“restart”：true}）。REST风格非常适合与领域模型交互，RPC适合于操作。 更多信息请查看“<a target="_blank" rel="noopener" href="https://www.smashingmagazine.com/2016/09/understanding-rest-and-rpc-for-http-apis/">Understanding RPC Vs REST For HTTP APIs</a>”。</p>
+<h3 id="实践12：分页"><a href="#实践12：分页" class="headerlink" title="实践12：分页"></a>实践12：分页</h3><p>两种流行的分页方法是：</p>
+<ol>
+<li>基于偏移的分页</li>
+<li>基于键集的分页，又称继续令牌，也称为光标（推荐）</li>
+</ol>
+<h4 id="基于偏移的分页"><a href="#基于偏移的分页" class="headerlink" title="基于偏移的分页"></a>基于偏移的分页</h4><p>一般方法是使用参数offset和limit来进行分页：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回30至45的epics</span></span><br><span class="line">/epics?offset=30&amp;<span class="built_in">limit</span>=15 </span><br></pre></td></tr></table></figure>
+
+<p>如果未填参数，则可使用默认值（offset=0， limit=100 ）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回0至100的epics</span></span><br><span class="line">/epics</span><br></pre></td></tr></table></figure>
+
+<p>还可以在响应数据中，提供前一页和后一页的链接：</p>
+<p>请求：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 返回30至45的epics</span></span><br><span class="line">/epics?offset=30&amp;<span class="built_in">limit</span>=15 </span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;pagination&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;offset&quot;</span>: <span class="number">20</span>,</span><br><span class="line">    <span class="string">&quot;limit&quot;</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="string">&quot;total&quot;</span>: <span class="number">3465</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    <span class="regexp">//</span>...</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;links&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;next&quot;</span>: <span class="string">&quot;http://www.domain.com/epics?offset=30&amp;limit=10&quot;</span>,</span><br><span class="line">    <span class="string">&quot;prev&quot;</span>: <span class="string">&quot;http://www.domain.com/epics?offset=10&amp;limit=10&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于偏移量的分页实现很简单，但是有两个缺点：</p>
+<ol>
+<li>查询慢。数据量大时SQL偏移子句执行会很慢。</li>
+<li>不安全。分页期间的变更。</li>
+</ol>
+<h4 id="基于键集的分页，又称继续令牌，也称为光标（推荐）"><a href="#基于键集的分页，又称继续令牌，也称为光标（推荐）" class="headerlink" title="基于键集的分页，又称继续令牌，也称为光标（推荐）"></a>基于键集的分页，又称继续令牌，也称为光标（推荐）</h4><p>简单来说就是使用索引列来进行分页。 假设epic有一个索引列data_created，我们就可以使用data_created来分页。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">GET</span> /epics?<span class="attribute">pageSize</span>=100                </span><br><span class="line"><span class="comment"># 客户端接受最靠前的100条epic信息，使用`data_created`字段排序</span></span><br><span class="line"><span class="comment"># 该分页最老epic的`dataCreated` 字段值为 1504224000000 (= Sep 1, 2017 12:00:00 AM)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">GET</span> /epics?<span class="attribute">pageSize</span>=100&amp;createdSince=1504224000000</span><br><span class="line"><span class="comment"># 客户端请求1504224000000之后的100个epics数据。 </span></span><br><span class="line"><span class="comment"># 该分页最前面的epic创建于1506816000000. </span></span><br></pre></td></tr></table></figure>
+
+<p>该分页方式解决了基于偏移的分页的许多缺点，但对调用方来说不太方便。</p>
+<p>更好的方式是通过向日期添加附加信息（如id）来创建所谓的 continuation token，以提高可靠性和效率。<br>此外，应该向该令牌的有效负载中提供专用字段，以便客户端不用必须通过查看元素才能搞清楚。 甚至还可以进一步提供下一页链接。</p>
+<p>因此 <code>GET /epics?pageSize=100</code>请求将返回如下：  </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;pagination&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;continuationToken&quot;</span>: <span class="string">&quot;1504224000000_10&quot;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">    <span class="regexp">//</span> ...</span><br><span class="line">    <span class="regexp">//</span> last element:</span><br><span class="line">    &#123; <span class="string">&quot;id&quot;</span>: <span class="number">10</span>, <span class="string">&quot;dateCreated&quot;</span>: <span class="number">1504224000000</span> &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;links&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;next&quot;</span>: <span class="string">&quot;http://www.domain.com/epics?pageSize=100&amp;continue=1504224000000_10&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下一页链接使API真正成为RESTful风格，因为客户端只需通过这些链接（HATEOAS）即可查看集合。 无需手动构建URL。 此外，服务端可以简单地更改URL结构而不会破坏客户端，保证接口的演进性。</p>
+<h3 id="实践13：确保API的可演进性"><a href="#实践13：确保API的可演进性" class="headerlink" title="实践13：确保API的可演进性"></a>实践13：确保API的可演进性</h3><h4 id="避免破坏性变更"><a href="#避免破坏性变更" class="headerlink" title="避免破坏性变更"></a>避免破坏性变更</h4><ul>
+<li>保持向后兼容。只要客户端能接受就通过添加字段的方式。</li>
+<li>复制和弃用。要更改现有字段（重命名或更改结构），可在该字段旁边添加新字段，并在接口手册中弃用该字段。一段时间后，删除旧字段。</li>
+<li>利用超媒体和HATEOAS。只要客户端使用响应中的链接来访问（且不会手动创建URL），即可以安全地更改URL而不会破坏客户端。</li>
+<li>使用新名称创建新资源。如果新业务需求导致全新的领域模型和工作流，则可以创建新资源。</li>
+</ul>
+<h4 id="保持业务逻辑在服务侧"><a href="#保持业务逻辑在服务侧" class="headerlink" title="保持业务逻辑在服务侧"></a>保持业务逻辑在服务侧</h4><p>不要让服务成为转储数据访问层，它通过直接公开数据库模型（低级API）来提供CRUD功能。这造成了高耦合。</p>
+<p>因此，我们应该构建高层次/基于工作流的API而不是低级API。</p>
+<h3 id="实践14：版本化"><a href="#实践14：版本化" class="headerlink" title="实践14：版本化"></a>实践14：版本化</h3><p>API实在无法演进，则必须提供不同版本的API。版本控制允许在不破坏客户端的情况下，在新版本中发布不兼容和重大更改的API。</p>
+<p>有两种最流行的版本控制方法：</p>
+<ul>
+<li>通过URLs版本化</li>
+<li>通过Accept HTTP Header进行版本控制（内容协商）</li>
+</ul>
+<h4 id="通过URLs版本化"><a href="#通过URLs版本化" class="headerlink" title="通过URLs版本化"></a>通过URLs版本化</h4><p>只需将API的版本号放在每个资源的URL中即可。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/v1/</span>epics</span><br></pre></td></tr></table></figure>
+
+<p>优点：</p>
+<ul>
+<li>对API开发人员非常简单。</li>
+<li>对客户端访问也非常简单。</li>
+<li>可以复制和粘贴URL。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>非RESTful。（该方式会令URL发生变化）</li>
+<li>破坏URLs。 客户端必须维护和更新URL。</li>
+</ul>
+<p>由于其简单性，该方式被各大厂商广泛使用，例如：Facebook, Twitter, Google/YouTube, Bing, Dropbox, Tumblr以及Disqus等。</p>
+<h4 id="通过Accept-HTTP-Header进行版本控制（内容协商）"><a href="#通过Accept-HTTP-Header进行版本控制（内容协商）" class="headerlink" title="通过Accept HTTP Header进行版本控制（内容协商）"></a>通过Accept HTTP Header进行版本控制（内容协商）</h4><p>更RESTFul的方式是利用通过Accept HTTP请求头的内容协商。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /epics</span><br><span class="line">Accept: application/vnd.myapi.v2+json</span><br></pre></td></tr></table></figure>
+
+<p>优点：</p>
+<ul>
+<li>URLs保持不变</li>
+<li>RESTFul方式</li>
+<li>HATEOAS友好</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>稍微难以使用。 客户必须注意标题。</li>
+<li>无法再复制和粘贴网址。</li>
+</ul>
+<h2 id="参考案例"><a href="#参考案例" class="headerlink" title="参考案例"></a>参考案例</h2><ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference">https://www.elastic.co/guide/en/elasticsearch/reference</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5NTg2NTU0Ng%3D%3D&chksm=bd5d2c238a2aa5354cc1d6de2804895cd46d655963433ce7b07891f3f2e40d9931cd0d990741&idx=2&mid=2656598662&scene=0&sn=1bb738ad2ee92c5963dd94cba03dd0b9#rd">RFC7807：API错误处理最佳实践</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7807">RFC7807</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cf80d644727e">RESTful Service API 设计最佳工程实践和常见问题解决方案</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.21cto.com/article/1751">REST API 设计与开发最佳实践</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://phauer.com/2015/restful-api-design-best-practices/">RESTful API Design. Best Practices in a Nutshell.</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://soundadvice.id.au/blog/2011/12/06/#httpEvolvability">Best Practices for HTTP API evolvability</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.ibm.com/developerworks/cn/java/j-lo-SpringHATEOAS/">使用 Spring HATEOAS 开发 REST 服务</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://phauer.com/2018/web-api-pagination-timestamp-id-continuation-token/">Web API Pagination with the ‘Timestamp_ID’ Continuation Token</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://martinfowler.com/articles/richardsonMaturityModel.html#level0">Richardson Maturity Model — steps toward the glory of REST</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">REST APIs must be hypertext-driven</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?time_continue=1&v=mQkf85S9UoQ">REST beyond the obvious – API design for ever evolving systems</a></p>
+</li>
+</ol>
+<p>转载自: <a target="_blank" rel="noopener" href="http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -914,249 +1325,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-title-link" itemprop="url">文件系统特定的 LookupAndOpen[file] 实施失败</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-21 18:33:56" itemprop="dateCreated datePublished" datetime="2022-02-21T18:33:56+08:00">2022-02-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/ESXI/" itemprop="url" rel="index"><span itemprop="name">ESXI</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-meta-item leancloud_visitors" data-flag-title="文件系统特定的 LookupAndOpen[file] 实施失败" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>错误描述</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">对象类型需要托管的 I/O</span><br><span class="line">无法打开磁盘“<span class="regexp">/vmfs/</span>volumes<span class="regexp">/5ec70d97-8b7959b3-d45b-ecf4bbe3557c/</span>openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk”或其所依赖的快照磁盘之一。</span><br><span class="line">模块“Disk”打开电源失败。</span><br><span class="line">无法启动虚拟机。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>解决方案, 找到对应的磁盘文件(可以在网页里查看到磁盘的挂载路径)</p>
-<p>例如</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[datastore1]</span> openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined<span class="selector-class">.vmdk</span> </span><br></pre></td></tr></table></figure>
-
-<p>尝试修复</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -x repair <span class="regexp">/vmfs/</span>volumes<span class="regexp">/&lt;datastorepath&gt;/</span>&lt;vm name&gt;/&lt;vm name main base disk&gt;.vmdk</span><br></pre></td></tr></table></figure>
-
-<p>例如</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到该目录下</span></span><br><span class="line">cd <span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastore1/</span>openwrt</span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">vmkfstools -x repair openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk</span><br></pre></td></tr></table></figure>
-
-<p>结果</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Disk was successfully repaired.</span><br></pre></td></tr></table></figure>
-
-<p>磁盘修复成功, 可以打开了.</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
-<p><a target="_blank" rel="noopener" href="https://kb.vmware.com/s/article/2149438?lang=zh_CN">https://kb.vmware.com/s/article/2149438?lang=zh_CN</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Jupyter配合Nginx反向代理的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-22 00:30:43" itemprop="dateCreated datePublished" datetime="2021-09-22T00:30:43+08:00">2021-09-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/Docker/Jupyter/" itemprop="url" rel="index"><span itemprop="name">Jupyter</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Jupyter配合Nginx反向代理的问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="SSL-Error"><a href="#SSL-Error" class="headerlink" title="SSL Error"></a>SSL Error</h1><p>当 jupyter 配置了 SSL 时, Nginx 反向代理时也需要用 https 协议</p>
-<p>例如, 反向代理到本地的 10000 端口</p>
-<p>错误示范</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
-
-<p>正确示范</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass https:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Websocket-连接问题"><a href="#Websocket-连接问题" class="headerlink" title="Websocket 连接问题"></a>Websocket 连接问题</h1><p>在基于 Docker 部署 jupyter 工作环境时, 可能会发生可以打开网页, 可以创建文件, 但是无法与后端 python 连接的情况.</p>
-<p>查看 jupyter 日志显示</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jupyter    | [W 2021-09-21 16:09:24.778 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.21ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:26.418 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.13ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:28.696 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.28ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:30.660 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.24ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:37.605 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.15ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:41.758 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.11ms <span class="attribute">referer</span>=None</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>当我尝试用 jupyter 提供的 terminal 时, 发现以上日志.</p>
-<p>这说明这个请求没有成功, 400 状态码参考 MDN</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">HTTP</span> <span class="number">400</span> Bad Request 响应状态码表示由于语法无效，服务器无法理解该请求。 客户端不应该在未经修改的情况下重复此请求。</span><br></pre></td></tr></table></figure>
-
-<p>所以应该是 nginx 在与 jupyter 通信时发生了问题.</p>
-<p>Google …</p>
-<p>找到以下解决方案, 一个可用的 Nginx 反向代理配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">location</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* /(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?</span> &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># WebSocket support</span></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>注意添加这三项</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/jupyter/notebook/issues/625">https://github.com/jupyter/notebook/issues/625</a></p>
-</blockquote>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/latest/config.html#options">https://jupyter-notebook.readthedocs.io/en/latest/config.html#options</a></p>
-</blockquote>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400</a></p>
-</blockquote>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://gist.github.com/cboettig/8643341bd3c93b62b5c2">https://gist.github.com/cboettig/8643341bd3c93b62b5c2</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1228,7 +1396,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-count">77</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
