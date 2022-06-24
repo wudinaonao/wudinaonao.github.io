@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>20.有效的括号</title>
+    <url>/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/</url>
+    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>给定一个只包括 ‘(‘，’)’，’{‘，’}’，’[‘，’]’ 的字符串 s ，判断字符串是否有效。</p>
+<p>有效字符串需满足</p>
+<ul>
+<li>左括号必须用相同类型的右括号闭合。</li>
+<li>左括号必须以正确的顺序闭合。</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()[]&#123;&#125;&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;(]&quot;</span></span><br><span class="line">输出：<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>即左右括号必须是闭合的。</p>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>使用栈结构来处理这个问题非常简单。</p>
+<p>我们从左到右依次扫描字符串的每一个字符，如果是<code>([&#123;</code>左括号就入栈，如果是<code>)]&#125;</code>右括号就从栈里弹出栈顶的元素，然后匹配该字符和栈顶元素是否是成对的。</p>
+<p>例如扫描到字符<code>(</code>,然后栈顶元素是<code>)</code>,则成对，否则不成对则返回<code>False</code></p>
+<p>扫描完字符串，如果栈里没有元素则说明括号都是成对的，匹配成功。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 字符串匹配成功的话其长度一定是偶数, 否则一定不成功</span></span><br><span class="line">        <span class="comment"># 这里可以先检查长度, 可以省略之后的步骤</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(s) % <span class="number">2</span> != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助栈</span></span><br><span class="line">        _stack = []</span><br><span class="line">        <span class="comment"># 对照表</span></span><br><span class="line">        _<span class="built_in">map</span> = &#123;</span><br><span class="line">            <span class="string">&quot;)&quot;</span>: <span class="string">&quot;(&quot;</span>,</span><br><span class="line">            <span class="string">&quot;]&quot;</span>: <span class="string">&quot;[&quot;</span>,</span><br><span class="line">            <span class="string">&quot;&#125;&quot;</span>: <span class="string">&quot;&#123;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> _char <span class="keyword">in</span> <span class="built_in">list</span>(s):</span><br><span class="line">            <span class="keyword">if</span> _char <span class="keyword">in</span> <span class="string">&quot;([&#123;&quot;</span>:</span><br><span class="line">                _stack.append(_char)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 当遇到右括号时, 从栈顶弹出元素检测是否</span></span><br><span class="line">                <span class="comment"># 成对, 即是否闭合, 不成对则返回 False</span></span><br><span class="line">                <span class="keyword">if</span> _stack:</span><br><span class="line">                    <span class="keyword">if</span> _char <span class="keyword">in</span> _<span class="built_in">map</span>:</span><br><span class="line">                        _top = _stack.pop()</span><br><span class="line">                        <span class="keyword">if</span> _<span class="built_in">map</span>[_char] != _top:</span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 右括号溢出</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 这里要判断栈里是否还有元素</span></span><br><span class="line">        <span class="comment"># 有元素则说明该字符串匹配不成功</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(_stack) == <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+
+<p>原链接</p>
+<blockquote>
+<p><a href="https://leetcode.cn/problems/valid-parentheses/">https://leetcode.cn/problems/valid-parentheses/</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
     <title>CentOS8安装Docker</title>
     <url>/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/</url>
     <content><![CDATA[<p><a href="https://developer.aliyun.com/mirror/docker-ce?spm=a2c6h.13651102.0.0.3e221b11A4nUxe">使用阿里源进行安装</a></p>
@@ -909,6 +939,361 @@
       </tags>
   </entry>
   <entry>
+    <title>Odoo Challenge</title>
+    <url>/2022/06/23/Odoo-Challenge/</url>
+    <content><![CDATA[<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea0e1da977196172c.png" alt=""></p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Odoo Challenge 挑战赛是一个很有意思的项目, 起源于一次面试时, HR发来个链接说测试一下水平.</p>
+<p>好了, 开始挑战</p>
+<h1 id="LEVEL-1"><a href="#LEVEL-1" class="headerlink" title="LEVEL 1"></a>LEVEL 1</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d19ff4a2b75f01c.png" alt=""></p>
+<p>先随便输一个密码, 点 Check Answer, 很不意外的密码错误, 不过这时候有提示, 可以根据提示的线索来找到密码.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image196452be9426f798.png" alt=""></p>
+<p>看到提示</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">Hint: <span class="keyword">if</span> <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;the_password&#x27;</span>]</span> == <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;pwd&#x27;</span>]</span>: return True</span><br></pre></td></tr></table></figure>
+<p>看看网页的源码, 猜测应该在里面能找到.</p>
+<p>部分源码</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">&lt;form method<span class="operator">=</span><span class="string">&quot;POST&quot;</span> action<span class="operator">=</span><span class="string">&quot;/jobs/challenge/submit&quot;</span> role<span class="operator">=</span><span class="string">&quot;form&quot;</span>&gt;</span><br><span class="line">    &lt;input class<span class="operator">=</span><span class="string">&quot;d-none&quot;</span> name<span class="operator">=</span><span class="string">&quot;csrf_token&quot;</span> value<span class="operator">=</span><span class="string">&quot;6ad9541dcf313efc428fa7f50dda9ca079adfe4ao1687487891&quot;</span>/&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group row&quot;</span>&gt;</span><br><span class="line">        &lt;label for<span class="operator">=</span><span class="string">&quot;password&quot;</span> class<span class="operator">=</span><span class="string">&quot;col-md-2 offset-md-2 col-form-label&quot;</span>&gt;Password&lt;/label&gt;</span><br><span class="line">        &lt;div class<span class="operator">=</span><span class="string">&quot;col-md-6&quot;</span>&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;hidden&quot;</span> name<span class="operator">=</span><span class="string">&quot;the_password&quot;</span> value<span class="operator">=</span><span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;text&quot;</span> required<span class="operator">=</span><span class="string">&quot;required&quot;</span> class<span class="operator">=</span><span class="string">&quot;form-control&quot;</span> name<span class="operator">=</span><span class="string">&quot;pwd&quot;</span> id<span class="operator">=</span><span class="string">&quot;password&quot;</span> placeholder<span class="operator">=</span><span class="string">&quot;&quot;</span>/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group&quot;</span>&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;button id<span class="operator">=</span><span class="string">&quot;submit&quot;</span> type<span class="operator">=</span><span class="string">&quot;submit&quot;</span> name<span class="operator">=</span><span class="string">&quot;signup&quot;</span> class<span class="operator">=</span><span class="string">&quot;btn btn-primary&quot;</span>&gt;Check Answer&lt;/button&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意到</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;input <span class="attribute">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;the_password&quot;</span> <span class="attribute">value</span>=<span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight llvm"><table><tr><td class="code"><pre><span class="line"><span class="number">796</span>ff<span class="number">3e72821</span>cf<span class="number">412787389</span><span class="keyword">c</span><span class="number">6</span>d<span class="number">5</span>f<span class="number">301e00</span>e<span class="number">3</span>efb<span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<p>就是本关的密码了</p>
+<h1 id="LEVEL-2"><a href="#LEVEL-2" class="headerlink" title="LEVEL 2"></a>LEVEL 2</h1><p>第二关提示如下</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">Hint: <span class="keyword">function</span> <span class="title function_">debug</span><span class="params">()</span> &#123; [<span class="keyword">native</span> code] &#125;</span><br></pre></td></tr></table></figure>
+
+<p>猜测应该是和 debug 有关系, 所以可以 F12 打开开发者工具在命令控制台标签页找线索</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf7240080d7a8150.png" alt=""></p>
+<p>直接出答案了</p>
+<h1 id="LEVEL-3"><a href="#LEVEL-3" class="headerlink" title="LEVEL 3"></a>LEVEL 3</h1><p>提示</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Hint</span>: GET / HTTP/<span class="number">1</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>猜测应该在与服务器交互的请求里寻找.</p>
+<p>我们随便输一个密码, 提交一下看看与服务器的交互请求都有哪些</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageceda9745f1804ab0.png" alt=""></p>
+<p>每个请求都点开看一看 request / response 里面有没有什么可以寻找的线索.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf2dae0788b0b0b3.png" alt=""></p>
+<p>可以看到在 <code>next?wrong=oups</code> 这个请求的响应头里面有内容, 红框标记的猜测应该是答案, 即</p>
+<figure class="highlight brainfuck"><table><tr><td class="code"><pre><span class="line"><span class="comment">Grow your business with Odoo and more than 985156</span> <span class="comment">apps</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="LEVEL-4"><a href="#LEVEL-4" class="headerlink" title="LEVEL 4"></a>LEVEL 4</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea91e68b41299a384.png" alt=""></p>
+<p>提示</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> Classy password</span><br></pre></td></tr></table></figure>
+
+<p>笔者在解决这个问题的时候花费了相当长的时间。最开始我猜测提示经典密码也许有可能是弱口令？</p>
+<p>我试了如下弱口令</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">admin</span><br><span class="line">root</span><br><span class="line"><span class="number">123456</span></span><br><span class="line"><span class="number">000000</span></span><br><span class="line"><span class="number">888888</span></span><br><span class="line"><span class="number">88888888</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">11111111</span></span><br></pre></td></tr></table></figure>
+
+<p>诸如此类的弱口令发现都没有用。</p>
+<p>最后我写了一个脚本, 从 Github 上找了找有没有彩虹表, 常用弱口令之类的仓库. </p>
+<p>找到一个 <a href="https://github.com/rootphantomer/Blasting_dictionary">https://github.com/rootphantomer/Blasting_dictionary</a></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4a43659ed94388e4.png" alt=""></p>
+<p>挂着跑了一下午, 回来一看跑了大概 2w 个密码仍然没有任何起色. 这个时候我开始怀疑一开始的思路是否正确, 提示经典密码的意思究竟是不是弱口令的意思?</p>
+<p>但是此时我又没有更好的思路, 于是每个请求都翻了翻, 看看有没有有用的信息. </p>
+<p>真让我翻到了….</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3d73e0bbd917848c.png" alt=""></p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/challenge.css</span><br></pre></td></tr></table></figure>
+
+<p>这个请求的内容就是密码….</p>
+<p>呵呵, 踏破铁鞋无觅处…</p>
+<p>这个事情告诉我什么道理呢, 如果一个题目看起来很简单, 但是通过暴力方法很难解决时, 一定要寻找其他的突破口….</p>
+<h1 id="LEVEL-5"><a href="#LEVEL-5" class="headerlink" title="LEVEL 5"></a>LEVEL 5</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image9d537f7a650e4297.png" alt=""></p>
+<p>提示</p>
+<figure class="highlight vbnet"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> I<span class="comment">&#x27;m a small piece of data sent from a website and stored on the user&#x27;s computer</span></span><br></pre></td></tr></table></figure>
+
+<p>意思是服务器发送了一个数据片段存储到了用户电脑上.</p>
+<p>看到这个首先想到 local storage 和 cookies</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imaged06179d00d0da120.png" alt=""></p>
+<p>印证了我的想法, 我在请求</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
+
+<p>里发现了线索, 密码既是方框里的值</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Odoo</span>-<span class="number">9850101554950100</span></span><br></pre></td></tr></table></figure>
+
+<p>PS: 事后我发现这个页面的图标是一个饼干.</p>
+<p>cookies 的意思正是饼干. 看来还是要多观察不一样的细节.</p>
+<h1 id="LEVEL-6"><a href="#LEVEL-6" class="headerlink" title="LEVEL 6"></a>LEVEL 6</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image92a98e09adca3e11.png" alt=""></p>
+<p>给了一段 js 代码</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span>.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> tmp = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; pwd.<span class="property">length</span>; i++)</span><br><span class="line">    tmp += <span class="string">&quot; &quot;</span>+idx.<span class="title function_">indexOf</span>(pwd.<span class="title function_">charAt</span>(i));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(tmp == <span class="string">&quot; 2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    $.<span class="title function_">post</span>(<span class="string">&#x27;/jobs/challenge/submit&#x27;</span>, &#123;<span class="attr">pwd</span>: pwd&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params">x</span>) &#123; <span class="variable language_">window</span>.<span class="property">location</span> = <span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看来一下逻辑, tmp 变量存储的应该是 idx 字符串的索引, 我们把索引对应的字符取出来即可.</p>
+<p>可以用 Python 实现一个简单的解码函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line">tmp = <span class="string">&quot;2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">pwd = <span class="string">&quot;&quot;</span>.join([idx[<span class="built_in">int</span>(index)] <span class="keyword">for</span> index <span class="keyword">in</span> tmp])</span><br><span class="line"><span class="built_in">print</span>(pwd)</span><br></pre></td></tr></table></figure>
+
+<p>得到密文</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line"><span class="number">2</span>CDA4eb85c<span class="number">13B7105e80</span></span><br></pre></td></tr></table></figure>
+
+<p>本关通过</p>
+<h1 id="LEVEL-7"><a href="#LEVEL-7" class="headerlink" title="LEVEL 7"></a>LEVEL 7</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageea4dff6ab52bf293.png" alt=""></p>
+<p>哈哈, 从现在开始难度增加了…..</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef075074667a94677.png" alt=""></p>
+<p>提示</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
+
+<p>ascii 码? 这个提示…..简单到等于没什么提示…</p>
+<p>还是去翻一翻请求, 看看 request / response / cookies 有什么线索吧.</p>
+<p>首先在控制台看到打印了一串信息</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image1dcba71b5d89779e.png" alt=""></p>
+<p>翻译了一下大概是说需要调用另一个 URL 来执行下一个任务.</p>
+<p>然后在请求</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
+
+<p>里发现了不少信息.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcd8624faebd854f.png" alt=""></p>
+<p>这个地方有一个奇怪的信息, 我们先记一下.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>It-Is-The-Part-2-Of-Url</td>
+<td>“/jobs/challenge/<part1>/1d1/prime.json”</td>
+</tr>
+</tbody></table>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagec790f18f7db82254.png" alt=""></p>
+<p>请求头也有一个奇怪的信息</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>It-Is-The-Part-1-Of-Url</td>
+<td>“/jobs/challenge/ebe/<part2>/prime.json”</td>
+</tr>
+</tbody></table>
+<p>这时候我们可以分析, 这个 URL 被分为了两部分, 放到一起看一下</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/&lt;part1&gt;/</span><span class="number">1</span>d1/prime.json</span><br><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span>&lt;part2&gt;/prime.json</span><br></pre></td></tr></table></figure>
+
+<p>那么完整的 URL 应该是</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span><span class="number">1</span>d1/prime.json</span><br></pre></td></tr></table></figure>
+
+<p>我们尝试访问这个 URL</p>
+<p>得到一串 JSON</p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;instructions&quot;</span>: <span class="string">&quot;Remove non prime numbers from data then right shift [222th decimal of the constant quantity that determines the area of a circle by multiplying it by the radius squared] bits from the remaining numbers, it will give you the alphanumeric password of the next level&quot;</span>,</span><br><span class="line">    <span class="string">&quot;numbers&quot;</span>: [</span><br><span class="line"><span class="built_in">        52191,</span></span><br><span class="line"><span class="built_in">        25453,</span></span><br><span class="line"><span class="built_in">        13613,</span></span><br><span class="line"><span class="built_in">        54064,</span></span><br><span class="line"><span class="built_in">        25111,</span></span><br><span class="line"><span class="built_in">        22425,</span></span><br><span class="line"><span class="built_in">        12821,</span></span><br><span class="line"><span class="built_in">        19580,</span></span><br><span class="line"><span class="built_in">        25163,</span></span><br><span class="line"><span class="built_in">        46513,</span></span><br><span class="line"><span class="built_in">        40022,</span></span><br><span class="line"><span class="built_in">        57039,</span></span><br><span class="line"><span class="built_in">        9167,</span></span><br><span class="line"><span class="built_in">        13697,</span></span><br><span class="line"><span class="built_in">        26041,</span></span><br><span class="line"><span class="built_in">        47396,</span></span><br><span class="line"><span class="built_in">        13577,</span></span><br><span class="line"><span class="built_in">        11932,</span></span><br><span class="line"><span class="built_in">        50399,</span></span><br><span class="line"><span class="built_in">        14591,</span></span><br><span class="line"><span class="built_in">        13323,</span></span><br><span class="line"><span class="built_in">        46296,</span></span><br><span class="line"><span class="built_in">        20704,</span></span><br><span class="line"><span class="built_in">        53379,</span></span><br><span class="line"><span class="built_in">        24889,</span></span><br><span class="line"><span class="built_in">        22289,</span></span><br><span class="line"><span class="built_in">        24989,</span></span><br><span class="line"><span class="built_in">        51709,</span></span><br><span class="line"><span class="built_in">        47000,</span></span><br><span class="line"><span class="built_in">        294,</span></span><br><span class="line"><span class="built_in">        26249,</span></span><br><span class="line"><span class="built_in">        52972,</span></span><br><span class="line"><span class="built_in">        51191,</span></span><br><span class="line"><span class="built_in">        44807,</span></span><br><span class="line"><span class="built_in">        43176,</span></span><br><span class="line"><span class="built_in">        6419,</span></span><br><span class="line"><span class="built_in">        26161,</span></span><br><span class="line"><span class="built_in">        13339,</span></span><br><span class="line"><span class="built_in">        48093,</span></span><br><span class="line"><span class="built_in">        12547,</span></span><br><span class="line"><span class="built_in">        4258,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        42054,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        22828,</span></span><br><span class="line"><span class="built_in">        59633,</span></span><br><span class="line"><span class="built_in">        40834,</span></span><br><span class="line"><span class="built_in">        37100,</span></span><br><span class="line"><span class="built_in">        34715,</span></span><br><span class="line"><span class="built_in">        17108,</span></span><br><span class="line"><span class="built_in">        39104,</span></span><br><span class="line"><span class="built_in">        24790,</span></span><br><span class="line"><span class="built_in">        14407,</span></span><br><span class="line"><span class="built_in">        24967,</span></span><br><span class="line"><span class="built_in">        64736,</span></span><br><span class="line"><span class="built_in">        561,</span></span><br><span class="line"><span class="built_in">        38676,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        17092,</span></span><br><span class="line"><span class="built_in">        62096,</span></span><br><span class="line"><span class="built_in">        42309,</span></span><br><span class="line"><span class="built_in">        26471,</span></span><br><span class="line"><span class="built_in">        59563,</span></span><br><span class="line"><span class="built_in">        25609,</span></span><br><span class="line"><span class="built_in">        13459,</span></span><br><span class="line"><span class="built_in">        2233,</span></span><br><span class="line"><span class="built_in">        14303,</span></span><br><span class="line"><span class="built_in">        52568,</span></span><br><span class="line"><span class="built_in">        50193,</span></span><br><span class="line"><span class="built_in">        28990,</span></span><br><span class="line"><span class="built_in">        34498,</span></span><br><span class="line"><span class="built_in">        25321,</span></span><br><span class="line"><span class="built_in">        21884,</span></span><br><span class="line"><span class="built_in">        26183,</span></span><br><span class="line"><span class="built_in">        13441,</span></span><br><span class="line"><span class="built_in">        25541,</span></span><br><span class="line"><span class="built_in">        57043,</span></span><br><span class="line"><span class="built_in">        4395,</span></span><br><span class="line"><span class="built_in">        25943,</span></span><br><span class="line"><span class="built_in">        25057,</span></span><br><span class="line"><span class="built_in">        41090,</span></span><br><span class="line"><span class="built_in">        14057,</span></span><br><span class="line"><span class="built_in">        38058,</span></span><br><span class="line"><span class="built_in">        7060,</span></span><br><span class="line"><span class="built_in">        26773,</span></span><br><span class="line"><span class="built_in">        37842,</span></span><br><span class="line"><span class="built_in">        25867,</span></span><br><span class="line"><span class="built_in">        33069,</span></span><br><span class="line"><span class="built_in">        8468,</span></span><br><span class="line"><span class="built_in">        46003,</span></span><br><span class="line"><span class="built_in">        24411,</span></span><br><span class="line"><span class="built_in">        20484,</span></span><br><span class="line"><span class="built_in">        19630,</span></span><br><span class="line"><span class="built_in">        3410,</span></span><br><span class="line"><span class="built_in">        35367,</span></span><br><span class="line"><span class="built_in">        26177,</span></span><br><span class="line"><span class="built_in">        25471,</span></span><br><span class="line"><span class="built_in">        35463,</span></span><br><span class="line"><span class="built_in">        12959,</span></span><br><span class="line"><span class="built_in">        25903,</span></span><br><span class="line"><span class="built_in">        25153,</span></span><br><span class="line"><span class="built_in">        13999,</span></span><br><span class="line"><span class="built_in">        44393,</span></span><br><span class="line"><span class="built_in">        25411,</span></span><br><span class="line"><span class="built_in">        2829,</span></span><br><span class="line"><span class="built_in">        51176,</span></span><br><span class="line"><span class="built_in">        25913,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        52113,</span></span><br><span class="line"><span class="built_in">        17144,</span></span><br><span class="line">        <span class="number">14533</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>翻译一下, 大概意思是, 把这个数组里的非素数删除了, 然后将剩余的数字右移x位(也许是位运算?), 然后就得到了密码</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4eb218a06afb4088.png" alt=""></p>
+<p>x 位指的是应该是 pi 的第 222 位的数字</p>
+<p>至此, 我们梳理一下完整的逻辑, 把上面给定的数组里的非素数删除, 然后找到 pi 的第 222 位的值 x, 然后将数组中剩余的数字按位运算右移 x 位.</p>
+<p>网上找一个高效的判断是否位素数的函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>查一下 pi 的第 222 位是几, 这里可以自己写函数计算也可以直接在网上查, 这里仅仅需要知道该值即可, 所以我选择了直接在网上查</p>
+<p>直接在网站</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">http:<span class="regexp">//</span>pai.babihu.com/</span><br></pre></td></tr></table></figure>
+
+<p>查的 pi 的 222 位为 <code>8</code></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image2f346286bb6078f2.png" alt=""></p>
+<p>还记的最开始的提示吗? </p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
+
+<p>这里运算完的应该是 ascii 码, 我们计算出对应的字符就得到了最后的密文, 至此我们开始编写解码函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">arr: <span class="built_in">list</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="comment"># 移除非素数</span></span><br><span class="line">    arr = <span class="built_in">list</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> x: is_prime(x), arr))</span><br><span class="line">    <span class="comment"># 将数组中的每个数字按位右移8, 按 ascii 码表取对应的字符</span></span><br><span class="line">    <span class="comment"># 最后将字符数组拼接成字符串, 即可得到密码</span></span><br><span class="line">    dec = <span class="string">&quot;&quot;</span>.join(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="built_in">chr</span>(x &gt;&gt; <span class="number">8</span>), arr)))</span><br><span class="line">    <span class="keyword">return</span> dec</span><br></pre></td></tr></table></figure>
+
+<p>解密得密码</p>
+<figure class="highlight llvm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">c</span><span class="number">5</span>b<span class="number">2</span>b<span class="number">5e58</span>aaff<span class="number">41868</span>a<span class="number">8</span>d<span class="number">7</span>bf<span class="number">4</span>cea<span class="number">6</span>efc<span class="number">2</span>eb<span class="number">6</span>ce<span class="number">68</span></span><br></pre></td></tr></table></figure>
+
+<p>本关通过</p>
+<h1 id="LEVEL-8"><a href="#LEVEL-8" class="headerlink" title="LEVEL 8"></a>LEVEL 8</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d46faeb7b38c79f.png" alt=""></p>
+<p>本关注意到这个图片变得奇怪了, 事出反常必有妖!</p>
+<p>我们仔细翻翻跟服务器的请求里有没有什么奇怪的东西.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4c3051d639f63ffb.png" alt=""></p>
+<p>这个就是请求的图片</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3a14378059959503.png" alt=""></p>
+<p>看起来非常像密码对不对? 突破口一定在这副怪异的图片里.</p>
+<p>该请求响应了一个 HTML, 里面全都是 span 标签, 我们尝试把 span 标签的 style 属性去除了(因为我分析应该和密文关系不大),</p>
+<p>然后删除 <code>#</code> 这个字符, 看看最后还能剩下什么.</p>
+<p>我意外的发现在 Chrome 开发工具的预览窗口可以直接过滤掉 <code>style</code> 属性, 这下就好办了.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef30de931f297c58f.png" alt=""></p>
+<p>我们把这些内容复制出来, 然后删除 <code>#</code></p>
+<p>已经可以看出来密码了</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4f86022daf5c8213.png" alt=""></p>
+<p>稍微整理下得到</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line">Password:&#x27;7f593a77ef76c1f04d1cc5bc51aebf<span class="number">265559</span>b965&#x27;    </span><br></pre></td></tr></table></figure>
+
+<p>通关</p>
+<h1 id="LEVEL-9"><a href="#LEVEL-9" class="headerlink" title="LEVEL 9"></a>LEVEL 9</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image00490d00881fe195.png" alt=""></p>
+<p>注意红框框住的地方</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">b</span>&#x27;iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAABmJLR0QA/wD/AP+gvaeTAAAE/klEQVR4nO3dwW7bOBSG0clg3v+VM7suhJSQTH4UW5yzbFxJcX4QNH15+fX9/f0PrPbv2w/A30mwSAgWCcEiIVgkBIvEfz/+<span class="number">69</span>fX157bXxY7Lvd99NOxR7/R+MoLH/KQ33fG757KiEVCsEgIFgnBIvHz5P1i4feJM5PKmYnwzKeEzsKnGr85+/+CRiwSgkVCsEgIFolbk/eLhavY24yfeWa5fOGVH71XM2/shr+gEYuEYJEQLBKCReKTyXtnZgW8W1ufKW6ZudHMU73OiEVCsEgIFgnBInHW5P2iq4jvprp/xENuYMQiIVgkBIuEYJH4ZPL+<span class="number">1</span>sx3/OKF91344plLdcUtGz4WGLFICBYJwSIhWCRuTd63beB85FGBysyS98Kyme6nY/v/gkYsEoJFQrBICBaJnyfvhxRsnPmhYaE/sS7oJiMWCcEiIVgkBIvE7m4zC1fAFy61P9Itpm9bW19Yj6TPO1sJFgnBIiFYJHZvWF04ie7KZg6xsPfOwvvevLIRi4RgkRAsEoJFYvfkfeakoRlvHU+<span class="number">6</span>cEvq2CGV+L8YsUgIFgnBIiFYJL5+nHzNTLEX/t+ZJeBtnxIe3WjbGzvzXi15c4xYJASLhGCRECwSC2reZxa1u0nltqKatwpUZn7Bmcew8s6bBIuEYJEQLBKfdJvp9kbOVHmPrzzzf7ct8XfNZx5R8865BIuEYJEQLBI/l82E98u6P26b215s69V+cXhBjhGLhGCRECwSgkXi55X3biNlV8Y+vm83xe6WyxeW+nQFOb9jxCIhWCQEi4Rgkbi18t4tEG9bLn9rjfuQif/+v4IRi4RgkRAsEoJF4pNuM2OHrK2PXzy28DNEt7m3az6zhBGLhGCRECwSgkXik5X3t2aR25pQjv0R3xZcbPvy4BcjFgnBIiFYJASLxIKymf0Twzv/d2zbttLxfcfe+v5jzIZV3iRYJASLhGCRuFU281Zjk0dP9Uh3qYW2FSA9eoybjFgkBIuEYJEQLBILWkVuK+vedojoIeXz3UeoR/R55yCCRUKwSAgWiVutIruF6YW15zMe3XfbFwBvbRdwwirnEiwSgkVCsEj8PHm/eGuNe+bFM0ebztx3Yb3Ktt70C3/<span class="number">6</span>ixGLhGCRECwSgkViQavI/ad33rnRX998pttVe2HlnYMIFgnBIiFYJD7ZsDp+<span class="number">8</span>dghW0O7qX13suu2BjIXNqxyEMEiIVgkBIvErbKZR7q9oNt2ii58jJkbXXTfFox/qs87BxEsEoJFQrBILFh573SbXceXGtu2YfWtZjtLGLFICBYJwSIhWCTW93l/<span class="number">5</span>Myl5/<span class="number">29</span>We7c9y1q3jmIYJEQLBKCRWJBn/eFth3/<span class="number">9</span>Nbmz7G3Osg/otsMbxIsEoJFQrBI3Orz3hl3Np+<span class="number">51</span>MXC6Wp3OtIhh0MtqcAxYpEQLBKCRUKwSNzasHrIcUgXCyekC1+<span class="number">8</span>cNZ8udRbJ1h9xohFQrBICBYJwSLxSbeZbhZ5SIX4wi8Auq6TF9u+WrjJiEVCsEgIFgnBIrG+VeRCj+by29qgd11uxkvtXdl+<span class="number">0</span>YvGiEVCsEgIFgnBInH05H1m6fmQxooL6+W3ndk0puadNwkWCcEiIVgkPpm8dxPDmdORZirEH1lY29Md9LqwXOczRiwSgkVCsEgIFolbk/e3Wid2x7GO57bbTli96NbW928mMGKRECwSgkVCsEic1eedv4YRi4RgkRAsEoJFQrBICBYJwSLxP3LS5YIohRy8AAAAAElFTkSuQmCC&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这里是一串不知名的代码, 不过看开头非常像 PNG 格式的图片 Base64 编码后的格式</p>
+<p>随便输一个密码看看有没有什么提示.</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea7e4610f03a7f358.png" alt=""></p>
+<p>提示</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> png</span><br></pre></td></tr></table></figure>
+
+<p>我现在很确信这是一个 png 格式的图片 base64 编码后的代码</p>
+<p>直接在网上还原该图片得到了一个二维码</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcae2e164280a166.png" alt=""></p>
+<p>继续识别一下该二维码则直接得到结果</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image967bd059fa30d7e1.png" alt=""></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">f870f6a65d94a6f65a772b7f4734be95278e28fd</span><br></pre></td></tr></table></figure>
+
+<p>通关</p>
+<h1 id="LEVEL-10"><a href="#LEVEL-10" class="headerlink" title="LEVEL 10"></a>LEVEL 10</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image397155b6f0545158.png" alt=""></p>
+<p>本关给了一个加密函数的两个版本, js 和 python, 我比较熟悉 python 我们就来看下这个 python 函数的逻辑</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">r</span>(<span class="params">pwd, fr, to, by</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([pwd[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(fr, to, by)])</span><br></pre></td></tr></table></figure>
+
+<p>逻辑很简单, 该函数每次取出密码指定位的字符.</p>
+<p>再看看输出结果</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>))</span><br><span class="line">edac</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>))</span><br><span class="line">e76716c1</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>))</span><br><span class="line">1646561d3</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>))</span><br><span class="line">12b52d3fd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line"><span class="number">711283</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>))</span><br><span class="line">e</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">7bc5adfced</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>))</span><br><span class="line">7a6d85</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line">a2ffd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">61d3b5c</span><br></pre></td></tr></table></figure>
+<p>观察函数 r 的第三个参数, 我们发现最大值位 40, 该参数对应 range() 函数的第二位即 max.</p>
+<p>于是我们可以知道 pwd 的长度位 40, 解码函数的逻辑就很清楚了.</p>
+<p>创建一个长度 40 的数组, 然后将上述输出的结果依次填到数组的指定位置即可</p>
+<p>开始编写解码函数</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建一个 40 长度的数组</span></span><br><span class="line">_pwd = [ <span class="string">&quot;&quot;</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>) ]</span><br><span class="line"></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">text, fr, to ,by</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;text 就是执行 r 函数的输出结果&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i, j <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">range</span>(fr, to, by)):</span><br><span class="line">        _pwd[j] = text[i]</span><br></pre></td></tr></table></figure>
+
+<p>然后依次执行</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;edac&quot;</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e76716c1&quot;</span>, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;1646561d3&quot;</span>, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;12b52d3fd&quot;</span>, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;711283&quot;</span>, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e&quot;</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7bc5adfced&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7a6d85&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;a2ffd&quot;</span>, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;61d3b5c&quot;</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>拼接结果</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">&quot;&quot;</span>.join(_pwd)</span></span>)</span><br></pre></td></tr></table></figure>
+
+<p>得到密码</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">edace17e62741b6ac51562a12ddff38cbfe53dcd</span><br></pre></td></tr></table></figure>
+
+<h1 id="LEVEL-11"><a href="#LEVEL-11" class="headerlink" title="LEVEL 11"></a>LEVEL 11</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image162da0736a8e78ea.png" alt=""></p>
+<p>最后一关就有点难度了</p>
+<p>因为你如果密码不正确的话是无法提交的, 也就是说没有任何的提示. 跟服务器也没有什么交互.</p>
+<p>我们只能先取看看网页源码里有什么线索没有</p>
+<p>果然发现了端倪, 源码里有一段 js 脚本, 看逻辑应该是处理提交密码的, 仔细分析下.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">  $( <span class="variable language_">document</span> ).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&quot;#submit&quot;</span>).<span class="title function_">on</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>();</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>.<span class="title function_">indexOf</span>(<span class="string">&#x27;challenge&#x27;</span>)!=-<span class="number">1</span>) &#123;<span class="keyword">debugger</span>;&#125;</span><br><span class="line">      pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br><span class="line">      ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">      stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">      multi = <span class="literal">true</span>;</span><br><span class="line">      $(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">        multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))) &#123;</span><br><span class="line">        $.<span class="title function_">ajax</span>(<span class="string">&quot;./70/&quot;</span>+ pwd, &#123;</span><br><span class="line">          <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">            <span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)&amp;&amp;(</span><br><span class="line">              $.<span class="title function_">post</span>(<span class="string">&#x27;submit&#x27;</span>, &#123;<span class="attr">pwd</span>: o, <span class="attr">csrf_token</span>:<span class="string">&#x27;ce1db5808eeed02fc22e46b80ef4651e39b7cd59o1687498808&#x27;</span>&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;)</span><br><span class="line">            );</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;To be or not to be... &#x27;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>有几个变量我们需要注意下</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">ts</span></span><br><span class="line"><span class="attribute">stmnt</span></span><br><span class="line"><span class="attribute">multi</span></span><br></pre></td></tr></table></figure>
+
+<p>我们直接在浏览器的控制台执行下面的代码看看有什么结果没有</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">multi = <span class="literal">true</span>;</span><br><span class="line">$(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageb9a894415b409fae.png" alt=""></p>
+<p>然后我们往下看是一个条件判断</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>))))</span><br></pre></td></tr></table></figure>
+
+<p>太长了我们可以拆分一下</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line">stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span></span><br></pre></td></tr></table></figure>
+
+<p>简单来讲就是上面三行的乘积需要等于下面该行的值</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>因为我们现在需要反推<code>pwd</code>这个值, 所以上面不涉及<code>pwd</code>变量的我们可以直接在控制台执行看看具体的值是多少</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image75d9447a4638c701.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>stmnt.split(“All”).length</td>
+<td>2</td>
+</tr>
+<tr>
+<td>ts.slice(eval(“”+’’+””+ƒ(1&lt;0)+””+”-“+’’+””+ƒ(0&lt;1)+”-“+ƒ(1&gt;0)))</td>
+<td>‘70’</td>
+</tr>
+</tbody></table>
+<p>这里注意到变量类型不同, 但是我们也看到了这个条件匹配用的是 <code>==</code>, 即不是严格模式! 所以我们可以把他们都当成数字来处理</p>
+<p>接下来我们处理包含 <code>pwd</code> 变量的条件</p>
+<p>我们把</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">parseInt(<span class="name">pwd</span>.slice(<span class="name">-</span>(<span class="name">--</span>([,,,undefined].join()).length))[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>记作 a</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">parseInt</span>(pwd.slice(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>记作 b</p>
+<p>则上述条件可以变为</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">a * b * <span class="number">2</span> <span class="operator">=</span><span class="operator">=</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
+
+<p>则可知 a b 的可选值表</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>35</td>
+</tr>
+<tr>
+<td>35</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>7</td>
+<td>5</td>
+</tr>
+</tbody></table>
+<p>我们把</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="built_in">-</span>(<span class="built_in">--</span>(<span class="selector-attr">[,,,undefined]</span><span class="selector-class">.join</span>()).length)</span><br></pre></td></tr></table></figure>
+
+<p>在控制台里执行下, 然后得到值 <code>-2</code></p>
+<p>于是</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+<p>于是我们可以分析出 a 表达式为 <code>pwd</code> 变量的倒数第二字符所代表的值</p>
+<p>同理我们分析 b 表达式</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p>b 表达式为 <code>pwd</code> 变量的倒数第一字符所代表的值</p>
+<p>仔细观察 js 脚本还记不记得这句</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br></pre></td></tr></table></figure>
+
+<p>意思是 <code>pwd</code> 取到的是一个字符串变量, 观察我们刚才的 a, b 取值表.</p>
+<p>我们发现按下标从一个字符串里取值, 取到的一定是一个字符, 不可能为两个字符, 于是现在 a / b 取值表就变为</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>7</td>
+<td>5</td>
+</tr>
+</tbody></table>
+<p>也就是说 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code></p>
+<p>我们再往下看</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>我们先看一下里面的具体值是什么.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="comment">// 执行得到, 这个东西看起来非常的像密码</span></span><br><span class="line"><span class="string">&#x27;4380Odoo&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看一下 <code>lastIndexOf</code> 方法的说明</p>
+<blockquote>
+<p>参考链接 </p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf</a></p>
+</blockquote>
+<p>lastIndexOf() 方法返回调用String 对象的指定值最后一次出现的索引，在一个字符串中的指定位置 fromIndex处从后向前搜索。如果没找到这个特定值则返回-1 。</p>
+<p>该方法将从尾到头地检索字符串 str，看它是否含有子串 searchValue。开始检索的位置在字符串的 fromIndex 处或字符串的结尾（没有指定 fromIndex 时）。如果找到一个 searchValue，则返回 searchValue 的第一个字符在 str 中的位置。str中的字符位置是从 0 开始的。</p>
+<p>简单来讲, 就是想要</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> === pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个表达式成立, <strong><code>pwd</code> 这个变量一定是 <code>multi.toString().substr(1,4)+stmnt.substring(2,6)</code> 所表示的值 <code>4380Odoo</code> 作为开头</strong></p>
+<p>又因为 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code>, 所以可以猜测密码应该为</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line"><span class="number">4380</span>Odo<span class="meta">o57</span></span><br><span class="line"><span class="number">4380</span>Odo<span class="meta">o75</span></span><br></pre></td></tr></table></figure>
+
+<p>这两个其中的一个</p>
+<p>大功告成!</p>
+<h1 id="Congratulations"><a href="#Congratulations" class="headerlink" title="Congratulations !"></a>Congratulations !</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image123e440fce3bf42e.png" alt=""></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Openwrt通过SSH启动接口</title>
     <url>/2020/05/25/Openwrt%E9%80%9A%E8%BF%87SSH%E5%90%AF%E5%8A%A8%E6%8E%A5%E5%8F%A3/</url>
     <content><![CDATA[<p>如果你像我一样，把lan口关闭了导致无法通过web进入后台。那么你可以进入通过SSH来重新启用这个接口。</p>
@@ -975,6 +1360,26 @@
 
 <p>可以发现只执行了一次逻辑</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fisrt run, loading ...</span><br><span class="line">loaded</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>Python单例模式</title>
+    <url>/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="基于元类"><a href="#基于元类" class="headerlink" title="基于元类"></a>基于元类</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">type</span>):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        cls.__instance = <span class="literal">None</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> cls.__instance <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>().__call__(*args, **kwargs)</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(metaclass=Singleton):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="基于-new-方法"><a href="#基于-new-方法" class="headerlink" title="基于 new 方法"></a>基于 <strong>new</strong> 方法</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    __instance = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cls.__instance:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>(Singleton, cls).__new__(cls, *args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">Singleton</span>):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于装饰器"><a href="#基于装饰器" class="headerlink" title="基于装饰器"></a>基于装饰器</h2><h3 id="用闭包实现"><a href="#用闭包实现" class="headerlink" title="用闭包实现"></a>用闭包实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">singleton</span>(<span class="params">cls</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用闭包的方式实现一个单例装饰器&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    __instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> __instance:</span><br><span class="line">            __instance[cls] = cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> __instance[cls]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> _create</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
+
+<h3 id="用类实现"><a href="#用类实现" class="headerlink" title="用类实现"></a>用类实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, cls</span>):</span><br><span class="line">        self.__cls = cls</span><br><span class="line">        self.__instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> self.__cls <span class="keyword">not</span> <span class="keyword">in</span> self.__instance:</span><br><span class="line">            self.__instance[self.__cls] = self.__cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> self.__instance[self.__cls]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Python的模块是天然的单例模式</p>
+<p>在一个py文件中, 多次导入同一个模块, 这个模块也只有在第一次的时候被导入, 后续的该模块导入语句都不会再执行了</p>
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://developer.aliyun.com/article/653759">https://developer.aliyun.com/article/653759</a></p>
+</blockquote>
+]]></content>
   </entry>
   <entry>
     <title>Python将对象序列化成JSON格式</title>
@@ -1100,21 +1505,6 @@
       <tags>
         <tag>Python</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SQLAlchemy default 不更新</title>
-    <url>/2022/03/20/SQLAlchemy-default-%E4%B8%8D%E6%9B%B4%E6%96%B0/</url>
-    <content><![CDATA[<p>错误示例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid())</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_uuid</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">return</span> str(uuid.uuid4())</span><br></pre></td></tr></table></figure>
-
-<p>正确示例</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid)</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<p>default 这个参数后可以指定一个函数</p>
-<p>例如 default=generate_uuid, 如果 default=generate_uuid() 则设定为该函数的一个返回值, 即这样是设置了一个常量</p>
-]]></content>
   </entry>
   <entry>
     <title>Restful API设计最佳实践</title>
@@ -1357,6 +1747,21 @@
 </li>
 </ol>
 <p>转载自: <a href="http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>SQLAlchemy default 不更新</title>
+    <url>/2022/03/20/SQLAlchemy-default-%E4%B8%8D%E6%9B%B4%E6%96%B0/</url>
+    <content><![CDATA[<p>错误示例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid())</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_uuid</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">return</span> str(uuid.uuid4())</span><br></pre></td></tr></table></figure>
+
+<p>正确示例</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UserModel</span>(db.Model):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    __tablename__ = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># </span></span><br><span class="line">    <span class="built_in">id</span> = Column(db.BIGINT, primary_key=<span class="literal">True</span>, unique=<span class="literal">True</span>, autoincrement=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    uid = Column(db.String(<span class="number">36</span>), unique=<span class="literal">True</span>, default=generate_uuid)</span><br><span class="line">    username = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    password = Column(db.String(<span class="number">60</span>))</span><br><span class="line">    category = Column(db.String(<span class="number">32</span>), default=Constants.DB_UserModel.Category.USER.value)</span><br><span class="line">    mobile = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    email = Column(db.String(<span class="number">32</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    register_date = Column(db.DATETIME, default=datetime.now)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>default 这个参数后可以指定一个函数</p>
+<p>例如 default=generate_uuid, 如果 default=generate_uuid() 则设定为该函数的一个返回值, 即这样是设置了一个常量</p>
 ]]></content>
   </entry>
   <entry>
@@ -2280,6 +2685,36 @@
       </tags>
   </entry>
   <entry>
+    <title>vue router api.now is not a function</title>
+    <url>/2022/04/15/vue-router-api-now-is-not-a-function/</url>
+    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>记录一次奇怪的 DEBUG 过程</p>
+<p>事情的起因是我在搭建一个前端项目, 第一次打开可以, 但是如果再刷新页面则会报错.</p>
+<p>仔细查看我的代码, 发现没有什么问题, 最后跟踪错误到了<code>vue-router</code></p>
+<p>控制台报错</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Uncaught</span> (in promise) TypeError: api.now is not a function</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">2545</span>:<span class="number">31</span></span><br><span class="line">    <span class="attribute">at</span> triggerAfterEach (vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3166</span>:<span class="number">13</span>)</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3069</span>:<span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<p>继续跟踪</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">api.<span class="title function_">addTimelineEvent</span>(&#123;</span><br><span class="line">                <span class="attr">layerId</span>: navigationsLayerId,</span><br><span class="line">                <span class="attr">event</span>: &#123;</span><br><span class="line">                    <span class="attr">title</span>: <span class="string">&#x27;End of navigation&#x27;</span>,</span><br><span class="line">                    <span class="attr">subtitle</span>: to.<span class="property">fullPath</span>,</span><br><span class="line">                    <span class="attr">time</span>: api.<span class="title function_">now</span>(), <span class="language-xml">&lt;--</span></span><br><span class="line"><span class="language-xml">                    data,</span></span><br><span class="line"><span class="language-xml">                    logType: failure ? &#x27;warning&#x27; : &#x27;default&#x27;,</span></span><br><span class="line"><span class="language-xml">                    groupId: to.meta.__navigationId,</span></span><br><span class="line"><span class="language-xml">                &#125;,</span></span><br><span class="line"><span class="language-xml">            &#125;); </span></span><br></pre></td></tr></table></figure>
+
+<p>如果出错的地方在业务逻辑, 则可以很容易的找出错误原因, 但是这个地方报错, 让我毫无头绪.</p>
+<p>Google …</p>
+<p>没想到还真的找到了解决方案, 而且还就在该文章发布时间的前半个月(还热乎着…)</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>That’s from the Vue devtools plugin. And only happens if you are still on the 6.0 beta of Vue devtools.</p>
+<p>Happened to me today when checking in another browser that still was on the 6.0 beta version instead of the stable one we released recently.</p>
+<p>Solution: remove the beta, upgrade to the stable release</p>
+<p>大意是说, 如果你开发时使用了 Vue Devtools 这个插件, 并且还是 6.0 beta 版本时, 就会发生这个问题.</p>
+<p>解决方案也很简单, 卸载这个测试版, 安装稳定版</p>
+<p><a href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd">https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd</a></p>
+<p>现在想想, 这个插件我一年前装的, 然后就没管过, 我不清楚它会不会自动更新, 但是确实在我意想不到的地方给我挖了个大坑….</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个事情总结出什么经验呢? </p>
+<p>BUG 有时候就是发生的这么毫无逻辑…让人捉摸不定</p>
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://github.com/vuejs/router/issues/1338">https://github.com/vuejs/router/issues/1338</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
     <title>vue3 script-setup 语法糖</title>
     <url>/2022/04/11/vue3-script-setup-%E8%AF%AD%E6%B3%95%E7%B3%96/</url>
     <content><![CDATA[<h2 id="什么是setup语法糖"><a href="#什么是setup语法糖" class="headerlink" title="什么是setup语法糖"></a>什么是setup语法糖</h2><p>起初 Vue3.0 暴露变量必须 <code>return</code> 出来，<code>template</code>中才能使用；</p>
@@ -2671,34 +3106,6 @@
       </tags>
   </entry>
   <entry>
-    <title>树莓派ubuntu更换国内源</title>
-    <url>/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/</url>
-    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507193511.png" alt="20200507193511"></p>
-<h1 id="备份原始源"><a href="#备份原始源" class="headerlink" title="备份原始源"></a>备份原始源</h1><figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">cd /etc/apt</span><br><span class="line"><span class="keyword">cp</span> sources<span class="meta">.list</span> sources<span class="meta">.list</span>.bak</span><br><span class="line">rm sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="更改源"><a href="#更改源" class="headerlink" title="更改源"></a>更改源</h1><figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">nano sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
-<p>然后填写以下内容。</p>
-<h2 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h2><h3 id="ubuntu-20-04-focal-配置如下"><a href="#ubuntu-20-04-focal-配置如下" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-updates main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-backports main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-security main restricted universe multiverse</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预发布软件源，不建议启用</span></span><br><span class="line"><span class="comment"># deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h2><h3 id="ubuntu-20-04-focal-配置如下-1"><a href="#ubuntu-20-04-focal-配置如下-1" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>其他版本根据版本号替换即可</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-<p>focal即版本号</p>
-<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><figure class="highlight sas"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">update</span> <span class="variable">&amp;&amp;</span> apt upgrade -y</span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507194302.png" alt="20200507194302"></p>
-<p>速度比官方源快很多。</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ubuntu-ports是Arm64，Armhf 等平台的 Ubuntu 软件仓库</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Ubuntu</tag>
-        <tag>Raspberry</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>文件系统特定的 LookupAndOpen[file] 实施失败</title>
     <url>/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/</url>
     <content><![CDATA[<p>错误描述</p>
@@ -2729,6 +3136,34 @@
       <tags>
         <tag>ESXI</tag>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派ubuntu更换国内源</title>
+    <url>/2020/05/07/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu%E6%9B%B4%E6%8D%A2%E5%9B%BD%E5%86%85%E6%BA%90/</url>
+    <content><![CDATA[<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507193511.png" alt="20200507193511"></p>
+<h1 id="备份原始源"><a href="#备份原始源" class="headerlink" title="备份原始源"></a>备份原始源</h1><figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">cd /etc/apt</span><br><span class="line"><span class="keyword">cp</span> sources<span class="meta">.list</span> sources<span class="meta">.list</span>.bak</span><br><span class="line">rm sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="更改源"><a href="#更改源" class="headerlink" title="更改源"></a>更改源</h1><figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line">nano sources<span class="meta">.list</span></span><br></pre></td></tr></table></figure>
+<p>然后填写以下内容。</p>
+<h2 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h2><h3 id="ubuntu-20-04-focal-配置如下"><a href="#ubuntu-20-04-focal-配置如下" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-updates main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-backports main restricted universe multiverse</span></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-security main restricted universe multiverse</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预发布软件源，不建议启用</span></span><br><span class="line"><span class="comment"># deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br><span class="line"><span class="comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h2><h3 id="ubuntu-20-04-focal-配置如下-1"><a href="#ubuntu-20-04-focal-配置如下-1" class="headerlink" title="ubuntu 20.04(focal) 配置如下"></a>ubuntu 20.04(focal) 配置如下</h3><figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line">deb-src https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal-backports main restricted universe multiverse</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其他版本根据版本号替换即可</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">deb https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/ubuntu-ports/</span> focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+<p>focal即版本号</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><figure class="highlight sas"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">update</span> <span class="variable">&amp;&amp;</span> apt upgrade -y</span><br></pre></td></tr></table></figure>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200507194302.png" alt="20200507194302"></p>
+<p>速度比官方源快很多。</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ubuntu-ports是Arm64，Armhf 等平台的 Ubuntu 软件仓库</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ubuntu</tag>
+        <tag>Raspberry</tag>
       </tags>
   </entry>
   <entry>
@@ -3094,440 +3529,5 @@
       <tags>
         <tag>OpenWRT</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>vue router api.now is not a function</title>
-    <url>/2022/04/15/vue-router-api-now-is-not-a-function/</url>
-    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>记录一次奇怪的 DEBUG 过程</p>
-<p>事情的起因是我在搭建一个前端项目, 第一次打开可以, 但是如果再刷新页面则会报错.</p>
-<p>仔细查看我的代码, 发现没有什么问题, 最后跟踪错误到了<code>vue-router</code></p>
-<p>控制台报错</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Uncaught</span> (in promise) TypeError: api.now is not a function</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">2545</span>:<span class="number">31</span></span><br><span class="line">    <span class="attribute">at</span> triggerAfterEach (vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3166</span>:<span class="number">13</span>)</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3069</span>:<span class="number">13</span></span><br></pre></td></tr></table></figure>
-
-<p>继续跟踪</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">api.<span class="title function_">addTimelineEvent</span>(&#123;</span><br><span class="line">                <span class="attr">layerId</span>: navigationsLayerId,</span><br><span class="line">                <span class="attr">event</span>: &#123;</span><br><span class="line">                    <span class="attr">title</span>: <span class="string">&#x27;End of navigation&#x27;</span>,</span><br><span class="line">                    <span class="attr">subtitle</span>: to.<span class="property">fullPath</span>,</span><br><span class="line">                    <span class="attr">time</span>: api.<span class="title function_">now</span>(), <span class="language-xml">&lt;--</span></span><br><span class="line"><span class="language-xml">                    data,</span></span><br><span class="line"><span class="language-xml">                    logType: failure ? &#x27;warning&#x27; : &#x27;default&#x27;,</span></span><br><span class="line"><span class="language-xml">                    groupId: to.meta.__navigationId,</span></span><br><span class="line"><span class="language-xml">                &#125;,</span></span><br><span class="line"><span class="language-xml">            &#125;); </span></span><br></pre></td></tr></table></figure>
-
-<p>如果出错的地方在业务逻辑, 则可以很容易的找出错误原因, 但是这个地方报错, 让我毫无头绪.</p>
-<p>Google …</p>
-<p>没想到还真的找到了解决方案, 而且还就在该文章发布时间的前半个月(还热乎着…)</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>That’s from the Vue devtools plugin. And only happens if you are still on the 6.0 beta of Vue devtools.</p>
-<p>Happened to me today when checking in another browser that still was on the 6.0 beta version instead of the stable one we released recently.</p>
-<p>Solution: remove the beta, upgrade to the stable release</p>
-<p>大意是说, 如果你开发时使用了 Vue Devtools 这个插件, 并且还是 6.0 beta 版本时, 就会发生这个问题.</p>
-<p>解决方案也很简单, 卸载这个测试版, 安装稳定版</p>
-<p><a href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd">https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd</a></p>
-<p>现在想想, 这个插件我一年前装的, 然后就没管过, 我不清楚它会不会自动更新, 但是确实在我意想不到的地方给我挖了个大坑….</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个事情总结出什么经验呢? </p>
-<p>BUG 有时候就是发生的这么毫无逻辑…让人捉摸不定</p>
-<p>参考链接</p>
-<blockquote>
-<p><a href="https://github.com/vuejs/router/issues/1338">https://github.com/vuejs/router/issues/1338</a></p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>20.有效的括号</title>
-    <url>/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/</url>
-    <content><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>给定一个只包括 ‘(‘，’)’，’{‘，’}’，’[‘，’]’ 的字符串 s ，判断字符串是否有效。</p>
-<p>有效字符串需满足</p>
-<ul>
-<li>左括号必须用相同类型的右括号闭合。</li>
-<li>左括号必须以正确的顺序闭合。</li>
-</ul>
-<p>例如：</p>
-<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()[]&#123;&#125;&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;(]&quot;</span></span><br><span class="line">输出：<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>即左右括号必须是闭合的。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>使用栈结构来处理这个问题非常简单。</p>
-<p>我们从左到右依次扫描字符串的每一个字符，如果是<code>([&#123;</code>左括号就入栈，如果是<code>)]&#125;</code>右括号就从栈里弹出栈顶的元素，然后匹配该字符和栈顶元素是否是成对的。</p>
-<p>例如扫描到字符<code>(</code>,然后栈顶元素是<code>)</code>,则成对，否则不成对则返回<code>False</code></p>
-<p>扫描完字符串，如果栈里没有元素则说明括号都是成对的，匹配成功。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 字符串匹配成功的话其长度一定是偶数, 否则一定不成功</span></span><br><span class="line">        <span class="comment"># 这里可以先检查长度, 可以省略之后的步骤</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(s) % <span class="number">2</span> != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助栈</span></span><br><span class="line">        _stack = []</span><br><span class="line">        <span class="comment"># 对照表</span></span><br><span class="line">        _<span class="built_in">map</span> = &#123;</span><br><span class="line">            <span class="string">&quot;)&quot;</span>: <span class="string">&quot;(&quot;</span>,</span><br><span class="line">            <span class="string">&quot;]&quot;</span>: <span class="string">&quot;[&quot;</span>,</span><br><span class="line">            <span class="string">&quot;&#125;&quot;</span>: <span class="string">&quot;&#123;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> _char <span class="keyword">in</span> <span class="built_in">list</span>(s):</span><br><span class="line">            <span class="keyword">if</span> _char <span class="keyword">in</span> <span class="string">&quot;([&#123;&quot;</span>:</span><br><span class="line">                _stack.append(_char)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 当遇到右括号时, 从栈顶弹出元素检测是否</span></span><br><span class="line">                <span class="comment"># 成对, 即是否闭合, 不成对则返回 False</span></span><br><span class="line">                <span class="keyword">if</span> _stack:</span><br><span class="line">                    <span class="keyword">if</span> _char <span class="keyword">in</span> _<span class="built_in">map</span>:</span><br><span class="line">                        _top = _stack.pop()</span><br><span class="line">                        <span class="keyword">if</span> _<span class="built_in">map</span>[_char] != _top:</span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 右括号溢出</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 这里要判断栈里是否还有元素</span></span><br><span class="line">        <span class="comment"># 有元素则说明该字符串匹配不成功</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(_stack) == <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-
-<p>原链接</p>
-<blockquote>
-<p><a href="https://leetcode.cn/problems/valid-parentheses/">https://leetcode.cn/problems/valid-parentheses/</a></p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>Odoo Challenge</title>
-    <url>/2022/06/23/Odoo-Challenge/</url>
-    <content><![CDATA[<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea0e1da977196172c.png" alt=""></p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Odoo Challenge 挑战赛是一个很有意思的项目, 起源于一次面试时, HR发来个链接说测试一下水平.</p>
-<p>好了, 开始挑战</p>
-<h1 id="LEVEL-1"><a href="#LEVEL-1" class="headerlink" title="LEVEL 1"></a>LEVEL 1</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d19ff4a2b75f01c.png" alt=""></p>
-<p>先随便输一个密码, 点 Check Answer, 很不意外的密码错误, 不过这时候有提示, 可以根据提示的线索来找到密码.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image196452be9426f798.png" alt=""></p>
-<p>看到提示</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">Hint: <span class="keyword">if</span> <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;the_password&#x27;</span>]</span> == <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;pwd&#x27;</span>]</span>: return True</span><br></pre></td></tr></table></figure>
-<p>看看网页的源码, 猜测应该在里面能找到.</p>
-<p>部分源码</p>
-<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">&lt;form method<span class="operator">=</span><span class="string">&quot;POST&quot;</span> action<span class="operator">=</span><span class="string">&quot;/jobs/challenge/submit&quot;</span> role<span class="operator">=</span><span class="string">&quot;form&quot;</span>&gt;</span><br><span class="line">    &lt;input class<span class="operator">=</span><span class="string">&quot;d-none&quot;</span> name<span class="operator">=</span><span class="string">&quot;csrf_token&quot;</span> value<span class="operator">=</span><span class="string">&quot;6ad9541dcf313efc428fa7f50dda9ca079adfe4ao1687487891&quot;</span>/&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group row&quot;</span>&gt;</span><br><span class="line">        &lt;label for<span class="operator">=</span><span class="string">&quot;password&quot;</span> class<span class="operator">=</span><span class="string">&quot;col-md-2 offset-md-2 col-form-label&quot;</span>&gt;Password&lt;/label&gt;</span><br><span class="line">        &lt;div class<span class="operator">=</span><span class="string">&quot;col-md-6&quot;</span>&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;hidden&quot;</span> name<span class="operator">=</span><span class="string">&quot;the_password&quot;</span> value<span class="operator">=</span><span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;text&quot;</span> required<span class="operator">=</span><span class="string">&quot;required&quot;</span> class<span class="operator">=</span><span class="string">&quot;form-control&quot;</span> name<span class="operator">=</span><span class="string">&quot;pwd&quot;</span> id<span class="operator">=</span><span class="string">&quot;password&quot;</span> placeholder<span class="operator">=</span><span class="string">&quot;&quot;</span>/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group&quot;</span>&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;button id<span class="operator">=</span><span class="string">&quot;submit&quot;</span> type<span class="operator">=</span><span class="string">&quot;submit&quot;</span> name<span class="operator">=</span><span class="string">&quot;signup&quot;</span> class<span class="operator">=</span><span class="string">&quot;btn btn-primary&quot;</span>&gt;Check Answer&lt;/button&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
-
-<p>注意到</p>
-<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;input <span class="attribute">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;the_password&quot;</span> <span class="attribute">value</span>=<span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight llvm"><table><tr><td class="code"><pre><span class="line"><span class="number">796</span>ff<span class="number">3e72821</span>cf<span class="number">412787389</span><span class="keyword">c</span><span class="number">6</span>d<span class="number">5</span>f<span class="number">301e00</span>e<span class="number">3</span>efb<span class="number">6</span></span><br></pre></td></tr></table></figure>
-
-<p>就是本关的密码了</p>
-<h1 id="LEVEL-2"><a href="#LEVEL-2" class="headerlink" title="LEVEL 2"></a>LEVEL 2</h1><p>第二关提示如下</p>
-<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">Hint: <span class="keyword">function</span> <span class="title function_">debug</span><span class="params">()</span> &#123; [<span class="keyword">native</span> code] &#125;</span><br></pre></td></tr></table></figure>
-
-<p>猜测应该是和 debug 有关系, 所以可以 F12 打开开发者工具在命令控制台标签页找线索</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf7240080d7a8150.png" alt=""></p>
-<p>直接出答案了</p>
-<h1 id="LEVEL-3"><a href="#LEVEL-3" class="headerlink" title="LEVEL 3"></a>LEVEL 3</h1><p>提示</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Hint</span>: GET / HTTP/<span class="number">1</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>猜测应该在与服务器交互的请求里寻找.</p>
-<p>我们随便输一个密码, 提交一下看看与服务器的交互请求都有哪些</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageceda9745f1804ab0.png" alt=""></p>
-<p>每个请求都点开看一看 request / response 里面有没有什么可以寻找的线索.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf2dae0788b0b0b3.png" alt=""></p>
-<p>可以看到在 <code>next?wrong=oups</code> 这个请求的响应头里面有内容, 红框标记的猜测应该是答案, 即</p>
-<figure class="highlight brainfuck"><table><tr><td class="code"><pre><span class="line"><span class="comment">Grow your business with Odoo and more than 985156</span> <span class="comment">apps</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="LEVEL-4"><a href="#LEVEL-4" class="headerlink" title="LEVEL 4"></a>LEVEL 4</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea91e68b41299a384.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> Classy password</span><br></pre></td></tr></table></figure>
-
-<p>笔者在解决这个问题的时候花费了相当长的时间。最开始我猜测提示经典密码也许有可能是弱口令？</p>
-<p>我试了如下弱口令</p>
-<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">admin</span><br><span class="line">root</span><br><span class="line"><span class="number">123456</span></span><br><span class="line"><span class="number">000000</span></span><br><span class="line"><span class="number">888888</span></span><br><span class="line"><span class="number">88888888</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">11111111</span></span><br></pre></td></tr></table></figure>
-
-<p>诸如此类的弱口令发现都没有用。</p>
-<p>最后我写了一个脚本, 从 Github 上找了找有没有彩虹表, 常用弱口令之类的仓库. </p>
-<p>找到一个 <a href="https://github.com/rootphantomer/Blasting_dictionary">https://github.com/rootphantomer/Blasting_dictionary</a></p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4a43659ed94388e4.png" alt=""></p>
-<p>挂着跑了一下午, 回来一看跑了大概 2w 个密码仍然没有任何起色. 这个时候我开始怀疑一开始的思路是否正确, 提示经典密码的意思究竟是不是弱口令的意思?</p>
-<p>但是此时我又没有更好的思路, 于是每个请求都翻了翻, 看看有没有有用的信息. </p>
-<p>真让我翻到了….</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3d73e0bbd917848c.png" alt=""></p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/challenge.css</span><br></pre></td></tr></table></figure>
-
-<p>这个请求的内容就是密码….</p>
-<p>呵呵, 踏破铁鞋无觅处…</p>
-<p>这个事情告诉我什么道理呢, 如果一个题目看起来很简单, 但是通过暴力方法很难解决时, 一定要寻找其他的突破口….</p>
-<h1 id="LEVEL-5"><a href="#LEVEL-5" class="headerlink" title="LEVEL 5"></a>LEVEL 5</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image9d537f7a650e4297.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight vbnet"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> I<span class="comment">&#x27;m a small piece of data sent from a website and stored on the user&#x27;s computer</span></span><br></pre></td></tr></table></figure>
-
-<p>意思是服务器发送了一个数据片段存储到了用户电脑上.</p>
-<p>看到这个首先想到 local storage 和 cookies</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imaged06179d00d0da120.png" alt=""></p>
-<p>印证了我的想法, 我在请求</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
-
-<p>里发现了线索, 密码既是方框里的值</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Odoo</span>-<span class="number">9850101554950100</span></span><br></pre></td></tr></table></figure>
-
-<p>PS: 事后我发现这个页面的图标是一个饼干.</p>
-<p>cookies 的意思正是饼干. 看来还是要多观察不一样的细节.</p>
-<h1 id="LEVEL-6"><a href="#LEVEL-6" class="headerlink" title="LEVEL 6"></a>LEVEL 6</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image92a98e09adca3e11.png" alt=""></p>
-<p>给了一段 js 代码</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span>.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> tmp = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; pwd.<span class="property">length</span>; i++)</span><br><span class="line">    tmp += <span class="string">&quot; &quot;</span>+idx.<span class="title function_">indexOf</span>(pwd.<span class="title function_">charAt</span>(i));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(tmp == <span class="string">&quot; 2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    $.<span class="title function_">post</span>(<span class="string">&#x27;/jobs/challenge/submit&#x27;</span>, &#123;<span class="attr">pwd</span>: pwd&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params">x</span>) &#123; <span class="variable language_">window</span>.<span class="property">location</span> = <span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>看来一下逻辑, tmp 变量存储的应该是 idx 字符串的索引, 我们把索引对应的字符取出来即可.</p>
-<p>可以用 Python 实现一个简单的解码函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line">tmp = <span class="string">&quot;2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">pwd = <span class="string">&quot;&quot;</span>.join([idx[<span class="built_in">int</span>(index)] <span class="keyword">for</span> index <span class="keyword">in</span> tmp])</span><br><span class="line"><span class="built_in">print</span>(pwd)</span><br></pre></td></tr></table></figure>
-
-<p>得到密文</p>
-<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line"><span class="number">2</span>CDA4eb85c<span class="number">13B7105e80</span></span><br></pre></td></tr></table></figure>
-
-<p>本关通过</p>
-<h1 id="LEVEL-7"><a href="#LEVEL-7" class="headerlink" title="LEVEL 7"></a>LEVEL 7</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageea4dff6ab52bf293.png" alt=""></p>
-<p>哈哈, 从现在开始难度增加了…..</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef075074667a94677.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
-
-<p>ascii 码? 这个提示…..简单到等于没什么提示…</p>
-<p>还是去翻一翻请求, 看看 request / response / cookies 有什么线索吧.</p>
-<p>首先在控制台看到打印了一串信息</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image1dcba71b5d89779e.png" alt=""></p>
-<p>翻译了一下大概是说需要调用另一个 URL 来执行下一个任务.</p>
-<p>然后在请求</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
-
-<p>里发现了不少信息.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcd8624faebd854f.png" alt=""></p>
-<p>这个地方有一个奇怪的信息, 我们先记一下.</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>It-Is-The-Part-2-Of-Url</td>
-<td>“/jobs/challenge/<part1>/1d1/prime.json”</td>
-</tr>
-</tbody></table>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagec790f18f7db82254.png" alt=""></p>
-<p>请求头也有一个奇怪的信息</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>It-Is-The-Part-1-Of-Url</td>
-<td>“/jobs/challenge/ebe/<part2>/prime.json”</td>
-</tr>
-</tbody></table>
-<p>这时候我们可以分析, 这个 URL 被分为了两部分, 放到一起看一下</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/&lt;part1&gt;/</span><span class="number">1</span>d1/prime.json</span><br><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span>&lt;part2&gt;/prime.json</span><br></pre></td></tr></table></figure>
-
-<p>那么完整的 URL 应该是</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span><span class="number">1</span>d1/prime.json</span><br></pre></td></tr></table></figure>
-
-<p>我们尝试访问这个 URL</p>
-<p>得到一串 JSON</p>
-<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;instructions&quot;</span>: <span class="string">&quot;Remove non prime numbers from data then right shift [222th decimal of the constant quantity that determines the area of a circle by multiplying it by the radius squared] bits from the remaining numbers, it will give you the alphanumeric password of the next level&quot;</span>,</span><br><span class="line">    <span class="string">&quot;numbers&quot;</span>: [</span><br><span class="line"><span class="built_in">        52191,</span></span><br><span class="line"><span class="built_in">        25453,</span></span><br><span class="line"><span class="built_in">        13613,</span></span><br><span class="line"><span class="built_in">        54064,</span></span><br><span class="line"><span class="built_in">        25111,</span></span><br><span class="line"><span class="built_in">        22425,</span></span><br><span class="line"><span class="built_in">        12821,</span></span><br><span class="line"><span class="built_in">        19580,</span></span><br><span class="line"><span class="built_in">        25163,</span></span><br><span class="line"><span class="built_in">        46513,</span></span><br><span class="line"><span class="built_in">        40022,</span></span><br><span class="line"><span class="built_in">        57039,</span></span><br><span class="line"><span class="built_in">        9167,</span></span><br><span class="line"><span class="built_in">        13697,</span></span><br><span class="line"><span class="built_in">        26041,</span></span><br><span class="line"><span class="built_in">        47396,</span></span><br><span class="line"><span class="built_in">        13577,</span></span><br><span class="line"><span class="built_in">        11932,</span></span><br><span class="line"><span class="built_in">        50399,</span></span><br><span class="line"><span class="built_in">        14591,</span></span><br><span class="line"><span class="built_in">        13323,</span></span><br><span class="line"><span class="built_in">        46296,</span></span><br><span class="line"><span class="built_in">        20704,</span></span><br><span class="line"><span class="built_in">        53379,</span></span><br><span class="line"><span class="built_in">        24889,</span></span><br><span class="line"><span class="built_in">        22289,</span></span><br><span class="line"><span class="built_in">        24989,</span></span><br><span class="line"><span class="built_in">        51709,</span></span><br><span class="line"><span class="built_in">        47000,</span></span><br><span class="line"><span class="built_in">        294,</span></span><br><span class="line"><span class="built_in">        26249,</span></span><br><span class="line"><span class="built_in">        52972,</span></span><br><span class="line"><span class="built_in">        51191,</span></span><br><span class="line"><span class="built_in">        44807,</span></span><br><span class="line"><span class="built_in">        43176,</span></span><br><span class="line"><span class="built_in">        6419,</span></span><br><span class="line"><span class="built_in">        26161,</span></span><br><span class="line"><span class="built_in">        13339,</span></span><br><span class="line"><span class="built_in">        48093,</span></span><br><span class="line"><span class="built_in">        12547,</span></span><br><span class="line"><span class="built_in">        4258,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        42054,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        22828,</span></span><br><span class="line"><span class="built_in">        59633,</span></span><br><span class="line"><span class="built_in">        40834,</span></span><br><span class="line"><span class="built_in">        37100,</span></span><br><span class="line"><span class="built_in">        34715,</span></span><br><span class="line"><span class="built_in">        17108,</span></span><br><span class="line"><span class="built_in">        39104,</span></span><br><span class="line"><span class="built_in">        24790,</span></span><br><span class="line"><span class="built_in">        14407,</span></span><br><span class="line"><span class="built_in">        24967,</span></span><br><span class="line"><span class="built_in">        64736,</span></span><br><span class="line"><span class="built_in">        561,</span></span><br><span class="line"><span class="built_in">        38676,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        17092,</span></span><br><span class="line"><span class="built_in">        62096,</span></span><br><span class="line"><span class="built_in">        42309,</span></span><br><span class="line"><span class="built_in">        26471,</span></span><br><span class="line"><span class="built_in">        59563,</span></span><br><span class="line"><span class="built_in">        25609,</span></span><br><span class="line"><span class="built_in">        13459,</span></span><br><span class="line"><span class="built_in">        2233,</span></span><br><span class="line"><span class="built_in">        14303,</span></span><br><span class="line"><span class="built_in">        52568,</span></span><br><span class="line"><span class="built_in">        50193,</span></span><br><span class="line"><span class="built_in">        28990,</span></span><br><span class="line"><span class="built_in">        34498,</span></span><br><span class="line"><span class="built_in">        25321,</span></span><br><span class="line"><span class="built_in">        21884,</span></span><br><span class="line"><span class="built_in">        26183,</span></span><br><span class="line"><span class="built_in">        13441,</span></span><br><span class="line"><span class="built_in">        25541,</span></span><br><span class="line"><span class="built_in">        57043,</span></span><br><span class="line"><span class="built_in">        4395,</span></span><br><span class="line"><span class="built_in">        25943,</span></span><br><span class="line"><span class="built_in">        25057,</span></span><br><span class="line"><span class="built_in">        41090,</span></span><br><span class="line"><span class="built_in">        14057,</span></span><br><span class="line"><span class="built_in">        38058,</span></span><br><span class="line"><span class="built_in">        7060,</span></span><br><span class="line"><span class="built_in">        26773,</span></span><br><span class="line"><span class="built_in">        37842,</span></span><br><span class="line"><span class="built_in">        25867,</span></span><br><span class="line"><span class="built_in">        33069,</span></span><br><span class="line"><span class="built_in">        8468,</span></span><br><span class="line"><span class="built_in">        46003,</span></span><br><span class="line"><span class="built_in">        24411,</span></span><br><span class="line"><span class="built_in">        20484,</span></span><br><span class="line"><span class="built_in">        19630,</span></span><br><span class="line"><span class="built_in">        3410,</span></span><br><span class="line"><span class="built_in">        35367,</span></span><br><span class="line"><span class="built_in">        26177,</span></span><br><span class="line"><span class="built_in">        25471,</span></span><br><span class="line"><span class="built_in">        35463,</span></span><br><span class="line"><span class="built_in">        12959,</span></span><br><span class="line"><span class="built_in">        25903,</span></span><br><span class="line"><span class="built_in">        25153,</span></span><br><span class="line"><span class="built_in">        13999,</span></span><br><span class="line"><span class="built_in">        44393,</span></span><br><span class="line"><span class="built_in">        25411,</span></span><br><span class="line"><span class="built_in">        2829,</span></span><br><span class="line"><span class="built_in">        51176,</span></span><br><span class="line"><span class="built_in">        25913,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        52113,</span></span><br><span class="line"><span class="built_in">        17144,</span></span><br><span class="line">        <span class="number">14533</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>翻译一下, 大概意思是, 把这个数组里的非素数删除了, 然后将剩余的数字右移x位(也许是位运算?), 然后就得到了密码</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4eb218a06afb4088.png" alt=""></p>
-<p>x 位指的是应该是 pi 的第 222 位的数字</p>
-<p>至此, 我们梳理一下完整的逻辑, 把上面给定的数组里的非素数删除, 然后找到 pi 的第 222 位的值 x, 然后将数组中剩余的数字按位运算右移 x 位.</p>
-<p>网上找一个高效的判断是否位素数的函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>查一下 pi 的第 222 位是几, 这里可以自己写函数计算也可以直接在网上查, 这里仅仅需要知道该值即可, 所以我选择了直接在网上查</p>
-<p>直接在网站</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">http:<span class="regexp">//</span>pai.babihu.com/</span><br></pre></td></tr></table></figure>
-
-<p>查的 pi 的 222 位为 <code>8</code></p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image2f346286bb6078f2.png" alt=""></p>
-<p>还记的最开始的提示吗? </p>
-<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
-
-<p>这里运算完的应该是 ascii 码, 我们计算出对应的字符就得到了最后的密文, 至此我们开始编写解码函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">arr: <span class="built_in">list</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="comment"># 移除非素数</span></span><br><span class="line">    arr = <span class="built_in">list</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> x: is_prime(x), arr))</span><br><span class="line">    <span class="comment"># 将数组中的每个数字按位右移8, 按 ascii 码表取对应的字符</span></span><br><span class="line">    <span class="comment"># 最后将字符数组拼接成字符串, 即可得到密码</span></span><br><span class="line">    dec = <span class="string">&quot;&quot;</span>.join(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="built_in">chr</span>(x &gt;&gt; <span class="number">8</span>), arr)))</span><br><span class="line">    <span class="keyword">return</span> dec</span><br></pre></td></tr></table></figure>
-
-<p>解密得密码</p>
-<figure class="highlight llvm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">c</span><span class="number">5</span>b<span class="number">2</span>b<span class="number">5e58</span>aaff<span class="number">41868</span>a<span class="number">8</span>d<span class="number">7</span>bf<span class="number">4</span>cea<span class="number">6</span>efc<span class="number">2</span>eb<span class="number">6</span>ce<span class="number">68</span></span><br></pre></td></tr></table></figure>
-
-<p>本关通过</p>
-<h1 id="LEVEL-8"><a href="#LEVEL-8" class="headerlink" title="LEVEL 8"></a>LEVEL 8</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d46faeb7b38c79f.png" alt=""></p>
-<p>本关注意到这个图片变得奇怪了, 事出反常必有妖!</p>
-<p>我们仔细翻翻跟服务器的请求里有没有什么奇怪的东西.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4c3051d639f63ffb.png" alt=""></p>
-<p>这个就是请求的图片</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3a14378059959503.png" alt=""></p>
-<p>看起来非常像密码对不对? 突破口一定在这副怪异的图片里.</p>
-<p>该请求响应了一个 HTML, 里面全都是 span 标签, 我们尝试把 span 标签的 style 属性去除了(因为我分析应该和密文关系不大),</p>
-<p>然后删除 <code>#</code> 这个字符, 看看最后还能剩下什么.</p>
-<p>我意外的发现在 Chrome 开发工具的预览窗口可以直接过滤掉 <code>style</code> 属性, 这下就好办了.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef30de931f297c58f.png" alt=""></p>
-<p>我们把这些内容复制出来, 然后删除 <code>#</code></p>
-<p>已经可以看出来密码了</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4f86022daf5c8213.png" alt=""></p>
-<p>稍微整理下得到</p>
-<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line">Password:&#x27;7f593a77ef76c1f04d1cc5bc51aebf<span class="number">265559</span>b965&#x27;    </span><br></pre></td></tr></table></figure>
-
-<p>通关</p>
-<h1 id="LEVEL-9"><a href="#LEVEL-9" class="headerlink" title="LEVEL 9"></a>LEVEL 9</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image00490d00881fe195.png" alt=""></p>
-<p>注意红框框住的地方</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">b</span>&#x27;iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAABmJLR0QA/wD/AP+gvaeTAAAE/klEQVR4nO3dwW7bOBSG0clg3v+VM7suhJSQTH4UW5yzbFxJcX4QNH15+fX9/f0PrPbv2w/A30mwSAgWCcEiIVgkBIvEfz/+<span class="number">69</span>fX157bXxY7Lvd99NOxR7/R+MoLH/KQ33fG757KiEVCsEgIFgnBIvHz5P1i4feJM5PKmYnwzKeEzsKnGr85+/+CRiwSgkVCsEgIFolbk/eLhavY24yfeWa5fOGVH71XM2/shr+gEYuEYJEQLBKCReKTyXtnZgW8W1ufKW6ZudHMU73OiEVCsEgIFgnBInHW5P2iq4jvprp/xENuYMQiIVgkBIuEYJH4ZPL+<span class="number">1</span>sx3/OKF91344plLdcUtGz4WGLFICBYJwSIhWCRuTd63beB85FGBysyS98Kyme6nY/v/gkYsEoJFQrBICBaJnyfvhxRsnPmhYaE/sS7oJiMWCcEiIVgkBIvE7m4zC1fAFy61P9Itpm9bW19Yj6TPO1sJFgnBIiFYJHZvWF04ie7KZg6xsPfOwvvevLIRi4RgkRAsEoJFYvfkfeakoRlvHU+<span class="number">6</span>cEvq2CGV+L8YsUgIFgnBIiFYJL5+nHzNTLEX/t+ZJeBtnxIe3WjbGzvzXi15c4xYJASLhGCRECwSC2reZxa1u0nltqKatwpUZn7Bmcew8s6bBIuEYJEQLBKfdJvp9kbOVHmPrzzzf7ct8XfNZx5R8865BIuEYJEQLBI/l82E98u6P26b215s69V+cXhBjhGLhGCRECwSgkXi55X3biNlV8Y+vm83xe6WyxeW+nQFOb9jxCIhWCQEi4Rgkbi18t4tEG9bLn9rjfuQif/+v4IRi4RgkRAsEoJF4pNuM2OHrK2PXzy28DNEt7m3az6zhBGLhGCRECwSgkXik5X3t2aR25pQjv0R3xZcbPvy4BcjFgnBIiFYJASLxIKymf0Twzv/d2zbttLxfcfe+v5jzIZV3iRYJASLhGCRuFU281Zjk0dP9Uh3qYW2FSA9eoybjFgkBIuEYJEQLBILWkVuK+vedojoIeXz3UeoR/R55yCCRUKwSAgWiVutIruF6YW15zMe3XfbFwBvbRdwwirnEiwSgkVCsEj8PHm/eGuNe+bFM0ebztx3Yb3Ktt70C3/<span class="number">6</span>ixGLhGCRECwSgkViQavI/ad33rnRX998pttVe2HlnYMIFgnBIiFYJD7ZsDp+<span class="number">8</span>dghW0O7qX13suu2BjIXNqxyEMEiIVgkBIvErbKZR7q9oNt2ii58jJkbXXTfFox/qs87BxEsEoJFQrBILFh573SbXceXGtu2YfWtZjtLGLFICBYJwSIhWCTW93l/<span class="number">5</span>Myl5/<span class="number">29</span>We7c9y1q3jmIYJEQLBKCRWJBn/eFth3/<span class="number">9</span>Nbmz7G3Osg/otsMbxIsEoJFQrBI3Orz3hl3Np+<span class="number">51</span>MXC6Wp3OtIhh0MtqcAxYpEQLBKCRUKwSNzasHrIcUgXCyekC1+<span class="number">8</span>cNZ8udRbJ1h9xohFQrBICBYJwSLxSbeZbhZ5SIX4wi8Auq6TF9u+WrjJiEVCsEgIFgnBIrG+VeRCj+by29qgd11uxkvtXdl+<span class="number">0</span>YvGiEVCsEgIFgnBInH05H1m6fmQxooL6+W3ndk0puadNwkWCcEiIVgkPpm8dxPDmdORZirEH1lY29Md9LqwXOczRiwSgkVCsEgIFolbk/e3Wid2x7GO57bbTli96NbW928mMGKRECwSgkVCsEic1eedv4YRi4RgkRAsEoJFQrBICBYJwSLxP3LS5YIohRy8AAAAAElFTkSuQmCC&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>这里是一串不知名的代码, 不过看开头非常像 PNG 格式的图片 Base64 编码后的格式</p>
-<p>随便输一个密码看看有没有什么提示.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea7e4610f03a7f358.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> png</span><br></pre></td></tr></table></figure>
-
-<p>我现在很确信这是一个 png 格式的图片 base64 编码后的代码</p>
-<p>直接在网上还原该图片得到了一个二维码</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcae2e164280a166.png" alt=""></p>
-<p>继续识别一下该二维码则直接得到结果</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image967bd059fa30d7e1.png" alt=""></p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">f870f6a65d94a6f65a772b7f4734be95278e28fd</span><br></pre></td></tr></table></figure>
-
-<p>通关</p>
-<h1 id="LEVEL-10"><a href="#LEVEL-10" class="headerlink" title="LEVEL 10"></a>LEVEL 10</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image397155b6f0545158.png" alt=""></p>
-<p>本关给了一个加密函数的两个版本, js 和 python, 我比较熟悉 python 我们就来看下这个 python 函数的逻辑</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">r</span>(<span class="params">pwd, fr, to, by</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([pwd[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(fr, to, by)])</span><br></pre></td></tr></table></figure>
-
-<p>逻辑很简单, 该函数每次取出密码指定位的字符.</p>
-<p>再看看输出结果</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>))</span><br><span class="line">edac</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>))</span><br><span class="line">e76716c1</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>))</span><br><span class="line">1646561d3</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>))</span><br><span class="line">12b52d3fd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line"><span class="number">711283</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>))</span><br><span class="line">e</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">7bc5adfced</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>))</span><br><span class="line">7a6d85</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line">a2ffd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">61d3b5c</span><br></pre></td></tr></table></figure>
-<p>观察函数 r 的第三个参数, 我们发现最大值位 40, 该参数对应 range() 函数的第二位即 max.</p>
-<p>于是我们可以知道 pwd 的长度位 40, 解码函数的逻辑就很清楚了.</p>
-<p>创建一个长度 40 的数组, 然后将上述输出的结果依次填到数组的指定位置即可</p>
-<p>开始编写解码函数</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 创建一个 40 长度的数组</span></span><br><span class="line">_pwd = [ <span class="string">&quot;&quot;</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>) ]</span><br><span class="line"></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">text, fr, to ,by</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;text 就是执行 r 函数的输出结果&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i, j <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">range</span>(fr, to, by)):</span><br><span class="line">        _pwd[j] = text[i]</span><br></pre></td></tr></table></figure>
-
-<p>然后依次执行</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;edac&quot;</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e76716c1&quot;</span>, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;1646561d3&quot;</span>, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;12b52d3fd&quot;</span>, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;711283&quot;</span>, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e&quot;</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7bc5adfced&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7a6d85&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;a2ffd&quot;</span>, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;61d3b5c&quot;</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-
-<p>拼接结果</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">&quot;&quot;</span>.join(_pwd)</span></span>)</span><br></pre></td></tr></table></figure>
-
-<p>得到密码</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">edace17e62741b6ac51562a12ddff38cbfe53dcd</span><br></pre></td></tr></table></figure>
-
-<h1 id="LEVEL-11"><a href="#LEVEL-11" class="headerlink" title="LEVEL 11"></a>LEVEL 11</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image162da0736a8e78ea.png" alt=""></p>
-<p>最后一关就有点难度了</p>
-<p>因为你如果密码不正确的话是无法提交的, 也就是说没有任何的提示. 跟服务器也没有什么交互.</p>
-<p>我们只能先取看看网页源码里有什么线索没有</p>
-<p>果然发现了端倪, 源码里有一段 js 脚本, 看逻辑应该是处理提交密码的, 仔细分析下.</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">  $( <span class="variable language_">document</span> ).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&quot;#submit&quot;</span>).<span class="title function_">on</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>();</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>.<span class="title function_">indexOf</span>(<span class="string">&#x27;challenge&#x27;</span>)!=-<span class="number">1</span>) &#123;<span class="keyword">debugger</span>;&#125;</span><br><span class="line">      pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br><span class="line">      ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">      stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">      multi = <span class="literal">true</span>;</span><br><span class="line">      $(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">        multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))) &#123;</span><br><span class="line">        $.<span class="title function_">ajax</span>(<span class="string">&quot;./70/&quot;</span>+ pwd, &#123;</span><br><span class="line">          <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">            <span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)&amp;&amp;(</span><br><span class="line">              $.<span class="title function_">post</span>(<span class="string">&#x27;submit&#x27;</span>, &#123;<span class="attr">pwd</span>: o, <span class="attr">csrf_token</span>:<span class="string">&#x27;ce1db5808eeed02fc22e46b80ef4651e39b7cd59o1687498808&#x27;</span>&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;)</span><br><span class="line">            );</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;To be or not to be... &#x27;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>有几个变量我们需要注意下</p>
-<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">ts</span></span><br><span class="line"><span class="attribute">stmnt</span></span><br><span class="line"><span class="attribute">multi</span></span><br></pre></td></tr></table></figure>
-
-<p>我们直接在浏览器的控制台执行下面的代码看看有什么结果没有</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">multi = <span class="literal">true</span>;</span><br><span class="line">$(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageb9a894415b409fae.png" alt=""></p>
-<p>然后我们往下看是一个条件判断</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>))))</span><br></pre></td></tr></table></figure>
-
-<p>太长了我们可以拆分一下</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line">stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span></span><br></pre></td></tr></table></figure>
-
-<p>简单来讲就是上面三行的乘积需要等于下面该行的值</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))</span><br></pre></td></tr></table></figure>
-
-<p>因为我们现在需要反推<code>pwd</code>这个值, 所以上面不涉及<code>pwd</code>变量的我们可以直接在控制台执行看看具体的值是多少</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image75d9447a4638c701.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>code</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>stmnt.split(“All”).length</td>
-<td>2</td>
-</tr>
-<tr>
-<td>ts.slice(eval(“”+’’+””+ƒ(1&lt;0)+””+”-“+’’+””+ƒ(0&lt;1)+”-“+ƒ(1&gt;0)))</td>
-<td>‘70’</td>
-</tr>
-</tbody></table>
-<p>这里注意到变量类型不同, 但是我们也看到了这个条件匹配用的是 <code>==</code>, 即不是严格模式! 所以我们可以把他们都当成数字来处理</p>
-<p>接下来我们处理包含 <code>pwd</code> 变量的条件</p>
-<p>我们把</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">parseInt(<span class="name">pwd</span>.slice(<span class="name">-</span>(<span class="name">--</span>([,,,undefined].join()).length))[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-<p>记作 a</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">parseInt</span>(pwd.slice(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>记作 b</p>
-<p>则上述条件可以变为</p>
-<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">a * b * <span class="number">2</span> <span class="operator">=</span><span class="operator">=</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
-
-<p>则可知 a b 的可选值表</p>
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>35</td>
-</tr>
-<tr>
-<td>35</td>
-<td>1</td>
-</tr>
-<tr>
-<td>5</td>
-<td>7</td>
-</tr>
-<tr>
-<td>7</td>
-<td>5</td>
-</tr>
-</tbody></table>
-<p>我们把</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="built_in">-</span>(<span class="built_in">--</span>(<span class="selector-attr">[,,,undefined]</span><span class="selector-class">.join</span>()).length)</span><br></pre></td></tr></table></figure>
-
-<p>在控制台里执行下, 然后得到值 <code>-2</code></p>
-<p>于是</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-
-<p>于是我们可以分析出 a 表达式为 <code>pwd</code> 变量的倒数第二字符所代表的值</p>
-<p>同理我们分析 b 表达式</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-
-<p>b 表达式为 <code>pwd</code> 变量的倒数第一字符所代表的值</p>
-<p>仔细观察 js 脚本还记不记得这句</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br></pre></td></tr></table></figure>
-
-<p>意思是 <code>pwd</code> 取到的是一个字符串变量, 观察我们刚才的 a, b 取值表.</p>
-<p>我们发现按下标从一个字符串里取值, 取到的一定是一个字符, 不可能为两个字符, 于是现在 a / b 取值表就变为</p>
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>5</td>
-<td>7</td>
-</tr>
-<tr>
-<td>7</td>
-<td>5</td>
-</tr>
-</tbody></table>
-<p>也就是说 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code></p>
-<p>我们再往下看</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>我们先看一下里面的具体值是什么.</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="comment">// 执行得到, 这个东西看起来非常的像密码</span></span><br><span class="line"><span class="string">&#x27;4380Odoo&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>查看一下 <code>lastIndexOf</code> 方法的说明</p>
-<blockquote>
-<p>参考链接 </p>
-<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf</a></p>
-</blockquote>
-<p>lastIndexOf() 方法返回调用String 对象的指定值最后一次出现的索引，在一个字符串中的指定位置 fromIndex处从后向前搜索。如果没找到这个特定值则返回-1 。</p>
-<p>该方法将从尾到头地检索字符串 str，看它是否含有子串 searchValue。开始检索的位置在字符串的 fromIndex 处或字符串的结尾（没有指定 fromIndex 时）。如果找到一个 searchValue，则返回 searchValue 的第一个字符在 str 中的位置。str中的字符位置是从 0 开始的。</p>
-<p>简单来讲, 就是想要</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> === pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>这个表达式成立, <strong><code>pwd</code> 这个变量一定是 <code>multi.toString().substr(1,4)+stmnt.substring(2,6)</code> 所表示的值 <code>4380Odoo</code> 作为开头</strong></p>
-<p>又因为 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code>, 所以可以猜测密码应该为</p>
-<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line"><span class="number">4380</span>Odo<span class="meta">o57</span></span><br><span class="line"><span class="number">4380</span>Odo<span class="meta">o75</span></span><br></pre></td></tr></table></figure>
-
-<p>这两个其中的一个</p>
-<p>大功告成!</p>
-<h1 id="Congratulations"><a href="#Congratulations" class="headerlink" title="Congratulations !"></a>Congratulations !</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image123e440fce3bf42e.png" alt=""></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Python单例模式</title>
-    <url>/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="基于元类"><a href="#基于元类" class="headerlink" title="基于元类"></a>基于元类</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">type</span>):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        cls.__instance = <span class="literal">None</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> cls.__instance <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>().__call__(*args, **kwargs)</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(metaclass=Singleton):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="基于-new-方法"><a href="#基于-new-方法" class="headerlink" title="基于 new 方法"></a>基于 <strong>new</strong> 方法</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    __instance = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cls.__instance:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>(Singleton, cls).__new__(cls, *args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">Singleton</span>):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="基于装饰器"><a href="#基于装饰器" class="headerlink" title="基于装饰器"></a>基于装饰器</h2><h3 id="用闭包实现"><a href="#用闭包实现" class="headerlink" title="用闭包实现"></a>用闭包实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">singleton</span>(<span class="params">cls</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用闭包的方式实现一个单例装饰器&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    __instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> __instance:</span><br><span class="line">            __instance[cls] = cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> __instance[cls]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> _create</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h3 id="用类实现"><a href="#用类实现" class="headerlink" title="用类实现"></a>用类实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, cls</span>):</span><br><span class="line">        self.__cls = cls</span><br><span class="line">        self.__instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> self.__cls <span class="keyword">not</span> <span class="keyword">in</span> self.__instance:</span><br><span class="line">            self.__instance[self.__cls] = self.__cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> self.__instance[self.__cls]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Python的模块是天然的单例模式</p>
-<p>在一个py文件中, 多次导入同一个模块, 这个模块也只有在第一次的时候被导入, 后续的该模块导入语句都不会再执行了</p>
-<p>参考链接</p>
-<blockquote>
-<p><a href="https://developer.aliyun.com/article/653759">https://developer.aliyun.com/article/653759</a></p>
-</blockquote>
-]]></content>
   </entry>
 </search>
