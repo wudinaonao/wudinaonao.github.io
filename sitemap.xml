@@ -812,20 +812,6 @@
   </url>
   
   <url>
-    <loc>https://blog.wudinaonao.com/tags/Linux/</loc>
-    <lastmod>2022-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.wudinaonao.com/tags/Ubuntu/</loc>
-    <lastmod>2022-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.wudinaonao.com/tags/Python/</loc>
     <lastmod>2022-06-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -841,6 +827,20 @@
   
   <url>
     <loc>https://blog.wudinaonao.com/tags/Flask/</loc>
+    <lastmod>2022-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/tags/Linux/</loc>
+    <lastmod>2022-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.wudinaonao.com/tags/Ubuntu/</loc>
     <lastmod>2022-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
