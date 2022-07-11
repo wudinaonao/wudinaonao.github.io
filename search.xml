@@ -3574,4 +3574,22 @@
 <p>达到预期效果!</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>Nextcloud 反向代理登录不跳转</title>
+    <url>/2022/07/11/Nextcloud-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%99%BB%E5%BD%95%E4%B8%8D%E8%B7%B3%E8%BD%AC/</url>
+    <content><![CDATA[<p>在使用 Docker 部署 Nextcloud 并通过 Nginx 反向代理时，会发生登陆后不跳转的问题</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/07/11/image.png" alt=""></p>
+<p>具体表现为上图，会一直卡在这里。</p>
+<p>但是此时刷新页面可以看到登录后的页面。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>在 <code>config/config.php</code> 这个文件中添加</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;overwriteprotocol&#x27;</span> =&gt; <span class="string">&#x27;https&#x27;</span>,</span><br></pre></td></tr></table></figure>
+
+<p>像这样</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/07/11/image0d1234872a1d87b7.png" alt=""></p>
+<p>参考链接</p>
+<blockquote>
+<p><a href="https://wangzhengzhen.com/2499.html">https://wangzhengzhen.com/2499.html</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
