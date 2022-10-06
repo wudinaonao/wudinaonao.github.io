@@ -3608,4 +3608,34 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>Gitlab配置external_url</title>
+    <url>/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/</url>
+    <content><![CDATA[<p>Gitlab 里有一个配置选项 <code>external_url</code></p>
+<p>顾名思义这里配置的是从外部机器访问 Gitlab 的链接，可以是域名或ip地址</p>
+<p>在配置这个选项的时候需要注意一个问题，就是这个配置的是里 gitlab 最近的访问路径。</p>
+<p>比如我们有如下一个结构</p>
+<h2 id="基于-Docker-容器的结构"><a href="#基于-Docker-容器的结构" class="headerlink" title="基于 Docker 容器的结构"></a>基于 Docker 容器的结构</h2><p><strong>访客 -&gt; nginx 容器 -&gt; gitlab 容器</strong></p>
+<p>此时，访客假如在浏览器输入网址<code>https://gitlab.wudinaonao.com</code>，浏览器将请求发送给 nginx 容器，nginx容器通过反向代理连接到 gitlab 容器</p>
+<p>这个时候就要注意了，<code>external_url</code> 这个选项并不能设置为<code>https://gitlab.wudinaonao.com</code></p>
+<p>为什么？</p>
+<p>因为在上述结构里 <code>https://gitlab.wudinaonao.com</code> 并不是离 gitlab 最近的访问路径, nginx 通过反向代理向 gitlab 发出的请求才是离 gitlab 最近的链接.</p>
+<p>例如, 如果我们通过 docker-compose 来配置 nginx 和 docker 镜像.</p>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">version:</span> <span class="string">&quot;3.1&quot;</span></span><br><span class="line"><span class="symbol">services:</span></span><br><span class="line"><span class="symbol">    Gitlab:</span></span><br><span class="line">        <span class="meta"># 省略其他配置 ...</span></span><br><span class="line"><span class="symbol">        </span></span><br><span class="line"><span class="symbol">    Nginx:</span></span><br><span class="line">        <span class="meta"># 省略其他配置 ...</span></span><br><span class="line"><span class="symbol">        depends_on:</span></span><br><span class="line">            - Gitlab</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在上述容器组中, Nginx 容器可以通过 <code>Gitlab</code> 来访问 Gitlab 容器, 可以在 Nginx 容器里使用ping命令测试<code>ping gitlab</code></p>
+<p>那么在这样的结构里, <code>external_url</code>的值就应当配置为<code>http://Gitlab</code></p>
+<h2 id="基于动态DNS的结构"><a href="#基于动态DNS的结构" class="headerlink" title="基于动态DNS的结构"></a>基于动态DNS的结构</h2><p><strong>访客 -&gt; 路由器 -&gt; 内网主机</strong></p>
+<p>如果 gitlab 主机假设在一个私网里, 我们通过端口映射的方式来访问, 这种情况下, 我们需要设置</p>
+<p><code>external_url</code> 的值为 <code>内网主机的 ip 地址</code></p>
+<p>详细来说, 假设我们的路由器对外有一个公网ip, 我们通过动态dns的方式绑定了一个域名 abc.com, 然后我们将内网里的gitlab主机端口暴露出去, 比如为 8080</p>
+<p>那么此时我们可以通过 http:abc.com:8080 的方式来访问内网的 gitlab 主机吗 ?</p>
+<p>并不可以.</p>
+<p>是因为 abc.com 并不是距离 gitlab 最近的请求, 所以我们需要设置 <code>external_url</code> 的值为 <code>内网主机的 ip 地址</code></p>
+<p>此时才可以正常访问.</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/atlasun/article/details/115749373">https://blog.csdn.net/atlasun/article/details/115749373</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>

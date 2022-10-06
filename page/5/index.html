@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">80</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,114 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/Linux%E9%87%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/Linux%E9%87%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">Linux里设置环境变量的方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 20:03:40" itemprop="dateCreated datePublished" datetime="2021-05-06T20:03:40+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/Linux%E9%87%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95/" class="post-meta-item leancloud_visitors" data-flag-title="Linux里设置环境变量的方法" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/Linux%E9%87%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/Linux%E9%87%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实验路径</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/opt/</span>au1200_rm<span class="regexp">/build_tools/</span>bin</span><br></pre></td></tr></table></figure>
+
+<h2 id="直接用export命令"><a href="#直接用export命令" class="headerlink" title="直接用export命令"></a>直接用export命令</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=<span class="variable">$PATH</span><span class="symbol">:/opt/au1200_rm/build_tools/bin</span></span><br></pre></td></tr></table></figure>
+
+<p>以上命令将实验路径导入到环境变量, 下次登录失效</p>
+<h2 id="修改profile文件"><a href="#修改profile文件" class="headerlink" title="修改profile文件"></a>修改profile文件</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>profile</span><br></pre></td></tr></table></figure>
+
+<p>加入</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=<span class="variable">$PATH</span><span class="symbol">:/opt/au1200_rm/build_tools/bin</span></span><br></pre></td></tr></table></figure>
+
+<p>以上命令将实验路径导入到环境变量, 下次登录有效</p>
+<h2 id="修改-bashrc文件"><a href="#修改-bashrc文件" class="headerlink" title="修改.bashrc文件"></a>修改.bashrc文件</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/root/</span>.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>加入</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=<span class="variable">$PATH</span><span class="symbol">:/opt/au1200_rm/build_tools/bin</span></span><br></pre></td></tr></table></figure>
+<p>以上命令将实验路径导入到环境变量, 未测试下次登录是否有效</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leezx/p/5589941.html">https://www.cnblogs.com/leezx/p/5589941.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1102,172 +1210,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/12/21/Docker%E9%83%A8%E7%BD%B2Jupyter/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/21/Docker%E9%83%A8%E7%BD%B2Jupyter/" class="post-title-link" itemprop="url">Docker部署Jupyter</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-21 22:22:14" itemprop="dateCreated datePublished" datetime="2020-12-21T22:22:14+08:00">2020-12-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/12/21/Docker%E9%83%A8%E7%BD%B2Jupyter/" class="post-meta-item leancloud_visitors" data-flag-title="Docker部署Jupyter" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/12/21/Docker%E9%83%A8%E7%BD%B2Jupyter/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/12/21/Docker%E9%83%A8%E7%BD%B2Jupyter/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>为了方便随时随地测试一些算法，做一些研究。笔者在自己的服务器上安装了jupyter-lab，这个是jupyter的下一代版本。但是因为不想搞乱自己服务器的环境，于是尝试寻找看看有没有jupyter的docker镜像，发现还真的有官方出的镜像。</p>
-<p>官方出了很多镜像，根据不同的需求选择合适的镜像。本次搭建笔者选择了<code>jupyter/datascience-notebook</code>这个镜像，具体镜像列表参考:</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html">https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html</a></p>
-</blockquote>
-<p>拉取镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jupyter/datascience-notebook</span><br></pre></td></tr></table></figure>
-
-<p>运行一个容器</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker</span> run -p <span class="number">8888</span>:<span class="number">8888</span> jupyter/datascience-notebook</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~<span class="comment"># docker run -p 8888:8888 jupyter/datascience-notebook</span></span><br><span class="line">Executing the command: jupyter notebook</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">00.559</span> NotebookApp] Writing notebook server cookie secret to <span class="regexp">/home/</span>jovyan<span class="regexp">/.local/</span>share<span class="regexp">/jupyter/</span>runtime/notebook_cookie_secret</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">02.995</span> NotebookApp] JupyterLab extension loaded from <span class="regexp">/opt/</span>conda<span class="regexp">/lib/</span>python3.<span class="number">8</span><span class="regexp">/site-packages/</span>jupyterlab</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">02.996</span> NotebookApp] JupyterLab application directory is <span class="regexp">/opt/</span>conda<span class="regexp">/share/</span>jupyter/lab</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.006</span> NotebookApp] Serving notebooks from local directory: <span class="regexp">/home/</span>jovyan</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.006</span> NotebookApp] Jupyter Notebook <span class="number">6.1</span>.<span class="number">5</span> is running at:</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.007</span> NotebookApp] http:<span class="regexp">//</span>a0a0fecd00d5:<span class="number">8888</span>/?token=<span class="number">2</span>f725d16b757283384db037ff1707b590eca49d9ac037f3b</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.007</span> NotebookApp]  or http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">8888</span>/?token=<span class="number">2</span>f725d16b757283384db037ff1707b590eca49d9ac037f3b</span><br><span class="line">[I <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.007</span> NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).</span><br><span class="line">[C <span class="number">12</span>:<span class="number">28</span>:<span class="number">03.019</span> NotebookApp] </span><br><span class="line">    </span><br><span class="line">    To access the notebook, open this file <span class="keyword">in</span> a browser:</span><br><span class="line">        file:<span class="regexp">//</span><span class="regexp">/home/</span>jovyan<span class="regexp">/.local/</span>share<span class="regexp">/jupyter/</span>runtime/nbserver-<span class="number">7</span>-open.html</span><br><span class="line">    Or copy and paste one of these URLs:</span><br><span class="line">        http:<span class="regexp">//</span>a0a0fecd00d5:<span class="number">8888</span>/?token=<span class="number">2</span>f725d16b757283384db037ff1707b590eca49d9ac037f3b</span><br><span class="line">     or http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">8888</span>/?token=<span class="number">2</span>f725d16b757283384db037ff1707b590eca49d9ac037f3b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>访问你部署docker的那台主机，例如本次我部署在<code>jupyter.local</code>这台主机上，我们访问<code>http://jupyter.local:8888</code>会看到如下界面。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222203043.png" alt="20201222203043"></p>
-<p>你可以使用token登录或使用token设置一个新密码。本次的token为<code>2f725d16b757283384db037ff1707b590eca49d9ac037f3b</code></p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222203206.png" alt="20201222203206"></p>
-<p>用token设置一个新密码然后登录。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222203257.png" alt="20201222203257"></p>
-<p>这样就进来了。</p>
-<p>但是这样我们的所有工作都在这个容器里，没有挂载外部的数据卷进来，当容器消失后我们的工作内容也将烟消云散。所以我们需要挂载外部的数据卷进来。</p>
-<p>这里推荐使用<code>docker-compose</code>来启动容器，yaml格式的语法阅读非常清晰。</p>
-<p>ubuntu 可以使用以下命令安装</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt <span class="keyword">install</span> docker-compose -y</span><br></pre></td></tr></table></figure>
-
-<p>这里我们来看一个 docker compose 模板</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">version:</span> <span class="string">&quot;3.1&quot;</span></span><br><span class="line"><span class="symbol">services:</span></span><br><span class="line"><span class="symbol">  Jupyter:</span></span><br><span class="line"><span class="symbol">    image:</span> jupyter/datascience-notebook:latest</span><br><span class="line"><span class="symbol">    tty:</span> true</span><br><span class="line"><span class="symbol">    restart:</span> always</span><br><span class="line"><span class="symbol">    container_name:</span> jupyter</span><br><span class="line"><span class="symbol">    user:</span> root</span><br><span class="line"><span class="symbol">    ports:</span></span><br><span class="line">      - <span class="string">&quot;8888:8888&quot;</span></span><br><span class="line"><span class="symbol">    volumes:</span></span><br><span class="line">      - <span class="string">&quot;$&#123;PWD&#125;/work:/home/jovyan/work&quot;</span></span><br><span class="line"><span class="symbol">    environment:</span></span><br><span class="line">      - JUPYTER_ENABLE_LAB=yes</span><br><span class="line">      - GRANT_SUDO=yes</span><br><span class="line"><span class="symbol">    logging:</span></span><br><span class="line"><span class="symbol">      driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line"><span class="symbol">      options:</span></span><br><span class="line">        max-size: <span class="string">&quot;100m&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>在当前目录下新建一个<code>work</code>目录， 我们把这个目录挂载到容器里。<br><code>JUPYTER_ENABLE_LAB=yes</code>启用jupyter-lab，这个是jupyter的下一代版本。</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao</span><span class="comment"># mkdir work</span></span><br><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao</span><span class="comment"># ls</span></span><br><span class="line">work</span><br><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao</span><span class="comment"># </span></span><br></pre></td></tr></table></figure>
-
-<p>例如我在<code>/home/naonao</code>这个目录下新建一个<code>work</code>文件夹，然后再本目录下创建一个<code>docker-compose.yaml</code>文件，复制上面的内容进去。</p>
-<p>运行容器</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker-compose up</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:<span class="regexp">/home/</span>naonao<span class="comment"># nano docker-compose.yaml</span></span><br><span class="line">root@ubuntu:<span class="regexp">/home/</span>naonao<span class="comment"># ls</span></span><br><span class="line">docker-compose.yaml  work</span><br><span class="line">root@ubuntu:<span class="regexp">/home/</span>naonao<span class="comment"># docker-compose up</span></span><br><span class="line">Creating network <span class="string">&quot;naonao_default&quot;</span> with the default driver</span><br><span class="line">Creating jupyter ... done</span><br><span class="line">Attaching to jupyter</span><br><span class="line">jupyter    | Set username to: jovyan</span><br><span class="line">jupyter    | usermod: no changes</span><br><span class="line">jupyter    | Granting jovyan sudo access and appending <span class="regexp">/opt/</span>conda/bin to sudo PATH</span><br><span class="line">jupyter    | Executing the command: jupyter lab</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">40</span>:<span class="number">59.811</span> LabApp] Writing notebook server cookie secret to <span class="regexp">/home/</span>jovyan<span class="regexp">/.local/</span>share<span class="regexp">/jupyter/</span>runtime/notebook_cookie_secret</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.953</span> LabApp] JupyterLab extension loaded from <span class="regexp">/opt/</span>conda<span class="regexp">/lib/</span>python3.<span class="number">8</span><span class="regexp">/site-packages/</span>jupyterlab</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.954</span> LabApp] JupyterLab application directory is <span class="regexp">/opt/</span>conda<span class="regexp">/share/</span>jupyter/lab</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.957</span> LabApp] Serving notebooks from local directory: <span class="regexp">/home/</span>jovyan</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.958</span> LabApp] Jupyter Notebook <span class="number">6.1</span>.<span class="number">5</span> is running at:</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.958</span> LabApp] http:<span class="regexp">//</span><span class="number">051</span>c0b8b860b:<span class="number">8888</span>/?token=a37dc92a50b7b6f3fb0f01abfee6a374b5fb74d23a0a3114</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.958</span> LabApp]  or http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">8888</span>/?token=a37dc92a50b7b6f3fb0f01abfee6a374b5fb74d23a0a3114</span><br><span class="line">jupyter    | [I <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.958</span> LabApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).</span><br><span class="line">jupyter    | [C <span class="number">12</span>:<span class="number">41</span>:<span class="number">00.963</span> LabApp] </span><br><span class="line">jupyter    |     </span><br><span class="line">jupyter    |     To access the notebook, open this file <span class="keyword">in</span> a browser:</span><br><span class="line">jupyter    |         file:<span class="regexp">//</span><span class="regexp">/home/</span>jovyan<span class="regexp">/.local/</span>share<span class="regexp">/jupyter/</span>runtime/nbserver-<span class="number">14</span>-open.html</span><br><span class="line">jupyter    |     Or copy and paste one of these URLs:</span><br><span class="line">jupyter    |         http:<span class="regexp">//</span><span class="number">051</span>c0b8b860b:<span class="number">8888</span>/?token=a37dc92a50b7b6f3fb0f01abfee6a374b5fb74d23a0a3114</span><br><span class="line">jupyter    |      or http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">8888</span>/?token=a37dc92a50b7b6f3fb0f01abfee6a374b5fb74d23a0a3114</span><br></pre></td></tr></table></figure>
-
-<p>同刚才一样，你可以用token设置一个密码，或者也可以直接访问连接<code>http://jupyter.local:8888/?token=a37dc92a50b7b6f3fb0f01abfee6a374b5fb74d23a0a3114</code>，这里注意访问你部署docker的主机的地址，本例我部署在<code>jupyter.local</code>主机。我们将看到jupyer-lab的界面。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222204526.png" alt="20201222204526"></p>
-<p>进入<code>/work</code>目录新建一个文件。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222204649.png" alt="20201222204649"></p>
-<p>我的得到了一个Permission denied错误。</p>
-<p>查阅资料发现</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You must <span class="keyword">grant</span> the <span class="keyword">within</span>-container notebook <span class="keyword">user</span> <span class="keyword">or</span> <span class="keyword">group</span> (NB_UID <span class="keyword">or</span> NB_GID) <span class="keyword">write</span> <span class="keyword">access</span> <span class="keyword">to</span> the host directory (e.g., sudo chown <span class="number">1000</span> /<span class="keyword">some</span>/host/folder/<span class="keyword">for</span>/<span class="keyword">work</span>).</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html">https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html</a></p>
-</blockquote>
-<p>你必须允许容器的用户或组写你设置的这个目录</p>
-<p>例如我挂载目录<code>/home/naonao/work</code>到容器里, 那么我需要更改这个目录的权限.<code>chown 1000 /home/naonao/work</code></p>
-<p>重启容器，问题解决。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222204942.png" alt="20201222204942"></p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao</span><span class="comment"># cd work</span></span><br><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao/work</span><span class="comment"># ls</span></span><br><span class="line">Untitled.ipynb</span><br><span class="line">root<span class="variable">@ubuntu</span><span class="symbol">:/home/naonao/work</span><span class="comment"># </span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>如果把它架设在公共云上，那么我们可以通过域名在任意位置访问到jupyter环境。</p>
-<h2 id="Nginx-SSL"><a href="#Nginx-SSL" class="headerlink" title="Nginx + SSL"></a>Nginx + SSL</h2><p>通过Nginx反向代理并使用SSL加密HTTP</p>
-<p>笔者用宝塔新建了一个静态网站，并设置了Let’s Encrpyt证书。<br><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222205257.png" alt="20201222205257"></p>
-<p>在华为云上部署docker，因为8888端口被占用，所以本次使用10000端口，在宝塔面板添加一个反向代理，当然你也可以自己配置Nginx。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222205721.png" alt="20201222205721"></p>
-<p>完成单击配置文件</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222210023.png" alt="20201222210023"></p>
-<p>增加websocket</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># websocket headers</span></span><br><span class="line"><span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> X-Scheme <span class="variable">$scheme</span>;</span><br><span class="line"></span><br><span class="line"><span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br></pre></td></tr></table></figure>
-
-<p>然后在点击左边目录的配置文件增加</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">map</span> $http_upgrade $connection_upgrade &#123;</span><br><span class="line">    default upgrade;</span><br><span class="line">    <span class="string">&#x27;&#x27;</span>      <span class="keyword">close</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222205825.png" alt="20201222205825"></p>
-<p>保存。</p>
-<p>访问<code>https://jupyter.wudinaonao.com</code>一切正常</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201222210506.png" alt="20201222210506"></p>
-<h2 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h2><h3 id="Python3-connecting"><a href="#Python3-connecting" class="headerlink" title="Python3 connecting"></a>Python3 connecting</h3><p>有时候通过Nginx反向代理会出现可以访问界面但是无法连接到python，这是因为没有配置websocket导致。</p>
-<p>通常出现在这种情况下，用户通过HTTPS访问Nginx的反向代理。即</p>
-<p>user —https—&gt; nginx —http—&gt; docker</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html">https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://jupyterhub.readthedocs.io/en/stable/reference/config-proxy.html">https://jupyterhub.readthedocs.io/en/stable/reference/config-proxy.html</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1339,7 +1281,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-count">81</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

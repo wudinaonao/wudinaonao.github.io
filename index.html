@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">80</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,109 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/" class="post-title-link" itemprop="url">Gitlab配置external_url</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-06 21:17:04" itemprop="dateCreated datePublished" datetime="2022-10-06T21:17:04+08:00">2022-10-06</time>
+            </span>
+
+          
+            <span id="/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/" class="post-meta-item leancloud_visitors" data-flag-title="Gitlab配置external_url" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/06/Gitlab%E9%85%8D%E7%BD%AEexternal-url/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Gitlab 里有一个配置选项 <code>external_url</code></p>
+<p>顾名思义这里配置的是从外部机器访问 Gitlab 的链接，可以是域名或ip地址</p>
+<p>在配置这个选项的时候需要注意一个问题，就是这个配置的是里 gitlab 最近的访问路径。</p>
+<p>比如我们有如下一个结构</p>
+<h2 id="基于-Docker-容器的结构"><a href="#基于-Docker-容器的结构" class="headerlink" title="基于 Docker 容器的结构"></a>基于 Docker 容器的结构</h2><p><strong>访客 -&gt; nginx 容器 -&gt; gitlab 容器</strong></p>
+<p>此时，访客假如在浏览器输入网址<code>https://gitlab.wudinaonao.com</code>，浏览器将请求发送给 nginx 容器，nginx容器通过反向代理连接到 gitlab 容器</p>
+<p>这个时候就要注意了，<code>external_url</code> 这个选项并不能设置为<code>https://gitlab.wudinaonao.com</code></p>
+<p>为什么？</p>
+<p>因为在上述结构里 <code>https://gitlab.wudinaonao.com</code> 并不是离 gitlab 最近的访问路径, nginx 通过反向代理向 gitlab 发出的请求才是离 gitlab 最近的链接.</p>
+<p>例如, 如果我们通过 docker-compose 来配置 nginx 和 docker 镜像.</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">version:</span> <span class="string">&quot;3.1&quot;</span></span><br><span class="line"><span class="symbol">services:</span></span><br><span class="line"><span class="symbol">    Gitlab:</span></span><br><span class="line">        <span class="meta"># 省略其他配置 ...</span></span><br><span class="line"><span class="symbol">        </span></span><br><span class="line"><span class="symbol">    Nginx:</span></span><br><span class="line">        <span class="meta"># 省略其他配置 ...</span></span><br><span class="line"><span class="symbol">        depends_on:</span></span><br><span class="line">            - Gitlab</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在上述容器组中, Nginx 容器可以通过 <code>Gitlab</code> 来访问 Gitlab 容器, 可以在 Nginx 容器里使用ping命令测试<code>ping gitlab</code></p>
+<p>那么在这样的结构里, <code>external_url</code>的值就应当配置为<code>http://Gitlab</code></p>
+<h2 id="基于动态DNS的结构"><a href="#基于动态DNS的结构" class="headerlink" title="基于动态DNS的结构"></a>基于动态DNS的结构</h2><p><strong>访客 -&gt; 路由器 -&gt; 内网主机</strong></p>
+<p>如果 gitlab 主机假设在一个私网里, 我们通过端口映射的方式来访问, 这种情况下, 我们需要设置</p>
+<p><code>external_url</code> 的值为 <code>内网主机的 ip 地址</code></p>
+<p>详细来说, 假设我们的路由器对外有一个公网ip, 我们通过动态dns的方式绑定了一个域名 abc.com, 然后我们将内网里的gitlab主机端口暴露出去, 比如为 8080</p>
+<p>那么此时我们可以通过 http:abc.com:8080 的方式来访问内网的 gitlab 主机吗 ?</p>
+<p>并不可以.</p>
+<p>是因为 abc.com 并不是距离 gitlab 最近的请求, 所以我们需要设置 <code>external_url</code> 的值为 <code>内网主机的 ip 地址</code></p>
+<p>此时才可以正常访问.</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/atlasun/article/details/115749373">https://blog.csdn.net/atlasun/article/details/115749373</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1387,84 +1490,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" class="post-title-link" itemprop="url">Python 获取实例的类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-13 00:29:24" itemprop="dateCreated datePublished" datetime="2022-04-13T00:29:24+08:00">2022-04-13</time>
-            </span>
-
-          
-            <span id="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" class="post-meta-item leancloud_visitors" data-flag-title="Python 获取实例的类" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实例</span></span><br><span class="line">p = Person()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实例的类</span></span><br><span class="line">p.__class__</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1536,7 +1561,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-count">81</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
