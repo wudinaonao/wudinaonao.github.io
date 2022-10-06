@@ -288,7 +288,7 @@
 <p>比如我们有如下一个结构</p>
 <h2 id="基于-Docker-容器的结构"><a href="#基于-Docker-容器的结构" class="headerlink" title="基于 Docker 容器的结构"></a>基于 Docker 容器的结构</h2><p><strong>访客 -&gt; nginx 容器 -&gt; gitlab 容器</strong></p>
 <p>此时，访客假如在浏览器输入网址<code>https://gitlab.wudinaonao.com</code>，浏览器将请求发送给 nginx 容器，nginx容器通过反向代理连接到 gitlab 容器</p>
-<p>这个时候就要注意了，<code>external_url</code> 这个选项并不能设置为<code>https://gitlab.wudinaonao.com</code></p>
+<p>这个时候就要注意了，<code>external_url</code> 这个选项并不能设置为<code>https://gitlab.wudinaonao.com</code>(并不是绝对的)</p>
 <p>为什么？</p>
 <p>因为在上述结构里 <code>https://gitlab.wudinaonao.com</code> 并不是离 gitlab 最近的访问路径, nginx 通过反向代理向 gitlab 发出的请求才是离 gitlab 最近的链接.</p>
 <p>例如, 如果我们通过 docker-compose 来配置 nginx 和 docker 镜像.</p>
@@ -296,6 +296,8 @@
 
 <p>在上述容器组中, Nginx 容器可以通过 <code>Gitlab</code> 来访问 Gitlab 容器, 可以在 Nginx 容器里使用ping命令测试<code>ping gitlab</code></p>
 <p>那么在这样的结构里, <code>external_url</code>的值就应当配置为<code>http://Gitlab</code></p>
+<h3 id="并不是绝对的"><a href="#并不是绝对的" class="headerlink" title="并不是绝对的"></a>并不是绝对的</h3><p>为什么设置成<code>http://Gitlab</code>并不是绝对的, 因为通过 Nginx 反向代理时, 其实可以更改请求头的 <code>host</code> 选项! </p>
+<p>只需要将 <code>host</code> 和 <code>external_url</code> 匹配即可</p>
 <h2 id="基于动态DNS的结构"><a href="#基于动态DNS的结构" class="headerlink" title="基于动态DNS的结构"></a>基于动态DNS的结构</h2><p><strong>访客 -&gt; 路由器 -&gt; 内网主机</strong></p>
 <p>如果 gitlab 主机假设在一个私网里, 我们通过端口映射的方式来访问, 这种情况下, 我们需要设置</p>
 <p><code>external_url</code> 的值为 <code>内网主机的 ip 地址</code></p>
