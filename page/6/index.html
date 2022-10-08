@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">82</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,163 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">opentracker搭建自己的BT Tracker服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-24 21:25:13" itemprop="dateCreated datePublished" datetime="2020-12-24T21:25:13+08:00">2020-12-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="opentracker搭建自己的BT Tracker服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/12/24/opentracker%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84BT-Tracker%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>生命不息，折腾不止。在老家布置了一台服务器用于家庭影音中心，现在在新家，与老家相隔3000多公里，但是新家的服务器因为新装一无所有。此时此刻，突发奇想，我怎么能把老家的服务器里下载好的资源同步到新家的服务器上？</p>
+<p>解决方案：</p>
+<ul>
+<li><ol>
+<li><del>把老家服务器搬过来</del></li>
+</ol>
+</li>
+<li><ol start="2">
+<li>从新家访问老家的NAS，然后通过HTTP下载</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>自己写个同步程序部署在两台服务器上</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>或许可以用BT下载的方式从老家下载过来</li>
+</ol>
+</li>
+</ul>
+<p>方案1直接pass。</p>
+<p>方案2虽然也可以，但是群晖的连接好像直接复制到Aria2里下载不了，我可忍受不了下载一部50G的电影用浏览器自带的下载工具，而且还没有进度提示</p>
+<p>方案3，emmmm……等有空再说</p>
+<p>方案4，自己假设一台BT Trakcer服务器，然后做个种子下载，目前能想到的一个最佳方案</p>
+<p>查阅相关资料，看看有没有现成的工具可以使用。</p>
+<p>Searching …</p>
+<p>！！！可以使用 <strong>OpenTracker</strong> 这个现成的工具来搭建。</p>
+<p>那么问题来了，为了不搞乱服务器的环境，有没有现成的Docker镜像？</p>
+<p>Continue searching …</p>
+<p>在笔者孜孜不倦的努力下，真的发现了有人已经做好了镜像。</p>
+<p>直接拉取镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull lednerb/opentracker-docker</span><br></pre></td></tr></table></figure>
+
+<p>那么接下来如何启动一个容器？，我推荐<code>docker-compose</code></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">opentracker</span><span class="punctuation">:</span></span><br><span class="line">        <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">lednerb/opentracker-docker</span></span><br><span class="line">        <span class="attribute">restart</span><span class="punctuation">:</span> <span class="string">unless-stopped</span></span><br><span class="line">        <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">6969:6969</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">6969:6969/udp</span></span><br></pre></td></tr></table></figure>
+
+<p>当然你也可以直接</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker</span> run -dit --name opentracker -p <span class="number">6969</span>:<span class="number">6969</span>/udp -p <span class="number">6969</span>:<span class="number">6969</span> lednerb/opentracker-docker</span><br></pre></td></tr></table></figure>
+
+<p>好了。大功告成。</p>
+<p>那么我怎么知道它运行了没有，怎么查看状态？</p>
+<p>举个栗子，比如我假设在了<code>yourhostname.com</code>这台主机上，那么访问</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://yourhostname.com:<span class="number">6969</span>/<span class="keyword">state</span></span><br></pre></td></tr></table></figure>
+
+<p>或者访问更详细的内容</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://yourhostname.com:<span class="number">6969</span>/<span class="keyword">state</span>?mode=everything</span><br></pre></td></tr></table></figure>
+
+<p>即可看到这家伙有没有在认真工作咯！</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224220240.png" alt="20201224220240"></p>
+<p>emmmmm…..刚搭建好，还没传种子。</p>
+<p>我们创建一个种子，传上去试试看。</p>
+<p>创建种子的时候Tracker服务器填：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//y</span>ourhostname.com:<span class="number">6969</span>/announce</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">udp:<span class="regexp">//y</span>ourhostname.com:<span class="number">6969</span>/announce</span><br></pre></td></tr></table></figure>
+
+<p>在Transmission里看一下。。。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224221255.png" alt="20201224221255"></p>
+<p>一切OK。。。</p>
+<p>到后台看一下</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224221518.png" alt="20201224221518"></p>
+<p>一切OK。。。可以看到已经增加了一个种子。</p>
+<p>下载试试看。。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20201224222117.png" alt="20201224222117"></p>
+<p>OK。。。已经出现一个peer了！</p>
+<p>接下来就像下载BT一样，不过并不会有更多的peer出现，因为只有我自己在做种自己在下。。。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/lednerb/opentracker-docker/">https://hub.docker.com/r/lednerb/opentracker-docker/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1107,109 +1264,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/" class="post-title-link" itemprop="url">CentOS8安装Docker</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-10 14:09:21" itemprop="dateCreated datePublished" datetime="2020-06-10T14:09:21+08:00">2020-06-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/" class="post-meta-item leancloud_visitors" data-flag-title="CentOS8安装Docker" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/06/10/CentOS8%E5%AE%89%E8%A3%85Docker/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/mirror/docker-ce?spm=a2c6h.13651102.0.0.3e221b11A4nUxe">使用阿里源进行安装</a></p>
-<p>CentOS7用阿里源安装Docker</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># step 1: 安装必要的一些系统工具</span></span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="comment"># Step 2: 添加软件源信息</span></span><br><span class="line">sudo yum-config-manager --add-repo https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/docker-ce/</span>linux<span class="regexp">/centos/</span>docker-ce.repo</span><br><span class="line"><span class="comment"># Step 3: 更新并安装Docker-CE</span></span><br><span class="line">sudo yum makecache fast</span><br><span class="line">sudo yum -y install docker-ce</span><br><span class="line"><span class="comment"># Step 4: 开启Docker服务</span></span><br><span class="line">sudo service docker start</span><br></pre></td></tr></table></figure>
-
-<p>根据CentOS7的安装方式安装遇到如下问题。<br>错误描述</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">上次元数据过期检查：<span class="number">0</span>:<span class="number">00</span>:<span class="number">11</span> 前，执行于 <span class="number">2020</span>年<span class="number">06</span>月<span class="number">10</span>日 星期三 <span class="number">02</span>时<span class="number">05</span>分<span class="number">21</span>秒。</span><br><span class="line">错误：</span><br><span class="line"> 问题: package docker-ce-<span class="number">3</span>:<span class="number">19.03</span>.<span class="number">11</span>-<span class="number">3</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> requires containerd<span class="selector-class">.io</span> &gt;= <span class="number">1.2</span>.<span class="number">2</span>-<span class="number">3</span>, but <span class="attribute">none</span> of the providers can be installed</span><br><span class="line">  - cannot install the best candidate <span class="keyword">for</span> the job</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.10</span>-<span class="number">3.2</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.13</span>-<span class="number">3.1</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.13</span>-<span class="number">3.2</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.2</span>-<span class="number">3.3</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.2</span>-<span class="number">3</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.4</span>-<span class="number">3.1</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.5</span>-<span class="number">3.1</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">  - package containerd<span class="selector-class">.io-1</span>.<span class="number">2.6</span>-<span class="number">3.3</span><span class="selector-class">.el7</span><span class="selector-class">.x86_64</span> is excluded</span><br><span class="line">(尝试添加 <span class="string">&#x27;--skip-broken&#x27;</span> 来跳过无法安装的软件包 或 <span class="string">&#x27;--nobest&#x27;</span> 来不只使用最佳选择的软件包)</span><br></pre></td></tr></table></figure>
-
-<p>使用阿里源安装containerd.io安装不低于1.2.2-3的版本</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y https:<span class="regexp">//mi</span>rrors.aliyun.com<span class="regexp">/docker-ce/</span>linux<span class="regexp">/centos/</span><span class="number">7</span><span class="regexp">/x86_64/</span>edge<span class="regexp">/Packages/</span>containerd.io-<span class="number">1.2</span>.<span class="number">13</span>-<span class="number">3.2</span>.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
-
-<p>然后继续根据CentOS7的安装方法安装即可。</p>
-<p>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/RtxTitanV/article/details/106550640">https://blog.csdn.net/RtxTitanV/article/details/106550640</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1277,7 +1335,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">82</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -3640,4 +3640,36 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>windows连接共享打印机错误</title>
+    <url>/2022/10/08/windows%E8%BF%9E%E6%8E%A5%E5%85%B1%E4%BA%AB%E6%89%93%E5%8D%B0%E6%9C%BA%E9%94%99%E8%AF%AF/</url>
+    <content><![CDATA[<p>windows 连接共享打印机时有可能发生的错误以及解决方案 </p>
+<h2 id="0x00004005"><a href="#0x00004005" class="headerlink" title="0x00004005"></a>0x00004005</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image.png" alt=""></p>
+<p>解决方式为手工添加打印机</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image80cb3203c52b6421.png" alt=""></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image6a97ea3fbae18af6.png" alt=""></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image3e5ffb89721d0e2a.png" alt=""></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image16a477ed6c19edd2.png" alt=""></p>
+<p>注意这个选项如何填写， 比如打印机共享在<code>192.168.1.48</code>下，像这样</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image4321385c0ed8b097.png" alt=""></p>
+<p>那么我们应当填写的值为</p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">\\<span class="number">192.168.1.48</span>\EPSON L1800 Series</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image1c3ca96a71804b42.png" alt=""></p>
+<p>像这样</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image527c082dbaf808c5.png" alt=""></p>
+<p>然后选择打印机对应的驱动， 可以通过 windows update 从 windows 下载，也可以自己下载然后选择从磁盘安装</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/imagecf3952f25cac9e3d.png" alt=""></p>
+<p>然后我连接的是这个打印机，所以我选择这个驱动</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image40ebb988b23f3332.png" alt=""></p>
+<p>设置一个打印机名字</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/imaged44700059d0fbe77.png" alt=""></p>
+<p>这一步问你是否共享这个打印机，如果不共享，选第一个选项就 OK。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/08/image66f2d9f08c5bf573.png" alt=""></p>
+<p>然后就设置好了， 可以打印个测试页测试一下。</p>
+<blockquote>
+<p><a href="https://www.youtube.com/watch?v=ZTYPBpGzB_g">https://www.youtube.com/watch?v=ZTYPBpGzB_g</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
