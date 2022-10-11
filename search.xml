@@ -3672,4 +3672,34 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>ERROR odoo odoo.modules.loading: Database odoo not initialized</title>
+    <url>/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/</url>
+    <content><![CDATA[<h2 id="ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized"><a href="#ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized" class="headerlink" title="ERROR odoo odoo.modules.loading: Database odoo not initialized"></a>ERROR odoo odoo.modules.loading: Database odoo not initialized</h2><p>在使用 docker-compose 部署 odoo 时报错</p>
+<figure class="highlight subunit"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ERROR </span>odoo odoo.modules.loading: Database odoo not initialized, you can force it with -i base</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/11/image.png" alt=""></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>数据库容器增加环境变量</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">POSTGRES_DB</span>=postgres</span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3.1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line"><span class="punctuation"></span></span><br><span class="line">  <span class="attribute">odoo</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">odoo:15.0</span></span><br><span class="line">    <span class="attribute">depends_on</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">postgres</span></span><br><span class="line">    <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8069:8069&quot;</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_web_data:/var/lib/odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config/odoo.conf:/etc/odoo/odoo.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./addons:/mnt/extra-addons</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">HOST=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASSWORD=xxxxxxxxx</span></span><br><span class="line"></span><br><span class="line">  <span class="attribute">postgres</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">postgres:15rc2-alpine3.16</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_DB=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=xxxxxxxxx</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGDATA=/var/lib/postgresql/data/pgdata</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_db_data:/var/lib/postgresql/data/pgdata</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><a href="https://github.com/odoo/odoo/issues/27447">https://github.com/odoo/odoo/issues/27447</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://github.com/lefilament/ansible_role_odoo_docker/issues/7">https://github.com/lefilament/ansible_role_odoo_docker/issues/7</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>Linux 下设置 swap 分区</title>
+    <url>/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/</url>
+    <content><![CDATA[<p>最近在腾讯云购置了一台2C2G的服务器用来放置 Gitlab。但是发现 Gitlab 的 docker 镜像最少需要 4G 内存才能跑起来，所以尝试下启用 SWAP 来用硬盘空间代替内存空间</p>
+<p>PS：腾讯云轻量服务器在内存消耗完毕时，会发生硬盘IO读写高的故障，导致无法通过SSH连接到服务器。笔者已经在两台服务器上测试过了，确实会发生这个BUG。</p>
+<h2 id="SWAP"><a href="#SWAP" class="headerlink" title="SWAP"></a>SWAP</h2>]]></content>
+  </entry>
 </search>
