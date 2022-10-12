@@ -145,17 +145,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">37</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">38</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,101 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" class="post-title-link" itemprop="url">使用Flask部署Keras模型并提供Restful接口</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-28 12:23:17" itemprop="dateCreated datePublished" datetime="2020-04-28T12:23:17+08:00">2020-04-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" class="post-meta-item leancloud_visitors" data-flag-title="使用Flask部署Keras模型并提供Restful接口" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="使用Flask部署Keras模型并提供Restful接口"><a href="#使用Flask部署Keras模型并提供Restful接口" class="headerlink" title="使用Flask部署Keras模型并提供Restful接口"></a>使用Flask部署Keras模型并提供Restful接口</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当我们训练好了模型后想发布出去，提供Restful风格的API供外部使用，这个时候我们可以选择任意选择一款Web框架进行发布。我之前使用过Django，但是感觉有些繁琐，所以我更倾向于使用Flask这个框架，因为这个框架的路由标注方式跟Java的Springboot非常相似。接下来我们用之前训练的识别12306验证码的模型来进行部署。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/28/%E4%BD%BF%E7%94%A8Flask%E9%83%A8%E7%BD%B2Keras%E6%A8%A1%E5%9E%8B%E5%B9%B6%E6%8F%90%E4%BE%9BRestful%E6%8E%A5%E5%8F%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -580,20 +675,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">85</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -145,17 +145,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">37</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">38</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">84</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,207 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">KMP字符串匹配算法的理解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-12 21:46:24" itemprop="dateCreated datePublished" datetime="2022-10-12T21:46:24+08:00">2022-10-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="KMP字符串匹配算法的理解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在计算机科学中, 字符串搜索是一个很常见的任务. 给定两个字符串A和B, 例如</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; ABC ABCDAB ABCDABCDABDE</span><br><span class="line">B -&gt; ABCDABD</span><br></pre></td></tr></table></figure>
+
+<p>我们怎么知道 A 是否包含有 B ?</p>
+<p>有很多种算法可以完成这个任务, Knuth-Morris-Pratt字符串查找算法（简称为KMP算法）是比较著名的一种.</p>
+<p>这个算法由高德纳（Donald Knuth）和沃恩·普拉特（英语：Vaughan Pratt）在1974年构思，同年詹姆斯·H·莫里斯（英语：James H. Morris）也独立地设计出该算法，最终三人于1977年联合发表.</p>
+<p>没错! 起头的那个 K 就是高德纳老爷子</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image.png" alt=""></p>
+<p>该算法的巧妙之处在于, 一个词在不匹配时本身就包含足够的信息来确定下一个匹配可能的开始位置，此算法利用这一特性以避免重新检查先前配對的字符。（来自维基百科）</p>
+<p>emmm….</p>
+<p>我觉得，上面的话似乎不太好懂，我个人的理解是，该算法设计了一种方法，利用已经匹配过的信息，来减少重新匹配的次数。</p>
+<p>以下的文章基于阮一峰的网络日志，特地记录了下学习的过程，以加强理解。</p>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagecc3ea0b9a4cb30b2.png" alt=""></p>
+<p>如上图，首先字符串“BBC ABCDAB ABCDABCDABDE”的第一个字符与搜索词“ABCDABD”的第一个字符进行比较，因为B与A不匹配，所以我们将搜索词后移一位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image86dc56a4a494075f.png" alt=""></p>
+<p>因为B与A不匹配，我们继续后移。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imaged2ced97720283918.png" alt=""></p>
+<p>如此直到字符串有一个字符与搜索词的第一个字符匹配到为止。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image7477df616cfabb08.png" alt=""></p>
+<p>接着比较字符串和搜索词的下一个字符，还是相同。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>直到字符串有一个字符，与搜索词对应的字符不相同为止。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefd15692621352466.png" alt=""></p>
+<p>这时，最自然的反应是，将搜索词整个后移一位，再从头逐个比较。这样做虽然可行，但是效率很差，因为你要把”搜索位置”移到已经比较过的位置，重比一遍。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>一个基本事实是，当空格与D不匹配时，你其实知道前面六个字符是”ABCDAB”。KMP算法的想法是，设法利用这个已知信息，不要把”搜索位置”移回已经比较过的位置，继续把它向后移，这样就提高了效率。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
+<p>怎么做到这一点呢？可以针对搜索词，算出一张《部分匹配表》（Partial Match Table）。这张表是如何产生的，后面再介绍，这里只要会用就可以了。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>已知空格与D不匹配时，前面六个字符”ABCDAB”是匹配的。查表可知，最后一个匹配字符B对应的”部分匹配值”为2，因此按照下面的公式算出向后移动的位数</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">移动位数 <span class="operator">=</span> 已匹配的字符数 - 对应的部分匹配值</span><br></pre></td></tr></table></figure>
+
+<p>因为 6 - 2 等于4，所以将搜索词向后移动4位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image1b937471562a53b5.png" alt=""></p>
+<p>因为空格与Ｃ不匹配，搜索词还要继续往后移。这时，已匹配的字符数为2（”AB”），对应的”部分匹配值”为0。所以，移动位数 = 2 - 0，结果为 2，于是将搜索词向后移2位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image3a680f9eeb1ae9f6.png" alt=""></p>
+<p>因为空格与A不匹配，继续后移一位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
+<p>逐位比较，直到发现C与D不匹配。于是，移动位数 = 6 - 2，继续将搜索词向后移动4位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image71addcc418b4bb22.png" alt=""></p>
+<p>逐位比较，直到搜索词的最后一位，发现完全匹配，于是搜索完成。如果还要继续搜索（即找出全部匹配），移动位数 = 7 - 0，再将搜索词向后移动7位，这里就不再重复了。</p>
+<h2 id="如何计算部分匹配表"><a href="#如何计算部分匹配表" class="headerlink" title="如何计算部分匹配表"></a>如何计算部分匹配表</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefff2d7818cf3d586.png" alt=""></p>
+<p>首先，要了解两个概念：”前缀”和”后缀”。 “前缀”指除了最后一个字符以外，一个字符串的全部头部组合；”后缀”指除了第一个字符以外，一个字符串的全部尾部组合。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
+<p>“部分匹配值”就是”前缀”和”后缀”的最长的共有元素的长度。以”ABCDABD”为例，</p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>前缀</th>
+<th>后缀</th>
+<th>最长共有元素</th>
+<th>最长共有元素的长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>空集</td>
+<td>空集</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>AB</td>
+<td>A</td>
+<td>B</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABC</td>
+<td>A, AB</td>
+<td>BC, C</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABCD</td>
+<td>A, AB, ABC</td>
+<td>BCD, CD, D</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABCDA</td>
+<td>A, AB, ABC, ABCD</td>
+<td>BCDA, CDA, DA, A</td>
+<td>A</td>
+<td>1</td>
+</tr>
+<tr>
+<td>ABCDAB</td>
+<td>A, AB, ABC, ABCD, ABCDA</td>
+<td>BCDAB, CDAB, DAB, AB, B</td>
+<td>AB</td>
+<td>2</td>
+</tr>
+<tr>
+<td>ABCDABD</td>
+<td>A, AB, ABC, ABCD, ABCDA, ABCDAB</td>
+<td>BCDABD, CDABD, DABD, ABD, BD, D</td>
+<td>无</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
+<p><strong>“部分匹配”的实质是，有时候，字符串头部和尾部会有重复。比如，”ABCDAB”之中有两个”AB”，那么它的”部分匹配值”就是2（”AB”的长度）。搜索词移动的时候，第一个”AB”向后移动4位（搜索串长度-部分匹配值），就可以来到第二个”AB”的位置。</strong></p>
+<h2 id="Python-实现"><a href="#Python-实现" class="headerlink" title="Python 实现"></a>Python 实现</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽空再补</span><br></pre></td></tr></table></figure>
+
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html">https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1330,99 +1531,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">Python单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-06-22 09:24:03" itemprop="dateCreated datePublished" datetime="2022-06-22T09:24:03+08:00">2022-06-22</time>
-            </span>
-
-          
-            <span id="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Python单例模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基于元类"><a href="#基于元类" class="headerlink" title="基于元类"></a>基于元类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">type</span>):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        cls.__instance = <span class="literal">None</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> cls.__instance <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>().__call__(*args, **kwargs)</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(metaclass=Singleton):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="基于-new-方法"><a href="#基于-new-方法" class="headerlink" title="基于 new 方法"></a>基于 <strong>new</strong> 方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    __instance = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cls.__instance:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>(Singleton, cls).__new__(cls, *args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">Singleton</span>):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="基于装饰器"><a href="#基于装饰器" class="headerlink" title="基于装饰器"></a>基于装饰器</h2><h3 id="用闭包实现"><a href="#用闭包实现" class="headerlink" title="用闭包实现"></a>用闭包实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">singleton</span>(<span class="params">cls</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用闭包的方式实现一个单例装饰器&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    __instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> __instance:</span><br><span class="line">            __instance[cls] = cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> __instance[cls]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> _create</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h3 id="用类实现"><a href="#用类实现" class="headerlink" title="用类实现"></a>用类实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, cls</span>):</span><br><span class="line">        self.__cls = cls</span><br><span class="line">        self.__instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> self.__cls <span class="keyword">not</span> <span class="keyword">in</span> self.__instance:</span><br><span class="line">            self.__instance[self.__cls] = self.__cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> self.__instance[self.__cls]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Python的模块是天然的单例模式</p>
-<p>在一个py文件中, 多次导入同一个模块, 这个模块也只有在第一次的时候被导入, 后续的该模块导入语句都不会再执行了</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/653759">https://developer.aliyun.com/article/653759</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1494,20 +1602,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-count">85</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
