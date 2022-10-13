@@ -3827,4 +3827,61 @@
         <tag>算法</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Jenkins更新失败解决方案</title>
+    <url>/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<p>笔者使用 Docker 部署了一个 Jenkins 镜像，最近升级镜像版本时遇到问题。</p>
+<p>现在记录解决方案</p>
+<h2 id="java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy"><a href="#java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy" class="headerlink" title="java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy"></a>java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy</h2><p>参考该链接解决</p>
+<blockquote>
+<p><a href="https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282">https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282</a></p>
+</blockquote>
+<p>There may be deprecated plugins installed on your system that need to be removed.</p>
+<p>The Jenkins project stopped distributing the Ruby runtime plugin, the Python runtime plugin, and plugins that depend on those two plugins in January 2022. You can find a detailed list of plugins and more information in the blog post:</p>
+<p>大意是旧版本包含了已经弃用的插件。</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Ruby runtime plugin</span></span><br></pre></td></tr></table></figure>
+
+<p>这个插件在 2.373 版本已经弃用了，需要卸载之前安装的该插件。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image.png" alt=""></p>
+<p>启动旧版本docker镜像后，我们发现在控制台面板无法卸载。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image29d2887b0b56c1ea.png" alt=""></p>
+<p>解决方案是，进入到<code>$JENKINS_HOME/plugins</code>目录，然后移除<code>ruby-runtime*</code></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image618cb411402d9219.png" alt=""></p>
+<p>即这两个文件</p>
+<p>然后更新镜像版本，一切正常</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image2640e9e6bea963cb.png" alt=""></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>docker-compose 日志限制</title>
+    <url>/2022/10/13/docker-compose-%E6%97%A5%E5%BF%97%E9%99%90%E5%88%B6/</url>
+    <content><![CDATA[<p>例：</p>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">version:</span> <span class="string">&quot;3.7&quot;</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">services:</span></span><br><span class="line"><span class="symbol">  redis:</span></span><br><span class="line"><span class="symbol">    image:</span> redis:alpine</span><br><span class="line"><span class="symbol">    container_name:</span> testredis</span><br><span class="line"></span><br><span class="line">    <span class="meta"># 增加如下键</span></span><br><span class="line"><span class="symbol">    logging:</span></span><br><span class="line"><span class="symbol">        driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line"><span class="symbol">        options:</span></span><br><span class="line">            max-size: <span class="string">&quot;100M&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>max-size</code>限制该容器日志最大大小</p>
+<blockquote>
+<p><a href="https://yeasy.gitbook.io/docker_practice/compose/compose_file#logging">https://yeasy.gitbook.io/docker_practice/compose/compose_file#logging</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>docker-compose 限制内存，CPU</title>
+    <url>/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/</url>
+    <content><![CDATA[<p>docker-compose 使用3.7版本，然后加入 deploy，例如：</p>
+<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&quot;3.7&quot;</span></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">redis</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">redis:alpine</span></span><br><span class="line">    <span class="attribute">container_name</span><span class="punctuation">:</span> <span class="string">testredis</span></span><br><span class="line">    <span class="attribute">deploy</span><span class="punctuation">:</span></span><br><span class="line">      <span class="attribute">resources</span><span class="punctuation">:</span></span><br><span class="line">        <span class="attribute">limits</span><span class="punctuation">:</span></span><br><span class="line">          <span class="attribute">cpus</span><span class="punctuation">:</span> <span class="string">&#x27;0.50&#x27;</span></span><br><span class="line">          <span class="attribute">memory</span><span class="punctuation">:</span> <span class="string">500M</span></span><br></pre></td></tr></table></figure>
+
+<p>限制 CPU 使用率 50%， 500MB 内存</p>
+<p><strong>需要注意的是，启动时需增加 –compatibility 选项</strong></p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">docker-compose <span class="comment">--compatibility up -d</span></span><br></pre></td></tr></table></figure>
+
+<p>否则会报错</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="symbol">WARNING: </span>Some services (mysql, rsnmp) use the <span class="emphasis">&#x27;deploy&#x27;</span> key, which will be ignored. Compose does not support <span class="emphasis">&#x27;deploy&#x27;</span> configuration - use <span class="code">`docker stack deploy`</span> to deploy to a swarm.</span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<p>–compatibility是docker-compose 1.20.0加入，主要目的就是用来将deploy中的数据限制、replicas与重启策略直接转译为version 2的语法</p>
+<blockquote>
+<p><a href="https://www.cnblogs.com/yjt1993/p/12402394.htm">https://www.cnblogs.com/yjt1993/p/12402394.htm</a><br><a href="https://www.jianshu.com/p/ba5518476057">https://www.jianshu.com/p/ba5518476057</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>

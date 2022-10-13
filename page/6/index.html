@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">88</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,329 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" class="post-title-link" itemprop="url">shell用ssh在远程主机执行命令时如何退出</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 19:54:29" itemprop="dateCreated datePublished" datetime="2021-05-06T19:54:29+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" class="post-meta-item leancloud_visitors" data-flag-title="shell用ssh在远程主机执行命令时如何退出" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/shell%E7%94%A8ssh%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在 shell 脚本里使用 ssh 在远程主机执行脚本时无法关闭连接</p>
+<p>例如</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@ipaddress</span> <span class="string">&#x27;~/my_script.sh&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>脚本执行完毕连接不会关闭, 需要你手动 Ctrl + C 关闭连接.</p>
+<p>解决方案 </p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@ipaddress</span> <span class="string">&#x27;~/my_script.sh &amp;&amp; exit&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>当你在远程主机执行的脚本由本地主机推送的话</p>
+<p>例如</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> user<span class="variable">@remoteNode</span> &lt; test.sh</span><br></pre></td></tr></table></figure>
+
+<p>你可以在本地脚本里添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -SIGHUP <span class="variable">$PPID</span></span><br></pre></td></tr></table></figure>
+
+<p>kill 掉当前的 ssh</p>
+<p>但是这样会导致, 你尝试捕获 SSH 是否成功执行时, 总是得到失败的结果.</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://superuser.com/questions/207453/ssh-and-shell-through-ssh-how-to-exit?noredirect=1&amp;lq=1">https://superuser.com/questions/207453/ssh-and-shell-through-ssh-how-to-exit?noredirect=1&amp;lq=1</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-title-link" itemprop="url">SSH第一次登录免输入yes</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 19:48:35" itemprop="dateCreated datePublished" datetime="2021-05-06T19:48:35+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linuxe/" itemprop="url" rel="index"><span itemprop="name">Linuxe</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-meta-item leancloud_visitors" data-flag-title="SSH第一次登录免输入yes" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>连接时加入StrictHostKeyChecking=no</p>
+<p>例如</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> -o StrictHostKeyChecking=<span class="literal">no</span> root@<span class="number">192.168.1.100</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">gitlab 502 错误排查</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 02:07:28" itemprop="dateCreated datePublished" datetime="2021-05-06T02:07:28+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-meta-item leancloud_visitors" data-flag-title="gitlab 502 错误排查" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="动态查看日志"><a href="#动态查看日志" class="headerlink" title="动态查看日志"></a>动态查看日志</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f  <span class="regexp">/var/</span>log<span class="regexp">/gitlab/gi</span>tlab-rails/production.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="迁移或恢复备份后部分操作服务端响应500"><a href="#迁移或恢复备份后部分操作服务端响应500" class="headerlink" title="迁移或恢复备份后部分操作服务端响应500"></a>迁移或恢复备份后部分操作服务端响应500</h2><p>进入容器, 运行</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-rails dbconsole</span></span><br></pre></td></tr></table></figure>
+
+<p>依次清除 token, 注意! 这样会清除全部的 token, 不过解决问题简单粗暴</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- clear project tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> projects <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear group tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> namespaces <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear instance tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> application_settings <span class="keyword">SET</span> runners_registration_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>造成这个问题的原因是因为没有备份这个文件</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-secrets.json</span><br></pre></td></tr></table></figure>
+
+<p>以后操作的时候还是要多看看官方文档, 文档说的很清楚…</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
+</blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">When <span class="keyword">the</span> secrets <span class="built_in">file</span> is lost</span><br><span class="line">If you didn’t back up <span class="keyword">the</span> secrets <span class="built_in">file</span>, you must complete several steps <span class="built_in">to</span> <span class="built_in">get</span> GitLab working properly again.</span><br><span class="line"></span><br><span class="line">The secrets <span class="built_in">file</span> is responsible <span class="keyword">for</span> storing <span class="keyword">the</span> encryption key <span class="keyword">for</span> <span class="keyword">the</span> columns that contain required, sensitive information. If <span class="keyword">the</span> key is lost, GitLab can’t <span class="built_in">decrypt</span> those columns, preventing access <span class="built_in">to</span> <span class="keyword">the</span> following <span class="keyword">items</span>:</span><br><span class="line"></span><br><span class="line">CI/CD variables</span><br><span class="line">Kubernetes / GCP integration</span><br><span class="line">Custom Pages domains</span><br><span class="line">Project error tracking</span><br><span class="line">Runner authentication</span><br><span class="line">Project mirroring</span><br><span class="line">Web hooks</span><br><span class="line">In cases like CI/CD variables <span class="keyword">and</span> runner authentication, you can experience unexpected behaviors, such <span class="keyword">as</span>:</span><br><span class="line"></span><br><span class="line">Stuck jobs.</span><br><span class="line"><span class="number">500</span> errors.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Whoops-GitLab-is-currently-unavailable"><a href="#Whoops-GitLab-is-currently-unavailable" class="headerlink" title="Whoops, GitLab is currently unavailable."></a>Whoops, GitLab is currently unavailable.</h2><p>可以正常查看项目列表, 但是无法进入项目, 错误提示</p>
+<figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Whoops, GitLab <span class="keyword">is</span> currently unavailable.</span><br></pre></td></tr></table></figure>
+
+<p>项目基于docker容器部署, 首先查看日志, 发现一条错误, 权限拒绝.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;error&quot;</span><span class="punctuation">:</span><span class="string">&quot;open /var/opt/gitlab/gitaly/gitaly.pid: permission denied&quot;</span><span class="punctuation">,</span><span class="attr">&quot;level&quot;</span><span class="punctuation">:</span><span class="string">&quot;fatal&quot;</span><span class="punctuation">,</span><span class="attr">&quot;msg&quot;</span><span class="punctuation">:</span><span class="string">&quot;find gitaly&quot;</span><span class="punctuation">,</span><span class="attr">&quot;time&quot;</span><span class="punctuation">:</span><span class="string">&quot;2021-05-05T18:05:26Z&quot;</span><span class="punctuation">,</span><span class="attr">&quot;wrapper&quot;</span><span class="punctuation">:</span><span class="number">3514</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>google 发现, 这个文件在 docker 容器里的权限应该是 git:git</p>
+<p>但是我进入容器后发现该文件的权限为 root:root</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 63 </span>May <span class="number"> 5 </span>16:51 RUBY_VERSION</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 23 </span>May <span class="number"> 5 </span>17:56 VERSION</span><br><span class="line">-rw-r-----<span class="number"> 1 </span>root git  <span class="number"> 819 </span>May <span class="number"> 5 </span>17:56 config.toml</span><br><span class="line">-rw-------<span class="number"> 1 </span>root root   <span class="number"> 3 </span>Mar <span class="number"> 8 </span>18:57 gitaly.pid</span><br><span class="line">srwxr-xr-x<span class="number"> 1 </span>root root   <span class="number"> 0 </span>Mar <span class="number"> 8 </span>18:57 gitaly.socket</span><br><span class="line">drwx------<span class="number"> 2 </span>git  root<span class="number"> 4096 </span>Mar <span class="number"> 8 </span>18:57 internal_sockets</span><br></pre></td></tr></table></figure>
+
+<p>修改权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> git:git gitaly.pid</span><br></pre></td></tr></table></figure>
+
+<h2 id="Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories"><a href="#Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories" class="headerlink" title="Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories"></a>Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories</h2><p>备份的时候出现这个问题, 十有八九是权限问题.</p>
+<p>直接 </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> -R <span class="number">777</span> bakcups</span><br></pre></td></tr></table></figure>
+
+<p>参考连接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19">https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19</a><br><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -937,317 +1260,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/12/16/%E5%9F%BA%E4%BA%8EPython%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/16/%E5%9F%BA%E4%BA%8EPython%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">基于Python实现的设计模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-16 10:33:55" itemprop="dateCreated datePublished" datetime="2020-12-16T10:33:55+08:00">2020-12-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/12/16/%E5%9F%BA%E4%BA%8EPython%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="基于Python实现的设计模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/12/16/%E5%9F%BA%E4%BA%8EPython%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/12/16/%E5%9F%BA%E4%BA%8EPython%E5%AE%9E%E7%8E%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-Singleton-mode-单例模式"><a href="#1-Singleton-mode-单例模式" class="headerlink" title="1.Singleton mode 单例模式"></a>1.Singleton mode 单例模式</h1><h3 id="一个类最多创建一个实例"><a href="#一个类最多创建一个实例" class="headerlink" title="一个类最多创建一个实例"></a>一个类最多创建一个实例</h3><p>装饰器实现</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 装饰器实现</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">singleton</span>(<span class="params">class_</span>):</span><br><span class="line">    instances = &#123;&#125;</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getInstance</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> class_ <span class="keyword">not</span> <span class="keyword">in</span> instances:</span><br><span class="line">            instances[class_] = class_(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> instances[class_]</span><br><span class="line">    <span class="keyword">return</span> getInstance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>元类实现</p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 元类实现</span><br><span class="line"><span class="keyword">class</span> <span class="constructor">Singleton(<span class="params">type</span>)</span>:</span><br><span class="line">    _instances = &#123;&#125;</span><br><span class="line">    def <span class="constructor">__call__(<span class="params">cls</span>, <span class="operator">*</span><span class="params">args</span>, <span class="operator">**</span><span class="params">kwargs</span>)</span>:</span><br><span class="line">        <span class="keyword">if</span> cls not <span class="keyword">in</span> cls._instances:</span><br><span class="line">            cls._instances<span class="literal">[<span class="identifier">cls</span>]</span> = super(Singleton, cls).<span class="constructor">__call__(<span class="operator">*</span><span class="params">args</span>, <span class="operator">**</span><span class="params">kwargs</span>)</span></span><br><span class="line">        return cls._instances<span class="literal">[<span class="identifier">cls</span>]</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="constructor">MyClass(<span class="params">metaclass</span>=Singleton)</span>:</span><br><span class="line">    </span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
-
-<h1 id="2-The-Factory-Pattern-工厂模式"><a href="#2-The-Factory-Pattern-工厂模式" class="headerlink" title="2.The Factory Pattern 工厂模式"></a>2.The Factory Pattern 工厂模式</h1><h3 id="解决对象创建问题"><a href="#解决对象创建问题" class="headerlink" title="解决对象创建问题"></a>解决对象创建问题</h3><p>工厂模式属于创建型模式, 它提供了一种创建对象的最佳方式.<br>在工厂模式中, 我们在创建对象时不会对客户端暴露创建逻辑, 并且时通过使用一个共同的接口来指向新创建的对象.</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据品牌名生产不同的汽车</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bmw 生产线</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">bmw</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(<span class="keyword">self</span>)</span></span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;我生产了一台BMW汽车&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># benz 生产线</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">benz</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(<span class="keyword">self</span>)</span></span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;我生产了一台Benz汽车&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个汽车工厂</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MachineFactory</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span><span class="params">(<span class="keyword">self</span>, brand)</span></span>:</span><br><span class="line">        <span class="keyword">if</span> brand == <span class="string">&quot;bmw&quot;</span>:</span><br><span class="line">            machine = bmw()</span><br><span class="line">            print(machine)</span><br><span class="line">        elif brand == <span class="string">&quot;benz&quot;</span>:</span><br><span class="line">            machine = benz()</span><br><span class="line">            print(machine)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">machineFactory = MachineFactory()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 根据不同的品牌名生产不同的汽车</span></span><br><span class="line">machineFactory.build(<span class="string">&quot;bmw&quot;</span>)</span><br><span class="line">machineFactory.build(<span class="string">&quot;benz&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="3-The-Builder-Pattern-构造模式"><a href="#3-The-Builder-Pattern-构造模式" class="headerlink" title="3.The Builder Pattern 构造模式"></a>3.The Builder Pattern 构造模式</h1><h3 id="控制复杂对象的构造"><a href="#控制复杂对象的构造" class="headerlink" title="控制复杂对象的构造"></a>控制复杂对象的构造</h3><p>当对象需要多个部分组合起来一步步创建，并且创建和表示分离的时候。可以这么理解，你要买电脑，工厂模式直接返回一个你需要型号的电脑，但是构造模式允许你自定义电脑各种配置类型，组装完成后给你。这个过程你可以传入builder从而自定义创建的方式。</p>
-<p>假如我们要生产一台Computer, 我们需要首先定义一个Computer类, 他表示了一个Computer由那些组件组成. 然后定义一个Builer, Builer用于组装Computer. 最后定义一个Enginner, 工程师告诉Builer用那些配件参数生产Computer, 然后得到一台根据具体参数生产的Computer</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先我们先定义一个 Computer 类</span></span><br><span class="line"><span class="comment"># 它表示一个 Computer 都由那些参数设备组成</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Computer</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, serialNumber</span>):</span><br><span class="line">        self.serial = serialNumber</span><br><span class="line">        self.memory = <span class="literal">None</span></span><br><span class="line">        self.ssd = <span class="literal">None</span></span><br><span class="line">        self.gpu = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        info = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Memory: &#123;&#125;GB</span></span><br><span class="line"><span class="string">        SSD   : &#123;&#125;GB</span></span><br><span class="line"><span class="string">        Graphics Card: &#123;&#125;</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">            self.memory,</span><br><span class="line">            self.ssd,</span><br><span class="line">            self.gpu</span><br><span class="line">        )</span><br><span class="line">        info = <span class="string">&quot;\n&quot;</span>.join(<span class="built_in">list</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> x: x.strip(), info.split(<span class="string">&quot;\n&quot;</span>))))</span><br><span class="line">        <span class="keyword">return</span> info</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个建造者, 用于构造一个 Computer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ComputerBuilder</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.computer = Computer(<span class="string">&quot;W540&quot;</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">setMemory</span>(<span class="params">self, amount</span>):</span><br><span class="line">        self.computer.memory = amount</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">setSSD</span>(<span class="params">self, amount</span>):</span><br><span class="line">        self.computer.ssd = amount</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">setGPU</span>(<span class="params">self, amount</span>):</span><br><span class="line">        self.computer.gpu = amount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一个工程师, 他告诉建造者该如何构造一个 Computer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Engineer</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.builder = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">buildComputer</span>(<span class="params">self, memory, ssd, gpu</span>):</span><br><span class="line">        self.builder =  ComputerBuilder()</span><br><span class="line">        self.builder.setMemory(memory)</span><br><span class="line">        self.builder.setSSD(ssd)</span><br><span class="line">        self.builder.setGPU(gpu)</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">computer</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.builder.computer</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="comment"># 接下来我们创建一个 engineer 实例</span></span><br><span class="line">enginner = Engineer()</span><br><span class="line"><span class="comment"># engineer 构造了一个 computer</span></span><br><span class="line">enginner.buildComputer(</span><br><span class="line">    memory=<span class="number">32</span>,</span><br><span class="line">    ssd=<span class="number">1024</span>,</span><br><span class="line">    gpu=<span class="string">&quot;GeForce RTX 3090&quot;</span></span><br><span class="line">)</span><br><span class="line"><span class="comment"># 获得 computer</span></span><br><span class="line">computer = enginner.computer</span><br><span class="line"><span class="built_in">print</span>(computer)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-The-Prototype-Pattern-原型模式"><a href="#4-The-Prototype-Pattern-原型模式" class="headerlink" title="4.The Prototype Pattern 原型模式"></a>4.The Prototype Pattern 原型模式</h1><h3 id="解决对象拷贝的问题"><a href="#解决对象拷贝的问题" class="headerlink" title="解决对象拷贝的问题"></a>解决对象拷贝的问题</h3><p>可以使用Python内置的copy模块实现. 拷贝分为深拷贝和浅拷贝, 这里我觉得有点像C里面的指针. 浅拷贝相当于复制了对象的指针, 还是指向同一个对象, 而深拷贝则完全复制了一个新的对象.<br>深拷贝的优点是对象之间完全独立互不影响, 但是这个操作会比较消耗资源.<br>浅拷贝的优点是仅仅复制了指向对象的指针, 因为引用的都是同一个对象, 这个操作比深拷贝消耗的资源要少得多, 但是因为指向同一个对象, 所以当对象需要进行某些操作时候要慎重考虑.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义一本书</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Book</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, author, price, **kwargs</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.author = author</span><br><span class="line">        self.price = price</span><br><span class="line">        self.__dict__.update(kwargs)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(self.__dict__.keys())</span><br><span class="line">        attrNames = <span class="built_in">list</span>(self.__dict__.keys())</span><br><span class="line">        attrs = <span class="built_in">dict</span>()</span><br><span class="line">        <span class="keyword">for</span> name <span class="keyword">in</span> attrNames:</span><br><span class="line">            attrs.setdefault(name, <span class="built_in">getattr</span>(self, name))</span><br><span class="line">        <span class="keyword">return</span> json.dumps(attrs, indent=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Prototype</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.objects = &#123;&#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">register</span>(<span class="params">self, identifier, obj</span>):</span><br><span class="line">        self.objects[identifier] = obj</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">unregister</span>(<span class="params">self, identifiter</span>):</span><br><span class="line">        <span class="keyword">del</span> self.objects[identifiter]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clone</span>(<span class="params">self, identifier, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;克隆一个对象, 即对象的深拷贝&quot;&quot;&quot;</span></span><br><span class="line">        obj = self.objects.get(identifier)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> obj:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;Incorrect object identifier: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(identifier))</span><br><span class="line">        newObj = copy.deepcopy(obj)</span><br><span class="line">        <span class="comment"># 实现拷贝时自定义更新</span></span><br><span class="line">        newObj.__dict__.update(kwargs)</span><br><span class="line">        <span class="keyword">return</span> newObj</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    b1 = Book(</span><br><span class="line">        name=<span class="string">&quot;Python程序设计&quot;</span>,</span><br><span class="line">        author=<span class="string">&quot;闹闹&quot;</span>,</span><br><span class="line">        price=<span class="string">&quot;99&quot;</span>,</span><br><span class="line">        edition=<span class="string">&quot;1&quot;</span></span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">property</span> = Prototype()</span><br><span class="line">    cid = <span class="string">&quot;A123456789&quot;</span></span><br><span class="line">    <span class="comment"># 注册了一本新书</span></span><br><span class="line">    <span class="built_in">property</span>.register(cid, b1)</span><br><span class="line">    <span class="comment"># 克隆一个新对象</span></span><br><span class="line">    b2 = <span class="built_in">property</span>.clone(cid, edition=<span class="string">&quot;2&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> (b1, b2):</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;ID b1: &#123;&#125; b2: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(<span class="built_in">id</span>(b1), <span class="built_in">id</span>(b2)))</span><br></pre></td></tr></table></figure>
-
-<h1 id="5-The-Adapter-Pattern-适配器模式"><a href="#5-The-Adapter-Pattern-适配器模式" class="headerlink" title="5.The Adapter Pattern 适配器模式"></a>5.The Adapter Pattern 适配器模式</h1><h3 id="解决接口不兼容问题"><a href="#解决接口不兼容问题" class="headerlink" title="解决接口不兼容问题"></a>解决接口不兼容问题</h3><p>未完待续…</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/12/14/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/14/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">关于Python类的属性的一些问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-14 15:07:37" itemprop="dateCreated datePublished" datetime="2020-12-14T15:07:37+08:00">2020-12-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/12/14/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="关于Python类的属性的一些问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/12/14/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/12/14/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="区别实例属性和类属性"><a href="#区别实例属性和类属性" class="headerlink" title="区别实例属性和类属性"></a>区别实例属性和类属性</h1><h2 id="类属性"><a href="#类属性" class="headerlink" title="类属性"></a>类属性</h2><p>这样定义的属性是类属性, 我们 new 两个实例测试下</p>
-<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">class</span> <span class="function"><span class="title">MyClass</span>(<span class="variable"><span class="class">object</span></span>):</span></span><br><span class="line"><span class="function">    </span></span><br><span class="line"><span class="function">    <span class="variable">name</span>: <span class="variable">list</span> = <span class="title">list</span>()</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="variable"><span class="keyword">if</span></span> <span class="variable">__name__</span> == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="variable">m1</span> = <span class="function"><span class="title">MyClass</span>()</span></span><br><span class="line">    <span class="variable">m2</span> = <span class="function"><span class="title">MyClass</span>()</span></span><br><span class="line">    <span class="function"><span class="title">print</span>(<span class="title">id</span>(<span class="variable">m1.name</span>))</span></span><br><span class="line">    <span class="function"><span class="title">print</span>(<span class="title">id</span>(<span class="variable">m2.name</span>))</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到指向了相同的地址</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2078100290056</span></span><br><span class="line"><span class="number">2078100290056</span></span><br><span class="line"></span><br><span class="line">Process finished with <span class="keyword">exit</span> code <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="实例属性"><a href="#实例属性" class="headerlink" title="实例属性"></a>实例属性</h2><p>再 <code>__init__</code> 方法中创建的属性是实例属性</p>
-<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">class</span> <span class="function"><span class="title">MyClass</span>(<span class="variable"><span class="class">object</span></span>):</span></span><br><span class="line"><span class="function">    </span></span><br><span class="line"><span class="function">    <span class="variable">def</span> <span class="title">__init__</span>(<span class="variable">self</span>):</span></span><br><span class="line"><span class="function">        <span class="variable">self.name</span>: <span class="variable">list</span> = <span class="title">list</span>()</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="variable"><span class="keyword">if</span></span> <span class="variable">__name__</span> == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="variable">m1</span> = <span class="function"><span class="title">MyClass</span>()</span></span><br><span class="line">    <span class="variable">m2</span> = <span class="function"><span class="title">MyClass</span>()</span></span><br><span class="line">    <span class="function"><span class="title">print</span>(<span class="title">id</span>(<span class="variable">m1.name</span>))</span></span><br><span class="line">    <span class="function"><span class="title">print</span>(<span class="title">id</span>(<span class="variable">m2.name</span>))</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到指向了不同的地址</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1631300614792</span></span><br><span class="line"><span class="number">1631300614856</span></span><br><span class="line"></span><br><span class="line">Process finished with <span class="keyword">exit</span> code <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>类属性属于类所有, 所有实例共享一个属性</p>
-<p>实例属性属于实例所有, 每个实例各自独享一个属性</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p><strong>不要对实例属性和类属性使用相同的名字，否则将产生难以发现的错误。</strong></p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017594591051072">https://www.liaoxuefeng.com/wiki/1016959663602400/1017594591051072</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" class="post-title-link" itemprop="url">SQL查重以及删除</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-26 16:19:13" itemprop="dateCreated datePublished" datetime="2020-11-26T16:19:13+08:00">2020-11-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" class="post-meta-item leancloud_visitors" data-flag-title="SQL查重以及删除" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="查询重复记录"><a href="#查询重复记录" class="headerlink" title="查询重复记录"></a>查询重复记录</h1><p>表名: table_name</p>
-<p>查询列: column_name</p>
-<h2 id="单个条件"><a href="#单个条件" class="headerlink" title="单个条件"></a>单个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> column_name <span class="keyword">in</span>(<span class="keyword">select</span> column_name <span class="keyword">from</span> table_name</span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name)<span class="operator">&gt;</span><span class="number">1</span>)</span><br><span class="line"> <span class="keyword">order</span> <span class="keyword">by</span> column_name;</span><br></pre></td></tr></table></figure>
-
-<h2 id="多个条件"><a href="#多个条件" class="headerlink" title="多个条件"></a>多个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table_name <span class="keyword">as</span> t1 </span><br><span class="line"><span class="keyword">where</span> </span><br><span class="line">( </span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> table_name t2 </span><br><span class="line"><span class="keyword">where</span> </span><br><span class="line">t2.column_name_1<span class="operator">=</span>t1.column_name_1 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_2<span class="operator">=</span>t1.column_name_2 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_3<span class="operator">=</span>t1.column_name_3 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_4<span class="operator">=</span>t1.column_name_4 </span><br><span class="line">)<span class="operator">&gt;</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="删除重复只保留一个"><a href="#删除重复只保留一个" class="headerlink" title="删除重复只保留一个"></a>删除重复只保留一个</h1><p>表名: table_name</p>
-<p>查询列: column_name</p>
-<h2 id="单个条件-1"><a href="#单个条件-1" class="headerlink" title="单个条件"></a>单个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> column_name <span class="keyword">in</span> (<span class="keyword">select</span> column_name <span class="keyword">from</span> table_name <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name) <span class="operator">&gt;</span> <span class="number">1</span>) </span><br><span class="line"> <span class="keyword">and</span> ctid <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> <span class="built_in">min</span>(ctid) <span class="keyword">from</span> table_name <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name)<span class="operator">&gt;</span><span class="number">1</span>); </span><br></pre></td></tr></table></figure>
-
-<h2 id="多个条件-1"><a href="#多个条件-1" class="headerlink" title="多个条件"></a>多个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> (column_name1,column_name2,column_name3) <span class="keyword">in</span> </span><br><span class="line"> (<span class="keyword">select</span> column_name1,column_name2,column_name3 <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name1,column_name2,column_name3 </span><br><span class="line"> <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="operator">&gt;</span> <span class="number">1</span>) </span><br><span class="line"> <span class="keyword">and</span> ctid <span class="keyword">not</span> <span class="keyword">in</span> </span><br><span class="line"> (<span class="keyword">select</span> <span class="built_in">min</span>(ctid) <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name1,column_name2,column_name3 </span><br><span class="line"> <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>)<span class="operator">&gt;</span><span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fm0517/article/details/61202099">https://blog.csdn.net/fm0517/article/details/61202099</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1319,7 +1331,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">85</span>
+          <span class="site-state-item-count">88</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
