@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">88</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">89</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,114 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Gitlab 迁移服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-22 22:45:53" itemprop="dateCreated datePublished" datetime="2020-05-22T22:45:53+08:00">2020-05-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Gitlab 迁移服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/22/Gitlab-%E8%BF%81%E7%A7%BB%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="确定版本"><a href="#确定版本" class="headerlink" title="确定版本"></a>确定版本</h1><p>确定源服务器和目标服务器的版本。不然恢复备份时候会出现版本不一致的问题。</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522224718.png" alt="20200522224718"></p>
+<p>基于Docker的Gitlab，可以先更新一下镜像。再进行备份。或者目标服务器拉取指定版本的镜像。</p>
+<h1 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h1><p>进入镜像，执行命令生成备份</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:create <span class="attribute">RAILS_ENV</span>=production </span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522225121.png" alt="20200522225121"></p>
+<p>备份完成。<strong>注意！gitlab.rb 这个配置文件需要手动复制到目标服务器。</strong></p>
+<h1 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h1><p>找到备份的配置文件。在你挂载的/data/backups目录下</p>
+<p>例如我的位置</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522225742.png" alt="20200522225742"></p>
+<p>拷贝到目标服务器的相同目录下，例如</p>
+<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200522230003.png" alt="20200522230003"></p>
+<p>进入容器执行</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore <span class="attribute">RAILS_ENV</span>=production   <span class="attribute">BACKUP</span>=1590159208_2020_05_22_13.0.0</span><br></pre></td></tr></table></figure>
+<p><strong>注意BACKUP的时间标记。</strong>为你需要恢复的备份。</p>
+<p>复制gitlab.rb这个文件到目标服务器。</p>
+<p>重启Gitlab</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-ctl reconfigure</span></span><br><span class="line"><span class="attribute">gitlab-ctl restart</span></span><br></pre></td></tr></table></figure>
+
+<p>迁移完成。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1066,119 +1174,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" class="post-title-link" itemprop="url">Flask集成React前端部署</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-29 23:37:07" itemprop="dateCreated datePublished" datetime="2020-04-29T23:37:07+08:00">2020-04-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" class="post-meta-item leancloud_visitors" data-flag-title="Flask集成React前端部署" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/29/Flask%E9%9B%86%E6%88%90React%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Flask集成React前端部署"><a href="#Flask集成React前端部署" class="headerlink" title="Flask集成React前端部署"></a>Flask集成React前端部署</h1><h2 id="Build-React-文件"><a href="#Build-React-文件" class="headerlink" title="Build React 文件"></a>Build React 文件</h2><ul>
-<li><p>打包 React</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">run</span> build</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>得到build目录下的静态文件</p>
-</li>
-</ul>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234258.png" alt="20200429234258"></p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234325.png" alt="20200429234325"></p>
-<h2 id="设置-Flask"><a href="#设置-Flask" class="headerlink" title="设置 Flask"></a>设置 Flask</h2><p>Flask 默认静态资源在static目录，html文件在template目录，我们设置成我们自定义的路径。</p>
-<ul>
-<li><p>例如我们的目录结构</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429234735.png" alt="20200429234735"></p>
-</li>
-<li><p>我们构建好的静态文件放在/frontend/flask-mark-12306-captcha-frontend/build这个目录里</p>
-</li>
-<li><p>我们的在 App.py （你的应用程序入口）里面设置</p>
- <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, render_template</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> mark</span><br><span class="line"><span class="keyword">from</span> api <span class="keyword">import</span> get</span><br><span class="line"><span class="keyword">from</span> controller <span class="keyword">import</span> errorHandler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态文件目录</span></span><br><span class="line">frontEndDir = os.path.join(<span class="string">&quot;frontend&quot;</span>, <span class="string">&quot;flask-mark-12306-captcha-frontend&quot;</span>, <span class="string">&quot;build&quot;</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__, static_url_path=<span class="string">&#x27;&#x27;</span>, static_folder=frontEndDir)</span><br><span class="line">app.register_blueprint(errorHandler)</span><br><span class="line">app.register_blueprint(mark)</span><br><span class="line">app.register_blueprint(get)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 渲染 index.html</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line"><span class="keyword">return</span> render_template(<span class="string">&quot;index.html&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">app.run()</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>这样我们就设置好了。</p>
-</li>
-<li><p>跑一下项目看一下。</p>
-</li>
-<li><p>问题解决。</p>
-<p><img data-src="https://wudinaonao-1257394124.cos.ap-beijing.myqcloud.com/20200429235845.png" alt="20200429235845"></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1250,7 +1245,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">88</span>
+          <span class="site-state-item-count">89</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

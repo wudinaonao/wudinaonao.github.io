@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.wudinaonao.com/2022/10/16/Ubuntu%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85Python/</loc>
+    <lastmod>2022-10-16</lastmod>
+  </url>
+  <url>
     <loc>https://blog.wudinaonao.com/2022/10/13/docker-compose-%E6%97%A5%E5%BF%97%E9%99%90%E5%88%B6/</loc>
     <lastmod>2022-10-13</lastmod>
   </url>

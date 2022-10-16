@@ -3889,4 +3889,34 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>Ubuntu从源码编译安装Python</title>
+    <url>/2022/10/16/Ubuntu%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85Python/</url>
+    <content><![CDATA[<p>事情源于我要给新装的Ubuntu安装Python3.10, 结果在官网居然没有发现安装包</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/16/image.png" alt=""></p>
+<p>找了半天反正没找到, 只有源码没有发行版</p>
+<p>没辙, 从源码编译安装吧</p>
+<p>安装依赖</p>
+<figure class="highlight q"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">update</span></span><br><span class="line">apt install build-essential zlib1g-<span class="built_in">dev</span> libncurses5-<span class="built_in">dev</span> libgdbm-<span class="built_in">dev</span> libnss3-<span class="built_in">dev</span> libssl-<span class="built_in">dev</span> libreadline-<span class="built_in">dev</span> libffi-<span class="built_in">dev</span> libsqlite3-<span class="built_in">dev</span> wget libbz2-<span class="built_in">dev</span></span><br></pre></td></tr></table></figure>
+
+<p>下载对应版本的Python, 例如这里是<code>3.10.8</code></p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">wget</span> https://www.python.org/ftp/python/<span class="number">3</span>.<span class="number">10</span>.<span class="number">6</span>/Python-<span class="number">3</span>.<span class="number">10</span>.<span class="number">8</span>.tgz</span><br></pre></td></tr></table></figure>
+
+<p>解压</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">tar</span> -xf Python-<span class="number">3</span>.<span class="number">10</span>.*.tgz</span><br></pre></td></tr></table></figure>
+
+<p>检查配置</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cd</span> Python-3.10.*/</span><br><span class="line"><span class="string">./configure</span> <span class="params">--enable-optimizations</span></span><br></pre></td></tr></table></figure>
+
+<p>编译</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">make -j <span class="constructor">$(<span class="params">nproc</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>安装到<code>/usr/bin/python</code></p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">make altinstall</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/">https://computingforgeeks.com/how-to-install-python-on-ubuntu-linux-system/</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
