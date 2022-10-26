@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">89</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,228 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" class="post-title-link" itemprop="url">Python将对象序列化成JSON格式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-13 14:12:27" itemprop="dateCreated datePublished" datetime="2022-04-13T14:12:27+08:00">2022-04-13</time>
+            </span>
+
+          
+            <span id="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Python将对象序列化成JSON格式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/13/Python%E5%B0%86%E5%AF%B9%E8%B1%A1%E5%BA%8F%E5%88%97%E5%8C%96%E6%88%90JSON%E6%A0%BC%E5%BC%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 Python 中经常会做的一件事就是将某个对象序列化, 序列化有很多种方式, JSON 是最常用的其中一种(方便和前端交换数据).</p>
+<p>但是一个明显的问题是, Python 标准库<code>json</code>, 仅仅能<code>dumps</code>其内置的基本数据类型, 例如 string, integer, boolean, list, dict …</p>
+<p>并且 JSON 作为一种数据交换格式, 有其固定的数据类型.<br>有时候我们需要将我们编写的一个类序列化, 此时该怎么办?</p>
+<p><a target="_blank" rel="noopener" href="http://www.json.org/json-zh.html">JSON 的介绍可以参考其官网说明</a></p>
+<h2 id="序列化非标准类型时遇到的问题"><a href="#序列化非标准类型时遇到的问题" class="headerlink" title="序列化非标准类型时遇到的问题"></a>序列化非标准类型时遇到的问题</h2><p>如果 <code>json.dumps</code> 一个非标准类型(例如一个我们编写的类)会发生什么事?</p>
+<p>我们先定义一个类<code>Person</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.name = <span class="string">&quot;naonao&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试用 json 序列化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个实例</span></span><br><span class="line">p = Person()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试序列化</span></span><br><span class="line">json.dumps(p)</span><br></pre></td></tr></table></figure>
+
+<p>毫不意外的报错了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">---------------------------------------------------------------------------</span><br><span class="line">TypeError                                 Traceback (most recent call last)</span><br><span class="line">Input In [<span class="number">76</span>], <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">      <span class="number">4</span> p = Person()</span><br><span class="line">      <span class="number">6</span> <span class="comment"># 尝试序列化</span></span><br><span class="line">----&gt; <span class="number">7</span> json.dumps(p)</span><br><span class="line"></span><br><span class="line">File /opt/conda/lib/python3<span class="number">.9</span>/json/__init__.py:<span class="number">231</span>, <span class="keyword">in</span> dumps(obj, skipkeys, ensure_ascii, check_circular, allow_nan, cls, indent, separators, default, sort_keys, **kw)</span><br><span class="line">    <span class="number">226</span> <span class="comment"># cached encoder</span></span><br><span class="line">    <span class="number">227</span> <span class="keyword">if</span> (<span class="keyword">not</span> skipkeys <span class="keyword">and</span> ensure_ascii <span class="keyword">and</span></span><br><span class="line">    <span class="number">228</span>     check_circular <span class="keyword">and</span> allow_nan <span class="keyword">and</span></span><br><span class="line">    <span class="number">229</span>     cls <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> indent <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> separators <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span></span><br><span class="line">    <span class="number">230</span>     default <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> <span class="keyword">not</span> sort_keys <span class="keyword">and</span> <span class="keyword">not</span> kw):</span><br><span class="line">--&gt; <span class="number">231</span>     <span class="keyword">return</span> _default_encoder.encode(obj)</span><br><span class="line">    <span class="number">232</span> <span class="keyword">if</span> cls <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    <span class="number">233</span>     cls = JSONEncoder</span><br><span class="line"></span><br><span class="line">File /opt/conda/lib/python3<span class="number">.9</span>/json/encoder.py:<span class="number">199</span>, <span class="keyword">in</span> JSONEncoder.encode(self, o)</span><br><span class="line">    <span class="number">195</span>         <span class="keyword">return</span> encode_basestring(o)</span><br><span class="line">    <span class="number">196</span> <span class="comment"># This doesn&#x27;t pass the iterator directly to &#x27;&#x27;.join() because the</span></span><br><span class="line">    <span class="number">197</span> <span class="comment"># exceptions aren&#x27;t as detailed.  The list call should be roughly</span></span><br><span class="line">    <span class="number">198</span> <span class="comment"># equivalent to the PySequence_Fast that &#x27;&#x27;.join() would do.</span></span><br><span class="line">--&gt; <span class="number">199</span> chunks = self.iterencode(o, _one_shot=<span class="literal">True</span>)</span><br><span class="line">    <span class="number">200</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(chunks, (<span class="built_in">list</span>, <span class="built_in">tuple</span>)):</span><br><span class="line">    <span class="number">201</span>     chunks = <span class="built_in">list</span>(chunks)</span><br><span class="line"></span><br><span class="line">File /opt/conda/lib/python3<span class="number">.9</span>/json/encoder.py:<span class="number">257</span>, <span class="keyword">in</span> JSONEncoder.iterencode(self, o, _one_shot)</span><br><span class="line">    <span class="number">252</span> <span class="keyword">else</span>:</span><br><span class="line">    <span class="number">253</span>     _iterencode = _make_iterencode(</span><br><span class="line">    <span class="number">254</span>         markers, self.default, _encoder, self.indent, floatstr,</span><br><span class="line">    <span class="number">255</span>         self.key_separator, self.item_separator, self.sort_keys,</span><br><span class="line">    <span class="number">256</span>         self.skipkeys, _one_shot)</span><br><span class="line">--&gt; <span class="number">257</span> <span class="keyword">return</span> _iterencode(o, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">File /opt/conda/lib/python3<span class="number">.9</span>/json/encoder.py:<span class="number">179</span>, <span class="keyword">in</span> JSONEncoder.default(self, o)</span><br><span class="line">    <span class="number">160</span> <span class="keyword">def</span> <span class="title function_">default</span>(<span class="params">self, o</span>):</span><br><span class="line">    <span class="number">161</span>     <span class="string">&quot;&quot;&quot;Implement this method in a subclass such that it returns</span></span><br><span class="line"><span class="string">    162     a serializable object for ``o``, or calls the base implementation</span></span><br><span class="line"><span class="string">    163     (to raise a ``TypeError``).</span></span><br><span class="line"><span class="string">   (...)</span></span><br><span class="line"><span class="string">    177 </span></span><br><span class="line"><span class="string">    178     &quot;&quot;&quot;</span></span><br><span class="line">--&gt; <span class="number">179</span>     <span class="keyword">raise</span> TypeError(<span class="string">f&#x27;Object of type <span class="subst">&#123;o.__class__.__name__&#125;</span> &#x27;</span></span><br><span class="line">    <span class="number">180</span>                     <span class="string">f&#x27;is not JSON serializable&#x27;</span>)</span><br><span class="line"></span><br><span class="line">TypeError: Object of <span class="built_in">type</span> Person <span class="keyword">is</span> <span class="keyword">not</span> JSON serializable</span><br></pre></td></tr></table></figure>
+
+<p>我们仔细观察报错信息, 提示 <code>Person</code> 不是一个 JSON 序列化对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Object of <span class="built_in">type</span> Person <span class="keyword">is</span> <span class="keyword">not</span> JSON serializable</span><br></pre></td></tr></table></figure>
+
+<p>那么问题来了, 我们如何把各种各样的 Python 对象序列化成 JSON 格式?</p>
+<p>Google 和查阅官方文档后你会发现 <code>dumps</code> 方法提供了一个 <code>cls</code> 参数, 我们可以自己编写一个序列化类, 告诉该他该如何<code>dumps</code>这个对象.</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>例如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PersonEncoder</span>(json.JSONEncoder):</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 重写该方法, 告诉 json</span></span><br><span class="line">    <span class="comment"># 如何 dumps 指定的对象</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">default</span>(<span class="params">self, _<span class="built_in">object</span></span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person):</span><br><span class="line">            <span class="comment"># 这里编写如何序列化 Person</span></span><br><span class="line">            <span class="comment"># 对象的代码</span></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">dict</span>(name=_<span class="built_in">object</span>.name)</span><br></pre></td></tr></table></figure>
+
+<p>我们再尝试一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">json.dumps(p, cls=PersonEncoder)</span><br></pre></td></tr></table></figure>
+
+<p>得到结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#123;&quot;name&quot;: &quot;naonao&quot;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>成功了, 完美的解决了问题.</p>
+<h2 id="有点遐思"><a href="#有点遐思" class="headerlink" title="有点遐思"></a>有点遐思</h2><p>但是现在有一个问题, 如果序列化少量类, 我们只需要在<code>default</code>这个方法下编写少量的代码即可. 但通常一个应用不可能仅仅只有几个少量的类, 类多了怎么办?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">default</span>(<span class="params">self, _<span class="built_in">object</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person1):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person2):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person3):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person4):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person5):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person6):</span><br><span class="line">        ...</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(_<span class="built_in">object</span>, Person7):</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+
+<p>这种写法, 一点也不优雅!</p>
+<p>我们需要一种更优雅的解决方案</p>
+<h2 id="更优雅的解决方案"><a href="#更优雅的解决方案" class="headerlink" title="更优雅的解决方案"></a>更优雅的解决方案</h2><p>该函数可以解决这个问题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> singledispatch</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/functools.html">详细说明可以看官方文档</a></p>
+<p>我们先创建两个类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> singledispatch</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.name = <span class="string">&quot;naonao&quot;</span></span><br><span class="line">        self.age = <span class="number">18</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.name = <span class="string">&quot;dog&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建两个实例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">person = Person()</span><br><span class="line">animal = Animal()</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们可以这样定义序列化器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@singledispatch</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">serialize</span>(<span class="params">_<span class="built_in">object</span></span>):</span><br><span class="line">    <span class="keyword">return</span> json.dumps(_<span class="built_in">object</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@serialize.register(<span class="params">Person</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_</span>(<span class="params">_<span class="built_in">object</span></span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(name=_<span class="built_in">object</span>.name, </span><br><span class="line">                age=_<span class="built_in">object</span>.age)</span><br><span class="line"></span><br><span class="line"><span class="meta">@serialize.register(<span class="params">Animal</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_</span>(<span class="params">_<span class="built_in">object</span></span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(name=_<span class="built_in">object</span>.name)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CustomJSONEncoder</span>(json.JSONEncoder):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">default</span>(<span class="params">self, _<span class="built_in">object</span></span>):</span><br><span class="line">        <span class="keyword">return</span> serialize(_<span class="built_in">object</span>)</span><br></pre></td></tr></table></figure>
+
+<p>尝试一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data = &#123;</span><br><span class="line">    <span class="string">&quot;person&quot;</span>: person, </span><br><span class="line">    <span class="string">&quot;animal&quot;</span>: animal</span><br><span class="line">&#125;</span><br><span class="line">json.dumps(data, cls=CustomJSONEncoder)</span><br></pre></td></tr></table></figure>
+
+<p>完美解决</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#123;&quot;person&quot;: &#123;&quot;name&quot;: &quot;naonao&quot;, &quot;age&quot;: 18&#125;, &quot;animal&quot;: &#123;&quot;name&quot;: &quot;dog&quot;&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>接下来有新的类(或是数据类型)进行序列化时, 我们仅仅需要参照这个格式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">                    <span class="comment"># 目标类</span></span><br><span class="line"><span class="meta">@serialize.register(<span class="params">Person</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_</span>(<span class="params">_<span class="built_in">object</span></span>):</span><br><span class="line">    <span class="comment"># 如何序列化这个对象</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(name=_<span class="built_in">object</span>.name, </span><br><span class="line">                age=_<span class="built_in">object</span>.age)</span><br></pre></td></tr></table></figure>
+
+<p>编写对应的解析器即可. 这样可比 <code>if else ...</code>循环嵌套可读性高了不知多少倍!</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903510543171592">https://juejin.cn/post/6844903510543171592</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/functools.html">https://docs.python.org/zh-cn/3/library/functools.html</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.json.org/json-zh.html">http://www.json.org/json-zh.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" class="post-title-link" itemprop="url">Python 获取实例的类</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-13 00:29:24" itemprop="dateCreated datePublished" datetime="2022-04-13T00:29:24+08:00">2022-04-13</time>
+            </span>
+
+          
+            <span id="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" class="post-meta-item leancloud_visitors" data-flag-title="Python 获取实例的类" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/13/Python-%E8%8E%B7%E5%8F%96%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%B1%BB/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实例</span></span><br><span class="line">p = Person()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实例的类</span></span><br><span class="line">p.__class__</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -911,197 +1133,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/" class="post-title-link" itemprop="url">Javascript中的函数返回多个值</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-11 12:10:55" itemprop="dateCreated datePublished" datetime="2022-04-11T12:10:55+08:00">2022-04-11</time>
-            </span>
-
-          
-            <span id="/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/" class="post-meta-item leancloud_visitors" data-flag-title="Javascript中的函数返回多个值" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/11/Javascript%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>当使用 Javascript 调用函数的时候只能通过 <code>return</code> 返回一个值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getAge</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">37</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getName</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line"><span class="keyword">return</span> ‘<span class="title class_">Flavio</span>’</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当需要返回多个值的时候可以通过解构的方式获得</p>
-<h2 id="通过数组"><a href="#通过数组" class="headerlink" title="通过数组"></a>通过数组</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getDetails</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> [<span class="number">37</span>, <span class="string">&#x27;Flavio&#x27;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过数组结构, 我们可以这样获得</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [age, name] = <span class="title function_">getDetails</span>()</span><br></pre></td></tr></table></figure>
-
-<p>现在我们有了<code>age</code>和<code>name</code>包含这些值的变量</p>
-<p>但是需要注意获取的顺序.</p>
-<h2 id="通过对象"><a href="#通过对象" class="headerlink" title="通过对象"></a>通过对象</h2><p>也可以返回一个对象然后解构</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getDetails</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; </span><br><span class="line">    <span class="attr">age</span>: <span class="number">37</span>, </span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Flavio&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> &#123; age, name &#125; = <span class="title function_">getDetails</span>()</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; age, name &#125; = <span class="title function_">getDetails</span>()</span><br></pre></td></tr></table></figure>
-<p>此时顺序将不再重要, 因为这些都是命名参数</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://tech-wiki.online/tw/javascript-return-multiple-values.html">https://tech-wiki.online/tw/javascript-return-multiple-values.html</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/" class="post-title-link" itemprop="url">PowerShell设置全局代理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-05 14:19:55" itemprop="dateCreated datePublished" datetime="2022-04-05T14:19:55+08:00">2022-04-05</time>
-            </span>
-
-          
-            <span id="/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="PowerShell设置全局代理" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/05/PowerShell%E8%AE%BE%E7%BD%AE%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在 PowerShell 里输入环境变量</p>
-<p>格式</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env</span><span class="symbol">:HTTP_PROXY=<span class="string">&quot;http://域名:端口&quot;</span></span></span><br><span class="line"><span class="variable">$env</span><span class="symbol">:HTTPS_PROXY=<span class="string">&quot;http://域名:端口&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>例如</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env</span><span class="symbol">:HTTP_PROXY=<span class="string">&quot;http://127.0.0.1:10809&quot;</span></span></span><br><span class="line"><span class="variable">$env</span><span class="symbol">:HTTPS_PROXY=<span class="string">&quot;http://127.0.0.1:10809&quot;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44120025/article/details/110950434">https://blog.csdn.net/weixin_44120025/article/details/110950434</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1169,7 +1204,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">89</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

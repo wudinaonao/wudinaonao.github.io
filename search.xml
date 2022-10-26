@@ -3919,4 +3919,30 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>解决 Win10 自带微软输入法卡顿</title>
+    <url>/2022/10/26/%E8%A7%A3%E5%86%B3-Win10-%E8%87%AA%E5%B8%A6%E5%BE%AE%E8%BD%AF%E8%BE%93%E5%85%A5%E6%B3%95%E5%8D%A1%E9%A1%BF/</url>
+    <content><![CDATA[<p>具体表现为使用WIndows10自带的输入法输入中文时出现严重卡顿，比如在键盘上按下一个键，至少要反应几秒钟才能出现按的字符，注意，是字符！也就是说字符是一个一个蹦出来的，并不连贯！</p>
+<p>解决方法</p>
+<figure class="highlight haml"><table><tr><td class="code"><pre><span class="line"><span class="tag">%<span class="selector-tag">AppData</span></span>%\Microsoft\InputMethod\Chs</span><br></pre></td></tr></table></figure>
+
+<p>把上面这个目录删掉！完美解决！</p>
+<p>这个目录下有很多小文件</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/26/image.png" alt=""></p>
+<p>推测是输入法缓存，因为删除了以后，之前输入法记住的常输的句子就木有了。</p>
+<p>这个是在网上找的一键清除脚本，没试过不确定是不是有用</p>
+<figure class="highlight vbscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">&#x27; Fix Win10 Chinese IME lag</span></span><br><span class="line"><span class="keyword">Option</span> <span class="keyword">Explicit</span></span><br><span class="line"><span class="keyword">Dim</span> WSHShell, FSO, Target</span><br><span class="line"><span class="keyword">Set</span> WSHShell = <span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>)</span><br><span class="line"><span class="keyword">Set</span> FSO = <span class="built_in">CreateObject</span>(<span class="string">&quot;Scripting.FileSystemObject&quot;</span>)</span><br><span class="line">Target = WshShell.ExpandEnvironmentStrings(<span class="string">&quot;%AppData%&quot;</span>) &amp; <span class="string">&quot;\Microsoft\InputMethod\Chs\&quot;</span></span><br><span class="line">FSO.DeleteFile Target &amp; <span class="string">&quot;UDP*.tmp&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://ibug.io/cn/2021/03/win10-microsoft-ime-lag/">https://ibug.io/cn/2021/03/win10-microsoft-ime-lag/</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>Selenium Message: invaild cookie domain</title>
+    <url>/2022/10/26/Selenium-Message-invaild-cookie-domain/</url>
+    <content><![CDATA[<p>Cookie 的域无效, 这个大概率是写 Requests 写习惯了, 直接带这 cookie 请求</p>
+<p>解决方法也很简单, 先用Selenium打开一下网址, 然后在加上Cookie重新访问即可</p>
+]]></content>
+  </entry>
 </search>
