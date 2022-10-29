@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,486 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">Jenkins更新失败解决方案</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-13 10:59:35" itemprop="dateCreated datePublished" datetime="2022-10-13T10:59:35+08:00">2022-10-13</time>
+            </span>
+
+          
+            <span id="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-meta-item leancloud_visitors" data-flag-title="Jenkins更新失败解决方案" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>笔者使用 Docker 部署了一个 Jenkins 镜像，最近升级镜像版本时遇到问题。</p>
+<p>现在记录解决方案</p>
+<h2 id="java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy"><a href="#java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy" class="headerlink" title="java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy"></a>java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy</h2><p>参考该链接解决</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282">https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282</a></p>
+</blockquote>
+<p>There may be deprecated plugins installed on your system that need to be removed.</p>
+<p>The Jenkins project stopped distributing the Ruby runtime plugin, the Python runtime plugin, and plugins that depend on those two plugins in January 2022. You can find a detailed list of plugins and more information in the blog post:</p>
+<p>大意是旧版本包含了已经弃用的插件。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Ruby runtime plugin</span></span><br></pre></td></tr></table></figure>
+
+<p>这个插件在 2.373 版本已经弃用了，需要卸载之前安装的该插件。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image.png" alt=""></p>
+<p>启动旧版本docker镜像后，我们发现在控制台面板无法卸载。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image29d2887b0b56c1ea.png" alt=""></p>
+<p>解决方案是，进入到<code>$JENKINS_HOME/plugins</code>目录，然后移除<code>ruby-runtime*</code></p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image618cb411402d9219.png" alt=""></p>
+<p>即这两个文件</p>
+<p>然后更新镜像版本，一切正常</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image2640e9e6bea963cb.png" alt=""></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">KMP字符串匹配算法的理解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-12 21:46:24" itemprop="dateCreated datePublished" datetime="2022-10-12T21:46:24+08:00">2022-10-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="KMP字符串匹配算法的理解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在计算机科学中, 字符串搜索是一个很常见的任务. 给定两个字符串A和B, 例如</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; ABC ABCDAB ABCDABCDABDE</span><br><span class="line">B -&gt; ABCDABD</span><br></pre></td></tr></table></figure>
+
+<p>我们怎么知道 A 是否包含有 B ?</p>
+<p>有很多种算法可以完成这个任务, Knuth-Morris-Pratt字符串查找算法（简称为KMP算法）是比较著名的一种.</p>
+<p>这个算法由高德纳（Donald Knuth）和沃恩·普拉特（英语：Vaughan Pratt）在1974年构思，同年詹姆斯·H·莫里斯（英语：James H. Morris）也独立地设计出该算法，最终三人于1977年联合发表.</p>
+<p>没错! 起头的那个 K 就是高德纳老爷子</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image.png" alt=""></p>
+<p>该算法的巧妙之处在于, 一个词在不匹配时本身就包含足够的信息来确定下一个匹配可能的开始位置，此算法利用这一特性以避免重新检查先前配對的字符。（来自维基百科）</p>
+<p>emmm….</p>
+<p>我觉得，上面的话似乎不太好懂，我个人的理解是，该算法设计了一种方法，利用已经匹配过的信息，来减少重新匹配的次数。</p>
+<p>以下的文章基于阮一峰的网络日志，特地记录了下学习的过程，以加强理解。</p>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagecc3ea0b9a4cb30b2.png" alt=""></p>
+<p>如上图，首先字符串“BBC ABCDAB ABCDABCDABDE”的第一个字符与搜索词“ABCDABD”的第一个字符进行比较，因为B与A不匹配，所以我们将搜索词后移一位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image86dc56a4a494075f.png" alt=""></p>
+<p>因为B与A不匹配，我们继续后移。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imaged2ced97720283918.png" alt=""></p>
+<p>如此直到字符串有一个字符与搜索词的第一个字符匹配到为止。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image7477df616cfabb08.png" alt=""></p>
+<p>接着比较字符串和搜索词的下一个字符，还是相同。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>直到字符串有一个字符，与搜索词对应的字符不相同为止。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefd15692621352466.png" alt=""></p>
+<p>这时，最自然的反应是，将搜索词整个后移一位，再从头逐个比较。这样做虽然可行，但是效率很差，因为你要把”搜索位置”移到已经比较过的位置，重比一遍。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>一个基本事实是，当空格与D不匹配时，你其实知道前面六个字符是”ABCDAB”。KMP算法的想法是，设法利用这个已知信息，不要把”搜索位置”移回已经比较过的位置，继续把它向后移，这样就提高了效率。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
+<p>怎么做到这一点呢？可以针对搜索词，算出一张《部分匹配表》（Partial Match Table）。这张表是如何产生的，后面再介绍，这里只要会用就可以了。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
+<p>已知空格与D不匹配时，前面六个字符”ABCDAB”是匹配的。查表可知，最后一个匹配字符B对应的”部分匹配值”为2，因此按照下面的公式算出向后移动的位数</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">移动位数 <span class="operator">=</span> 已匹配的字符数 - 对应的部分匹配值</span><br></pre></td></tr></table></figure>
+
+<p>因为 6 - 2 等于4，所以将搜索词向后移动4位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image1b937471562a53b5.png" alt=""></p>
+<p>因为空格与Ｃ不匹配，搜索词还要继续往后移。这时，已匹配的字符数为2（”AB”），对应的”部分匹配值”为0。所以，移动位数 = 2 - 0，结果为 2，于是将搜索词向后移2位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image3a680f9eeb1ae9f6.png" alt=""></p>
+<p>因为空格与A不匹配，继续后移一位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
+<p>逐位比较，直到发现C与D不匹配。于是，移动位数 = 6 - 2，继续将搜索词向后移动4位。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image71addcc418b4bb22.png" alt=""></p>
+<p>逐位比较，直到搜索词的最后一位，发现完全匹配，于是搜索完成。如果还要继续搜索（即找出全部匹配），移动位数 = 7 - 0，再将搜索词向后移动7位，这里就不再重复了。</p>
+<h2 id="如何计算部分匹配表"><a href="#如何计算部分匹配表" class="headerlink" title="如何计算部分匹配表"></a>如何计算部分匹配表</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefff2d7818cf3d586.png" alt=""></p>
+<p>首先，要了解两个概念：”前缀”和”后缀”。 “前缀”指除了最后一个字符以外，一个字符串的全部头部组合；”后缀”指除了第一个字符以外，一个字符串的全部尾部组合。</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
+<p>“部分匹配值”就是”前缀”和”后缀”的最长的共有元素的长度。以”ABCDABD”为例，</p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>前缀</th>
+<th>后缀</th>
+<th>最长共有元素</th>
+<th>最长共有元素的长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>空集</td>
+<td>空集</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>AB</td>
+<td>A</td>
+<td>B</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABC</td>
+<td>A, AB</td>
+<td>BC, C</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABCD</td>
+<td>A, AB, ABC</td>
+<td>BCD, CD, D</td>
+<td>无</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ABCDA</td>
+<td>A, AB, ABC, ABCD</td>
+<td>BCDA, CDA, DA, A</td>
+<td>A</td>
+<td>1</td>
+</tr>
+<tr>
+<td>ABCDAB</td>
+<td>A, AB, ABC, ABCD, ABCDA</td>
+<td>BCDAB, CDAB, DAB, AB, B</td>
+<td>AB</td>
+<td>2</td>
+</tr>
+<tr>
+<td>ABCDABD</td>
+<td>A, AB, ABC, ABCD, ABCDA, ABCDAB</td>
+<td>BCDABD, CDABD, DABD, ABD, BD, D</td>
+<td>无</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
+<p><strong>“部分匹配”的实质是，有时候，字符串头部和尾部会有重复。比如，”ABCDAB”之中有两个”AB”，那么它的”部分匹配值”就是2（”AB”的长度）。搜索词移动的时候，第一个”AB”向后移动4位（搜索串长度-部分匹配值），就可以来到第二个”AB”的位置。</strong></p>
+<h2 id="Python-实现"><a href="#Python-实现" class="headerlink" title="Python 实现"></a>Python 实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">KMP</span>(<span class="params">text: <span class="built_in">str</span>, pattern: <span class="built_in">str</span>, search_all: <span class="built_in">bool</span> = <span class="literal">True</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;KMP字符串搜索算法&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t_len = <span class="built_in">len</span>(text)</span><br><span class="line">    p_len = <span class="built_in">len</span>(pattern)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 模式串长度小于待搜索的字符串</span></span><br><span class="line">    <span class="keyword">if</span> t_len &lt; p_len:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">while</span> i &lt; t_len:</span><br><span class="line">        is_match = <span class="literal">True</span></span><br><span class="line">        <span class="comment"># 匹配最后一部分时, 起始坐标加上模式串的</span></span><br><span class="line">        <span class="comment"># 长度大于文本长度时, 注定匹配失败, 所以</span></span><br><span class="line">        <span class="comment"># 不用多此一举匹配最后部分</span></span><br><span class="line">        <span class="keyword">if</span> i + p_len &gt; t_len:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(pattern)):</span><br><span class="line">            <span class="keyword">if</span> text[i + j] != pattern[j]:</span><br><span class="line">                <span class="comment"># 第一位就不匹配</span></span><br><span class="line">                <span class="keyword">if</span> j == <span class="number">0</span>:</span><br><span class="line">                    is_match = <span class="literal">False</span></span><br><span class="line">                    i += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="comment"># 其余位不匹配时, 计算偏移值(对应的部分匹配值)</span></span><br><span class="line">                is_match = <span class="literal">False</span></span><br><span class="line">                p_offset = partial_match(pattern[:j])</span><br><span class="line">                <span class="comment"># 移动位数 = 已匹配的字符数 - 偏移值(对应的部分匹配值)</span></span><br><span class="line">                i += j - p_offset</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> is_match:</span><br><span class="line">            result.append(i)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> search_all:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            i += p_len - partial_match(pattern)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">partial_match</span>(<span class="params">p: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算部分匹配值</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    例如:</span></span><br><span class="line"><span class="string">        in:     &quot;ABCDAB&quot;</span></span><br><span class="line"><span class="string">        out:    2</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    假设我们输入&quot;ABCDAB&quot;, 则可知道该字符串的长度为 6, 最大下标(max_index)为 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        字符:   A B C D A B</span></span><br><span class="line"><span class="string">        下标:   0 1 2 3 4 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    前缀和后缀的可选范围</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">        Prefix: 0 1 2 3 4</span></span><br><span class="line"><span class="string">        Suffix:   1 2 3 4 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    于是我们知道</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        i   prefix          suffix          diffrence(前缀和后缀的差值)</span></span><br><span class="line"><span class="string">        -                                   </span></span><br><span class="line"><span class="string">        0   0               5               5</span></span><br><span class="line"><span class="string">        1   0, 1            4, 5            4</span></span><br><span class="line"><span class="string">        2   0, 1, 2         3, 4, 5         3</span></span><br><span class="line"><span class="string">        3   0, 1, 2, 3      2, 3, 4, 5      2</span></span><br><span class="line"><span class="string">        4   0, 1, 2, 3, 4   1, 2, 3, 4, 5   1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    我们最多需要进行 5 次循环, i 表示当前循环的次数, prefix 和 suffix 分别</span></span><br><span class="line"><span class="string">    对应了该次循环时每个字符的下标, diffrence 表示了该次循环时, prefix 和</span></span><br><span class="line"><span class="string">    suffix 对应的下标的差值, 显然可知</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        diffrence = max_index - i</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    我们需要取最长的共有元素的长度, 很显然我们从大到小搜索效率最高, 我们只需要</span></span><br><span class="line"><span class="string">    搜索到一个有效值, 该值即是最优解. 对应上图即为从下往上搜索.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(p) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    max_macth_length = <span class="number">0</span></span><br><span class="line">    max_index = <span class="built_in">len</span>(p) - <span class="number">1</span></span><br><span class="line">    i = max_index - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 从大到小搜索仅需要搜索到一个即是最优值</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; -<span class="number">1</span>:</span><br><span class="line">        is_match = <span class="literal">True</span></span><br><span class="line">        diff = max_index - i</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> p[j] != p[j + diff]:</span><br><span class="line">                is_match = <span class="literal">False</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> is_match:</span><br><span class="line">            max_macth_length = i + <span class="number">1</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> max_macth_length</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;ABC ABCDAB ABCDABCDABDEABCDABD&quot;</span></span><br><span class="line">pattern = <span class="string">&quot;ABCDABD&quot;</span></span><br><span class="line"><span class="built_in">print</span>(KMP(text, pattern))</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[15, 23]</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html">https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" class="post-title-link" itemprop="url">ERROR odoo odoo.modules.loading: Database odoo not initialized</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-11 20:30:47" itemprop="dateCreated datePublished" datetime="2022-10-11T20:30:47+08:00">2022-10-11</time>
+            </span>
+
+          
+            <span id="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" class="post-meta-item leancloud_visitors" data-flag-title="ERROR odoo odoo.modules.loading: Database odoo not initialized" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized"><a href="#ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized" class="headerlink" title="ERROR odoo odoo.modules.loading: Database odoo not initialized"></a>ERROR odoo odoo.modules.loading: Database odoo not initialized</h2><p>在使用 docker-compose 部署 odoo 时报错</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ERROR </span>odoo odoo.modules.loading: Database odoo not initialized, you can force it with -i base</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/11/image.png" alt=""></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>数据库容器增加环境变量</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">POSTGRES_DB</span>=postgres</span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3.1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line"><span class="punctuation"></span></span><br><span class="line">  <span class="attribute">odoo</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">odoo:15.0</span></span><br><span class="line">    <span class="attribute">depends_on</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">postgres</span></span><br><span class="line">    <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8069:8069&quot;</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_web_data:/var/lib/odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config/odoo.conf:/etc/odoo/odoo.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./addons:/mnt/extra-addons</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">HOST=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASSWORD=xxxxxxxxx</span></span><br><span class="line"></span><br><span class="line">  <span class="attribute">postgres</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">postgres:15rc2-alpine3.16</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_DB=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=xxxxxxxxx</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGDATA=/var/lib/postgresql/data/pgdata</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_db_data:/var/lib/postgresql/data/pgdata</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/odoo/odoo/issues/27447">https://github.com/odoo/odoo/issues/27447</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/lefilament/ansible_role_odoo_docker/issues/7">https://github.com/lefilament/ansible_role_odoo_docker/issues/7</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" class="post-title-link" itemprop="url">Linux 下设置 swap 分区</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-08 15:57:20" itemprop="dateCreated datePublished" datetime="2022-10-08T15:57:20+08:00">2022-10-08</time>
+            </span>
+
+          
+            <span id="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Linux 下设置 swap 分区" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在腾讯云购置了一台2C2G的服务器用来放置 Gitlab。但是发现 Gitlab 的 docker 镜像最少需要 4G 内存才能跑起来，所以尝试下启用 SWAP 来用硬盘空间代替内存空间</p>
+<p>PS：腾讯云轻量服务器在内存消耗完毕时，会发生硬盘IO读写高的故障，导致无法通过SSH连接到服务器。笔者已经在两台服务器上测试过了，确实会发生这个BUG。</p>
+<h2 id="SWAP"><a href="#SWAP" class="headerlink" title="SWAP"></a>SWAP</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -726,733 +1206,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/06/23/Odoo-Challenge/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/23/Odoo-Challenge/" class="post-title-link" itemprop="url">Odoo Challenge</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-06-23 10:29:30" itemprop="dateCreated datePublished" datetime="2022-06-23T10:29:30+08:00">2022-06-23</time>
-            </span>
-
-          
-            <span id="/2022/06/23/Odoo-Challenge/" class="post-meta-item leancloud_visitors" data-flag-title="Odoo Challenge" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/06/23/Odoo-Challenge/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/23/Odoo-Challenge/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea0e1da977196172c.png" alt=""></p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Odoo Challenge 挑战赛是一个很有意思的项目, 起源于一次面试时, HR发来个链接说测试一下水平.</p>
-<p>好了, 开始挑战</p>
-<h1 id="LEVEL-1"><a href="#LEVEL-1" class="headerlink" title="LEVEL 1"></a>LEVEL 1</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d19ff4a2b75f01c.png" alt=""></p>
-<p>先随便输一个密码, 点 Check Answer, 很不意外的密码错误, 不过这时候有提示, 可以根据提示的线索来找到密码.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image196452be9426f798.png" alt=""></p>
-<p>看到提示</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hint: <span class="keyword">if</span> <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;the_password&#x27;</span>]</span> == <span class="selector-tag">form</span><span class="selector-attr">[<span class="string">&#x27;pwd&#x27;</span>]</span>: return True</span><br></pre></td></tr></table></figure>
-<p>看看网页的源码, 猜测应该在里面能找到.</p>
-<p>部分源码</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method<span class="operator">=</span><span class="string">&quot;POST&quot;</span> action<span class="operator">=</span><span class="string">&quot;/jobs/challenge/submit&quot;</span> role<span class="operator">=</span><span class="string">&quot;form&quot;</span>&gt;</span><br><span class="line">    &lt;input class<span class="operator">=</span><span class="string">&quot;d-none&quot;</span> name<span class="operator">=</span><span class="string">&quot;csrf_token&quot;</span> value<span class="operator">=</span><span class="string">&quot;6ad9541dcf313efc428fa7f50dda9ca079adfe4ao1687487891&quot;</span>/&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group row&quot;</span>&gt;</span><br><span class="line">        &lt;label for<span class="operator">=</span><span class="string">&quot;password&quot;</span> class<span class="operator">=</span><span class="string">&quot;col-md-2 offset-md-2 col-form-label&quot;</span>&gt;Password&lt;/label&gt;</span><br><span class="line">        &lt;div class<span class="operator">=</span><span class="string">&quot;col-md-6&quot;</span>&gt;</span><br><span class="line">            </span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;hidden&quot;</span> name<span class="operator">=</span><span class="string">&quot;the_password&quot;</span> value<span class="operator">=</span><span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br><span class="line">            &lt;input type<span class="operator">=</span><span class="string">&quot;text&quot;</span> required<span class="operator">=</span><span class="string">&quot;required&quot;</span> class<span class="operator">=</span><span class="string">&quot;form-control&quot;</span> name<span class="operator">=</span><span class="string">&quot;pwd&quot;</span> id<span class="operator">=</span><span class="string">&quot;password&quot;</span> placeholder<span class="operator">=</span><span class="string">&quot;&quot;</span>/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class<span class="operator">=</span><span class="string">&quot;form-group&quot;</span>&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;button id<span class="operator">=</span><span class="string">&quot;submit&quot;</span> type<span class="operator">=</span><span class="string">&quot;submit&quot;</span> name<span class="operator">=</span><span class="string">&quot;signup&quot;</span> class<span class="operator">=</span><span class="string">&quot;btn btn-primary&quot;</span>&gt;Check Answer&lt;/button&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
-
-<p>注意到</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input <span class="attribute">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;the_password&quot;</span> <span class="attribute">value</span>=<span class="string">&quot;796ff3e72821cf412787389c6d5f301e00e3efb6&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">796</span>ff<span class="number">3e72821</span>cf<span class="number">412787389</span><span class="keyword">c</span><span class="number">6</span>d<span class="number">5</span>f<span class="number">301e00</span>e<span class="number">3</span>efb<span class="number">6</span></span><br></pre></td></tr></table></figure>
-
-<p>就是本关的密码了</p>
-<h1 id="LEVEL-2"><a href="#LEVEL-2" class="headerlink" title="LEVEL 2"></a>LEVEL 2</h1><p>第二关提示如下</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hint: <span class="keyword">function</span> <span class="title function_">debug</span><span class="params">()</span> &#123; [<span class="keyword">native</span> code] &#125;</span><br></pre></td></tr></table></figure>
-
-<p>猜测应该是和 debug 有关系, 所以可以 F12 打开开发者工具在命令控制台标签页找线索</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf7240080d7a8150.png" alt=""></p>
-<p>直接出答案了</p>
-<h1 id="LEVEL-3"><a href="#LEVEL-3" class="headerlink" title="LEVEL 3"></a>LEVEL 3</h1><p>提示</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Hint</span>: GET / HTTP/<span class="number">1</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>猜测应该在与服务器交互的请求里寻找.</p>
-<p>我们随便输一个密码, 提交一下看看与服务器的交互请求都有哪些</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageceda9745f1804ab0.png" alt=""></p>
-<p>每个请求都点开看一看 request / response 里面有没有什么可以寻找的线索.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagedf2dae0788b0b0b3.png" alt=""></p>
-<p>可以看到在 <code>next?wrong=oups</code> 这个请求的响应头里面有内容, 红框标记的猜测应该是答案, 即</p>
-<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">Grow your business with Odoo and more than 985156</span> <span class="comment">apps</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="LEVEL-4"><a href="#LEVEL-4" class="headerlink" title="LEVEL 4"></a>LEVEL 4</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea91e68b41299a384.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> Classy password</span><br></pre></td></tr></table></figure>
-
-<p>笔者在解决这个问题的时候花费了相当长的时间。最开始我猜测提示经典密码也许有可能是弱口令？</p>
-<p>我试了如下弱口令</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">root</span><br><span class="line"><span class="number">123456</span></span><br><span class="line"><span class="number">000000</span></span><br><span class="line"><span class="number">888888</span></span><br><span class="line"><span class="number">88888888</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">11111111</span></span><br></pre></td></tr></table></figure>
-
-<p>诸如此类的弱口令发现都没有用。</p>
-<p>最后我写了一个脚本, 从 Github 上找了找有没有彩虹表, 常用弱口令之类的仓库. </p>
-<p>找到一个 <a target="_blank" rel="noopener" href="https://github.com/rootphantomer/Blasting_dictionary">https://github.com/rootphantomer/Blasting_dictionary</a></p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4a43659ed94388e4.png" alt=""></p>
-<p>挂着跑了一下午, 回来一看跑了大概 2w 个密码仍然没有任何起色. 这个时候我开始怀疑一开始的思路是否正确, 提示经典密码的意思究竟是不是弱口令的意思?</p>
-<p>但是此时我又没有更好的思路, 于是每个请求都翻了翻, 看看有没有有用的信息. </p>
-<p>真让我翻到了….</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3d73e0bbd917848c.png" alt=""></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/challenge.css</span><br></pre></td></tr></table></figure>
-
-<p>这个请求的内容就是密码….</p>
-<p>呵呵, 踏破铁鞋无觅处…</p>
-<p>这个事情告诉我什么道理呢, 如果一个题目看起来很简单, 但是通过暴力方法很难解决时, 一定要寻找其他的突破口….</p>
-<h1 id="LEVEL-5"><a href="#LEVEL-5" class="headerlink" title="LEVEL 5"></a>LEVEL 5</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image9d537f7a650e4297.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> I<span class="comment">&#x27;m a small piece of data sent from a website and stored on the user&#x27;s computer</span></span><br></pre></td></tr></table></figure>
-
-<p>意思是服务器发送了一个数据片段存储到了用户电脑上.</p>
-<p>看到这个首先想到 local storage 和 cookies</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imaged06179d00d0da120.png" alt=""></p>
-<p>印证了我的想法, 我在请求</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
-
-<p>里发现了线索, 密码既是方框里的值</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Odoo</span>-<span class="number">9850101554950100</span></span><br></pre></td></tr></table></figure>
-
-<p>PS: 事后我发现这个页面的图标是一个饼干.</p>
-<p>cookies 的意思正是饼干. 看来还是要多观察不一样的细节.</p>
-<h1 id="LEVEL-6"><a href="#LEVEL-6" class="headerlink" title="LEVEL 6"></a>LEVEL 6</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image92a98e09adca3e11.png" alt=""></p>
-<p>给了一段 js 代码</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span>.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> tmp = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i &lt; pwd.<span class="property">length</span>; i++)</span><br><span class="line">    tmp += <span class="string">&quot; &quot;</span>+idx.<span class="title function_">indexOf</span>(pwd.<span class="title function_">charAt</span>(i));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(tmp == <span class="string">&quot; 2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    $.<span class="title function_">post</span>(<span class="string">&#x27;/jobs/challenge/submit&#x27;</span>, &#123;<span class="attr">pwd</span>: pwd&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params">x</span>) &#123; <span class="variable language_">window</span>.<span class="property">location</span> = <span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>看来一下逻辑, tmp 变量存储的应该是 idx 字符串的索引, 我们把索引对应的字符取出来即可.</p>
-<p>可以用 Python 实现一个简单的解码函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">idx = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#x27;</span></span><br><span class="line">tmp = <span class="string">&quot;2 38 39 36 4 14 11 8 5 12 1 3 37 7 1 0 5 14 8 0&quot;</span>.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">pwd = <span class="string">&quot;&quot;</span>.join([idx[<span class="built_in">int</span>(index)] <span class="keyword">for</span> index <span class="keyword">in</span> tmp])</span><br><span class="line"><span class="built_in">print</span>(pwd)</span><br></pre></td></tr></table></figure>
-
-<p>得到密文</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span>CDA4eb85c<span class="number">13B7105e80</span></span><br></pre></td></tr></table></figure>
-
-<p>本关通过</p>
-<h1 id="LEVEL-7"><a href="#LEVEL-7" class="headerlink" title="LEVEL 7"></a>LEVEL 7</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageea4dff6ab52bf293.png" alt=""></p>
-<p>哈哈, 从现在开始难度增加了…..</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef075074667a94677.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
-
-<p>ascii 码? 这个提示…..简单到等于没什么提示…</p>
-<p>还是去翻一翻请求, 看看 request / response / cookies 有什么线索吧.</p>
-<p>首先在控制台看到打印了一串信息</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image1dcba71b5d89779e.png" alt=""></p>
-<p>翻译了一下大概是说需要调用另一个 URL 来执行下一个任务.</p>
-<p>然后在请求</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>www.odoo.com<span class="regexp">/jobs/</span>challenge/<span class="keyword">next</span>?wrong=oups</span><br></pre></td></tr></table></figure>
-
-<p>里发现了不少信息.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcd8624faebd854f.png" alt=""></p>
-<p>这个地方有一个奇怪的信息, 我们先记一下.</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>It-Is-The-Part-2-Of-Url</td>
-<td>“/jobs/challenge/<part1>/1d1/prime.json”</td>
-</tr>
-</tbody></table>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagec790f18f7db82254.png" alt=""></p>
-<p>请求头也有一个奇怪的信息</p>
-<table>
-<thead>
-<tr>
-<th>name</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>It-Is-The-Part-1-Of-Url</td>
-<td>“/jobs/challenge/ebe/<part2>/prime.json”</td>
-</tr>
-</tbody></table>
-<p>这时候我们可以分析, 这个 URL 被分为了两部分, 放到一起看一下</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/&lt;part1&gt;/</span><span class="number">1</span>d1/prime.json</span><br><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span>&lt;part2&gt;/prime.json</span><br></pre></td></tr></table></figure>
-
-<p>那么完整的 URL 应该是</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/jobs/</span>challenge<span class="regexp">/ebe/</span><span class="number">1</span>d1/prime.json</span><br></pre></td></tr></table></figure>
-
-<p>我们尝试访问这个 URL</p>
-<p>得到一串 JSON</p>
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;instructions&quot;</span>: <span class="string">&quot;Remove non prime numbers from data then right shift [222th decimal of the constant quantity that determines the area of a circle by multiplying it by the radius squared] bits from the remaining numbers, it will give you the alphanumeric password of the next level&quot;</span>,</span><br><span class="line">    <span class="string">&quot;numbers&quot;</span>: [</span><br><span class="line"><span class="built_in">        52191,</span></span><br><span class="line"><span class="built_in">        25453,</span></span><br><span class="line"><span class="built_in">        13613,</span></span><br><span class="line"><span class="built_in">        54064,</span></span><br><span class="line"><span class="built_in">        25111,</span></span><br><span class="line"><span class="built_in">        22425,</span></span><br><span class="line"><span class="built_in">        12821,</span></span><br><span class="line"><span class="built_in">        19580,</span></span><br><span class="line"><span class="built_in">        25163,</span></span><br><span class="line"><span class="built_in">        46513,</span></span><br><span class="line"><span class="built_in">        40022,</span></span><br><span class="line"><span class="built_in">        57039,</span></span><br><span class="line"><span class="built_in">        9167,</span></span><br><span class="line"><span class="built_in">        13697,</span></span><br><span class="line"><span class="built_in">        26041,</span></span><br><span class="line"><span class="built_in">        47396,</span></span><br><span class="line"><span class="built_in">        13577,</span></span><br><span class="line"><span class="built_in">        11932,</span></span><br><span class="line"><span class="built_in">        50399,</span></span><br><span class="line"><span class="built_in">        14591,</span></span><br><span class="line"><span class="built_in">        13323,</span></span><br><span class="line"><span class="built_in">        46296,</span></span><br><span class="line"><span class="built_in">        20704,</span></span><br><span class="line"><span class="built_in">        53379,</span></span><br><span class="line"><span class="built_in">        24889,</span></span><br><span class="line"><span class="built_in">        22289,</span></span><br><span class="line"><span class="built_in">        24989,</span></span><br><span class="line"><span class="built_in">        51709,</span></span><br><span class="line"><span class="built_in">        47000,</span></span><br><span class="line"><span class="built_in">        294,</span></span><br><span class="line"><span class="built_in">        26249,</span></span><br><span class="line"><span class="built_in">        52972,</span></span><br><span class="line"><span class="built_in">        51191,</span></span><br><span class="line"><span class="built_in">        44807,</span></span><br><span class="line"><span class="built_in">        43176,</span></span><br><span class="line"><span class="built_in">        6419,</span></span><br><span class="line"><span class="built_in">        26161,</span></span><br><span class="line"><span class="built_in">        13339,</span></span><br><span class="line"><span class="built_in">        48093,</span></span><br><span class="line"><span class="built_in">        12547,</span></span><br><span class="line"><span class="built_in">        4258,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        42054,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        22828,</span></span><br><span class="line"><span class="built_in">        59633,</span></span><br><span class="line"><span class="built_in">        40834,</span></span><br><span class="line"><span class="built_in">        37100,</span></span><br><span class="line"><span class="built_in">        34715,</span></span><br><span class="line"><span class="built_in">        17108,</span></span><br><span class="line"><span class="built_in">        39104,</span></span><br><span class="line"><span class="built_in">        24790,</span></span><br><span class="line"><span class="built_in">        14407,</span></span><br><span class="line"><span class="built_in">        24967,</span></span><br><span class="line"><span class="built_in">        64736,</span></span><br><span class="line"><span class="built_in">        561,</span></span><br><span class="line"><span class="built_in">        38676,</span></span><br><span class="line"><span class="built_in">        14479,</span></span><br><span class="line"><span class="built_in">        17092,</span></span><br><span class="line"><span class="built_in">        62096,</span></span><br><span class="line"><span class="built_in">        42309,</span></span><br><span class="line"><span class="built_in">        26471,</span></span><br><span class="line"><span class="built_in">        59563,</span></span><br><span class="line"><span class="built_in">        25609,</span></span><br><span class="line"><span class="built_in">        13459,</span></span><br><span class="line"><span class="built_in">        2233,</span></span><br><span class="line"><span class="built_in">        14303,</span></span><br><span class="line"><span class="built_in">        52568,</span></span><br><span class="line"><span class="built_in">        50193,</span></span><br><span class="line"><span class="built_in">        28990,</span></span><br><span class="line"><span class="built_in">        34498,</span></span><br><span class="line"><span class="built_in">        25321,</span></span><br><span class="line"><span class="built_in">        21884,</span></span><br><span class="line"><span class="built_in">        26183,</span></span><br><span class="line"><span class="built_in">        13441,</span></span><br><span class="line"><span class="built_in">        25541,</span></span><br><span class="line"><span class="built_in">        57043,</span></span><br><span class="line"><span class="built_in">        4395,</span></span><br><span class="line"><span class="built_in">        25943,</span></span><br><span class="line"><span class="built_in">        25057,</span></span><br><span class="line"><span class="built_in">        41090,</span></span><br><span class="line"><span class="built_in">        14057,</span></span><br><span class="line"><span class="built_in">        38058,</span></span><br><span class="line"><span class="built_in">        7060,</span></span><br><span class="line"><span class="built_in">        26773,</span></span><br><span class="line"><span class="built_in">        37842,</span></span><br><span class="line"><span class="built_in">        25867,</span></span><br><span class="line"><span class="built_in">        33069,</span></span><br><span class="line"><span class="built_in">        8468,</span></span><br><span class="line"><span class="built_in">        46003,</span></span><br><span class="line"><span class="built_in">        24411,</span></span><br><span class="line"><span class="built_in">        20484,</span></span><br><span class="line"><span class="built_in">        19630,</span></span><br><span class="line"><span class="built_in">        3410,</span></span><br><span class="line"><span class="built_in">        35367,</span></span><br><span class="line"><span class="built_in">        26177,</span></span><br><span class="line"><span class="built_in">        25471,</span></span><br><span class="line"><span class="built_in">        35463,</span></span><br><span class="line"><span class="built_in">        12959,</span></span><br><span class="line"><span class="built_in">        25903,</span></span><br><span class="line"><span class="built_in">        25153,</span></span><br><span class="line"><span class="built_in">        13999,</span></span><br><span class="line"><span class="built_in">        44393,</span></span><br><span class="line"><span class="built_in">        25411,</span></span><br><span class="line"><span class="built_in">        2829,</span></span><br><span class="line"><span class="built_in">        51176,</span></span><br><span class="line"><span class="built_in">        25913,</span></span><br><span class="line"><span class="built_in">        13913,</span></span><br><span class="line"><span class="built_in">        52113,</span></span><br><span class="line"><span class="built_in">        17144,</span></span><br><span class="line">        <span class="number">14533</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>翻译一下, 大概意思是, 把这个数组里的非素数删除了, 然后将剩余的数字右移x位(也许是位运算?), 然后就得到了密码</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4eb218a06afb4088.png" alt=""></p>
-<p>x 位指的是应该是 pi 的第 222 位的数字</p>
-<p>至此, 我们梳理一下完整的逻辑, 把上面给定的数组里的非素数删除, 然后找到 pi 的第 222 位的值 x, 然后将数组中剩余的数字按位运算右移 x 位.</p>
-<p>网上找一个高效的判断是否位素数的函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>查一下 pi 的第 222 位是几, 这里可以自己写函数计算也可以直接在网上查, 这里仅仅需要知道该值即可, 所以我选择了直接在网上查</p>
-<p>直接在网站</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span>pai.babihu.com/</span><br></pre></td></tr></table></figure>
-
-<p>查的 pi 的 222 位为 <code>8</code></p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image2f346286bb6078f2.png" alt=""></p>
-<p>还记的最开始的提示吗? </p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> ascii</span><br></pre></td></tr></table></figure>
-
-<p>这里运算完的应该是 ascii 码, 我们计算出对应的字符就得到了最后的密文, 至此我们开始编写解码函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">is_prime</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;check if is prime</span></span><br><span class="line"><span class="string">    referencen link https://zhuanlan.zhihu.com/p/107300262&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> x == <span class="number">2</span> <span class="keyword">or</span> x == <span class="number">3</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">6</span> != <span class="number">1</span> <span class="keyword">and</span> x % <span class="number">6</span> != <span class="number">5</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>, <span class="built_in">int</span>(x ** <span class="number">0.5</span>) + <span class="number">1</span>, <span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> x % i == <span class="number">0</span> <span class="keyword">or</span> x % (i + <span class="number">2</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">arr: <span class="built_in">list</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="comment"># 移除非素数</span></span><br><span class="line">    arr = <span class="built_in">list</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> x: is_prime(x), arr))</span><br><span class="line">    <span class="comment"># 将数组中的每个数字按位右移8, 按 ascii 码表取对应的字符</span></span><br><span class="line">    <span class="comment"># 最后将字符数组拼接成字符串, 即可得到密码</span></span><br><span class="line">    dec = <span class="string">&quot;&quot;</span>.join(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="built_in">chr</span>(x &gt;&gt; <span class="number">8</span>), arr)))</span><br><span class="line">    <span class="keyword">return</span> dec</span><br></pre></td></tr></table></figure>
-
-<p>解密得密码</p>
-<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">c</span><span class="number">5</span>b<span class="number">2</span>b<span class="number">5e58</span>aaff<span class="number">41868</span>a<span class="number">8</span>d<span class="number">7</span>bf<span class="number">4</span>cea<span class="number">6</span>efc<span class="number">2</span>eb<span class="number">6</span>ce<span class="number">68</span></span><br></pre></td></tr></table></figure>
-
-<p>本关通过</p>
-<h1 id="LEVEL-8"><a href="#LEVEL-8" class="headerlink" title="LEVEL 8"></a>LEVEL 8</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image6d46faeb7b38c79f.png" alt=""></p>
-<p>本关注意到这个图片变得奇怪了, 事出反常必有妖!</p>
-<p>我们仔细翻翻跟服务器的请求里有没有什么奇怪的东西.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4c3051d639f63ffb.png" alt=""></p>
-<p>这个就是请求的图片</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image3a14378059959503.png" alt=""></p>
-<p>看起来非常像密码对不对? 突破口一定在这副怪异的图片里.</p>
-<p>该请求响应了一个 HTML, 里面全都是 span 标签, 我们尝试把 span 标签的 style 属性去除了(因为我分析应该和密文关系不大),</p>
-<p>然后删除 <code>#</code> 这个字符, 看看最后还能剩下什么.</p>
-<p>我意外的发现在 Chrome 开发工具的预览窗口可以直接过滤掉 <code>style</code> 属性, 这下就好办了.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagef30de931f297c58f.png" alt=""></p>
-<p>我们把这些内容复制出来, 然后删除 <code>#</code></p>
-<p>已经可以看出来密码了</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image4f86022daf5c8213.png" alt=""></p>
-<p>稍微整理下得到</p>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Password:&#x27;7f593a77ef76c1f04d1cc5bc51aebf<span class="number">265559</span>b965&#x27;    </span><br></pre></td></tr></table></figure>
-
-<p>通关</p>
-<h1 id="LEVEL-9"><a href="#LEVEL-9" class="headerlink" title="LEVEL 9"></a>LEVEL 9</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image00490d00881fe195.png" alt=""></p>
-<p>注意红框框住的地方</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">b</span>&#x27;iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAABmJLR0QA/wD/AP+gvaeTAAAE/klEQVR4nO3dwW7bOBSG0clg3v+VM7suhJSQTH4UW5yzbFxJcX4QNH15+fX9/f0PrPbv2w/A30mwSAgWCcEiIVgkBIvEfz/+<span class="number">69</span>fX157bXxY7Lvd99NOxR7/R+MoLH/KQ33fG757KiEVCsEgIFgnBIvHz5P1i4feJM5PKmYnwzKeEzsKnGr85+/+CRiwSgkVCsEgIFolbk/eLhavY24yfeWa5fOGVH71XM2/shr+gEYuEYJEQLBKCReKTyXtnZgW8W1ufKW6ZudHMU73OiEVCsEgIFgnBInHW5P2iq4jvprp/xENuYMQiIVgkBIuEYJH4ZPL+<span class="number">1</span>sx3/OKF91344plLdcUtGz4WGLFICBYJwSIhWCRuTd63beB85FGBysyS98Kyme6nY/v/gkYsEoJFQrBICBaJnyfvhxRsnPmhYaE/sS7oJiMWCcEiIVgkBIvE7m4zC1fAFy61P9Itpm9bW19Yj6TPO1sJFgnBIiFYJHZvWF04ie7KZg6xsPfOwvvevLIRi4RgkRAsEoJFYvfkfeakoRlvHU+<span class="number">6</span>cEvq2CGV+L8YsUgIFgnBIiFYJL5+nHzNTLEX/t+ZJeBtnxIe3WjbGzvzXi15c4xYJASLhGCRECwSC2reZxa1u0nltqKatwpUZn7Bmcew8s6bBIuEYJEQLBKfdJvp9kbOVHmPrzzzf7ct8XfNZx5R8865BIuEYJEQLBI/l82E98u6P26b215s69V+cXhBjhGLhGCRECwSgkXi55X3biNlV8Y+vm83xe6WyxeW+nQFOb9jxCIhWCQEi4Rgkbi18t4tEG9bLn9rjfuQif/+v4IRi4RgkRAsEoJF4pNuM2OHrK2PXzy28DNEt7m3az6zhBGLhGCRECwSgkXik5X3t2aR25pQjv0R3xZcbPvy4BcjFgnBIiFYJASLxIKymf0Twzv/d2zbttLxfcfe+v5jzIZV3iRYJASLhGCRuFU281Zjk0dP9Uh3qYW2FSA9eoybjFgkBIuEYJEQLBILWkVuK+vedojoIeXz3UeoR/R55yCCRUKwSAgWiVutIruF6YW15zMe3XfbFwBvbRdwwirnEiwSgkVCsEj8PHm/eGuNe+bFM0ebztx3Yb3Ktt70C3/<span class="number">6</span>ixGLhGCRECwSgkViQavI/ad33rnRX998pttVe2HlnYMIFgnBIiFYJD7ZsDp+<span class="number">8</span>dghW0O7qX13suu2BjIXNqxyEMEiIVgkBIvErbKZR7q9oNt2ii58jJkbXXTfFox/qs87BxEsEoJFQrBILFh573SbXceXGtu2YfWtZjtLGLFICBYJwSIhWCTW93l/<span class="number">5</span>Myl5/<span class="number">29</span>We7c9y1q3jmIYJEQLBKCRWJBn/eFth3/<span class="number">9</span>Nbmz7G3Osg/otsMbxIsEoJFQrBI3Orz3hl3Np+<span class="number">51</span>MXC6Wp3OtIhh0MtqcAxYpEQLBKCRUKwSNzasHrIcUgXCyekC1+<span class="number">8</span>cNZ8udRbJ1h9xohFQrBICBYJwSLxSbeZbhZ5SIX4wi8Auq6TF9u+WrjJiEVCsEgIFgnBIrG+VeRCj+by29qgd11uxkvtXdl+<span class="number">0</span>YvGiEVCsEgIFgnBInH05H1m6fmQxooL6+W3ndk0puadNwkWCcEiIVgkPpm8dxPDmdORZirEH1lY29Md9LqwXOczRiwSgkVCsEgIFolbk/e3Wid2x7GO57bbTli96NbW928mMGKRECwSgkVCsEic1eedv4YRi4RgkRAsEoJFQrBICBYJwSLxP3LS5YIohRy8AAAAAElFTkSuQmCC&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>这里是一串不知名的代码, 不过看开头非常像 PNG 格式的图片 Base64 编码后的格式</p>
-<p>随便输一个密码看看有没有什么提示.</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagea7e4610f03a7f358.png" alt=""></p>
-<p>提示</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Hint:</span> png</span><br></pre></td></tr></table></figure>
-
-<p>我现在很确信这是一个 png 格式的图片 base64 编码后的代码</p>
-<p>直接在网上还原该图片得到了一个二维码</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imagebcae2e164280a166.png" alt=""></p>
-<p>继续识别一下该二维码则直接得到结果</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image967bd059fa30d7e1.png" alt=""></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f870f6a65d94a6f65a772b7f4734be95278e28fd</span><br></pre></td></tr></table></figure>
-
-<p>通关</p>
-<h1 id="LEVEL-10"><a href="#LEVEL-10" class="headerlink" title="LEVEL 10"></a>LEVEL 10</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image397155b6f0545158.png" alt=""></p>
-<p>本关给了一个加密函数的两个版本, js 和 python, 我比较熟悉 python 我们就来看下这个 python 函数的逻辑</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">r</span>(<span class="params">pwd, fr, to, by</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([pwd[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(fr, to, by)])</span><br></pre></td></tr></table></figure>
-
-<p>逻辑很简单, 该函数每次取出密码指定位的字符.</p>
-<p>再看看输出结果</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>))</span><br><span class="line">edac</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>))</span><br><span class="line">e76716c1</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>))</span><br><span class="line">1646561d3</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>))</span><br><span class="line">12b52d3fd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line"><span class="number">711283</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>))</span><br><span class="line">e</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">7bc5adfced</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>))</span><br><span class="line">7a6d85</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>))</span><br><span class="line">a2ffd</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(r(pwd, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>))</span><br><span class="line">61d3b5c</span><br></pre></td></tr></table></figure>
-<p>观察函数 r 的第三个参数, 我们发现最大值位 40, 该参数对应 range() 函数的第二位即 max.</p>
-<p>于是我们可以知道 pwd 的长度位 40, 解码函数的逻辑就很清楚了.</p>
-<p>创建一个长度 40 的数组, 然后将上述输出的结果依次填到数组的指定位置即可</p>
-<p>开始编写解码函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个 40 长度的数组</span></span><br><span class="line">_pwd = [ <span class="string">&quot;&quot;</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">40</span>) ]</span><br><span class="line"></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">text, fr, to ,by</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;text 就是执行 r 函数的输出结果&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i, j <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">range</span>(fr, to, by)):</span><br><span class="line">        _pwd[j] = text[i]</span><br></pre></td></tr></table></figure>
-
-<p>然后依次执行</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;edac&quot;</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e76716c1&quot;</span>, <span class="number">4</span>, <span class="number">20</span>, <span class="number">2</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;1646561d3&quot;</span>, <span class="number">5</span>, <span class="number">30</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;12b52d3fd&quot;</span>, <span class="number">5</span>, <span class="number">40</span>, <span class="number">4</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;711283&quot;</span>, <span class="number">6</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;e&quot;</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">1</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7bc5adfced&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;7a6d85&quot;</span>, <span class="number">10</span>, <span class="number">40</span>, <span class="number">5</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;a2ffd&quot;</span>, <span class="number">15</span>, <span class="number">40</span>, <span class="number">6</span>)</span><br><span class="line"><span class="attribute">decrypt</span>(<span class="string">&quot;61d3b5c&quot;</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-
-<p>拼接结果</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">&quot;&quot;</span>.join(_pwd)</span></span>)</span><br></pre></td></tr></table></figure>
-
-<p>得到密码</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edace17e62741b6ac51562a12ddff38cbfe53dcd</span><br></pre></td></tr></table></figure>
-
-<h1 id="LEVEL-11"><a href="#LEVEL-11" class="headerlink" title="LEVEL 11"></a>LEVEL 11</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image162da0736a8e78ea.png" alt=""></p>
-<p>最后一关就有点难度了</p>
-<p>因为你如果密码不正确的话是无法提交的, 也就是说没有任何的提示. 跟服务器也没有什么交互.</p>
-<p>我们只能先取看看网页源码里有什么线索没有</p>
-<p>果然发现了端倪, 源码里有一段 js 脚本, 看逻辑应该是处理提交密码的, 仔细分析下.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">  $( <span class="variable language_">document</span> ).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&quot;#submit&quot;</span>).<span class="title function_">on</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">      e.<span class="title function_">preventDefault</span>();</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>.<span class="title function_">indexOf</span>(<span class="string">&#x27;challenge&#x27;</span>)!=-<span class="number">1</span>) &#123;<span class="keyword">debugger</span>;&#125;</span><br><span class="line">      pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br><span class="line">      ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">      stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">      multi = <span class="literal">true</span>;</span><br><span class="line">      $(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">        multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))) &#123;</span><br><span class="line">        $.<span class="title function_">ajax</span>(<span class="string">&quot;./70/&quot;</span>+ pwd, &#123;</span><br><span class="line">          <span class="attr">success</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">            <span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)&amp;&amp;(</span><br><span class="line">              $.<span class="title function_">post</span>(<span class="string">&#x27;submit&#x27;</span>, &#123;<span class="attr">pwd</span>: o, <span class="attr">csrf_token</span>:<span class="string">&#x27;ce1db5808eeed02fc22e46b80ef4651e39b7cd59o1687498808&#x27;</span>&#125;).<span class="title function_">always</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;/jobs/challenge/next&#x27;</span>&#125;)</span><br><span class="line">            );</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">error</span>: <span class="keyword">function</span> (<span class="params">o</span>) &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;To be or not to be... &#x27;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>有几个变量我们需要注意下</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ts</span></span><br><span class="line"><span class="attribute">stmnt</span></span><br><span class="line"><span class="attribute">multi</span></span><br></pre></td></tr></table></figure>
-
-<p>我们直接在浏览器的控制台执行下面的代码看看有什么结果没有</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ts = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">data</span>(<span class="string">&#x27;ts&#x27;</span>)+<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">stmnt = <span class="title function_">getBiskuit</span>(<span class="string">&#x27;X-Odoo&#x27;</span>);</span><br><span class="line">multi = <span class="literal">true</span>;</span><br><span class="line">$(ts.<span class="title function_">substr</span>(<span class="number">0</span>,<span class="number">5</span>).<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)).<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"> i , j</span>) &#123;</span><br><span class="line">multi *= stmnt[<span class="built_in">parseInt</span>(j) +<span class="number">1</span>].<span class="title function_">charCodeAt</span>(<span class="number">0</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/imageb9a894415b409fae.png" alt=""></p>
-<p>然后我们往下看是一个条件判断</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>]) * <span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>]) * stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span> == ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>))))</span><br></pre></td></tr></table></figure>
-
-<p>太长了我们可以拆分一下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line">stmnt.<span class="title function_">split</span>(<span class="string">&quot;All&quot;</span>).<span class="property">length</span></span><br></pre></td></tr></table></figure>
-
-<p>简单来讲就是上面三行的乘积需要等于下面该行的值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ts.<span class="title function_">slice</span>(<span class="built_in">eval</span>(<span class="string">&quot;&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">1</span>&lt;<span class="number">0</span>)+<span class="string">&quot;&quot;</span>+<span class="string">&quot;-&quot;</span>+<span class="string">&#x27;&#x27;</span>+<span class="string">&quot;&quot;</span>+ƒ(<span class="number">0</span>&lt;<span class="number">1</span>)+<span class="string">&quot;-&quot;</span>+ƒ(<span class="number">1</span>&gt;<span class="number">0</span>)))</span><br></pre></td></tr></table></figure>
-
-<p>因为我们现在需要反推<code>pwd</code>这个值, 所以上面不涉及<code>pwd</code>变量的我们可以直接在控制台执行看看具体的值是多少</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image75d9447a4638c701.png" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>code</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>stmnt.split(“All”).length</td>
-<td>2</td>
-</tr>
-<tr>
-<td>ts.slice(eval(“”+’’+””+ƒ(1&lt;0)+””+”-“+’’+””+ƒ(0&lt;1)+”-“+ƒ(1&gt;0)))</td>
-<td>‘70’</td>
-</tr>
-</tbody></table>
-<p>这里注意到变量类型不同, 但是我们也看到了这个条件匹配用的是 <code>==</code>, 即不是严格模式! 所以我们可以把他们都当成数字来处理</p>
-<p>接下来我们处理包含 <code>pwd</code> 变量的条件</p>
-<p>我们把</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parseInt(<span class="name">pwd</span>.slice(<span class="name">-</span>(<span class="name">--</span>([,,,undefined].join()).length))[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-<p>记作 a</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">parseInt</span>(pwd.slice(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-<p>记作 b</p>
-<p>则上述条件可以变为</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a * b * <span class="number">2</span> <span class="operator">=</span><span class="operator">=</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
-
-<p>则可知 a b 的可选值表</p>
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>35</td>
-</tr>
-<tr>
-<td>35</td>
-<td>1</td>
-</tr>
-<tr>
-<td>5</td>
-<td>7</td>
-</tr>
-<tr>
-<td>7</td>
-<td>5</td>
-</tr>
-</tbody></table>
-<p>我们把</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">-</span>(<span class="built_in">--</span>(<span class="selector-attr">[,,,undefined]</span><span class="selector-class">.join</span>()).length)</span><br></pre></td></tr></table></figure>
-
-<p>在控制台里执行下, 然后得到值 <code>-2</code></p>
-<p>于是</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-(--([,,,<span class="literal">undefined</span>].<span class="title function_">join</span>()).<span class="property">length</span>))[<span class="number">0</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-
-<p>于是我们可以分析出 a 表达式为 <code>pwd</code> 变量的倒数第二字符所代表的值</p>
-<p>同理我们分析 b 表达式</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(<span class="number">0</span> - - - <span class="number">1</span> - - - - - <span class="number">1</span> - - - - <span class="number">0</span>)[<span class="number">1</span>])</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="built_in">parseInt</span>(pwd.<span class="title function_">slice</span>(-<span class="number">2</span>)[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
-
-<p>b 表达式为 <code>pwd</code> 变量的倒数第一字符所代表的值</p>
-<p>仔细观察 js 脚本还记不记得这句</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwd = $(<span class="string">&quot;#pwd&quot;</span>).<span class="title function_">val</span>();</span><br></pre></td></tr></table></figure>
-
-<p>意思是 <code>pwd</code> 取到的是一个字符串变量, 观察我们刚才的 a, b 取值表.</p>
-<p>我们发现按下标从一个字符串里取值, 取到的一定是一个字符, 不可能为两个字符, 于是现在 a / b 取值表就变为</p>
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>5</td>
-<td>7</td>
-</tr>
-<tr>
-<td>7</td>
-<td>5</td>
-</tr>
-</tbody></table>
-<p>也就是说 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code></p>
-<p>我们再往下看</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>===pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>我们先看一下里面的具体值是什么.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>)</span><br><span class="line"><span class="comment">// 执行得到, 这个东西看起来非常的像密码</span></span><br><span class="line"><span class="string">&#x27;4380Odoo&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>查看一下 <code>lastIndexOf</code> 方法的说明</p>
-<blockquote>
-<p>参考链接 </p>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf</a></p>
-</blockquote>
-<p>lastIndexOf() 方法返回调用String 对象的指定值最后一次出现的索引，在一个字符串中的指定位置 fromIndex处从后向前搜索。如果没找到这个特定值则返回-1 。</p>
-<p>该方法将从尾到头地检索字符串 str，看它是否含有子串 searchValue。开始检索的位置在字符串的 fromIndex 处或字符串的结尾（没有指定 fromIndex 时）。如果找到一个 searchValue，则返回 searchValue 的第一个字符在 str 中的位置。str中的字符位置是从 0 开始的。</p>
-<p>简单来讲, 就是想要</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span> === pwd.<span class="title function_">lastIndexOf</span>(multi.<span class="title function_">toString</span>().<span class="title function_">substr</span>(<span class="number">1</span>,<span class="number">4</span>)+stmnt.<span class="title function_">substring</span>(<span class="number">2</span>,<span class="number">6</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>这个表达式成立, <strong><code>pwd</code> 这个变量一定是 <code>multi.toString().substr(1,4)+stmnt.substring(2,6)</code> 所表示的值 <code>4380Odoo</code> 作为开头</strong></p>
-<p>又因为 <code>pwd</code> 的最后两位一定是 <code>57</code> 或 <code>75</code>, 所以可以猜测密码应该为</p>
-<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4380</span>Odo<span class="meta">o57</span></span><br><span class="line"><span class="number">4380</span>Odo<span class="meta">o75</span></span><br></pre></td></tr></table></figure>
-
-<p>这两个其中的一个</p>
-<p>大功告成!</p>
-<h1 id="Congratulations"><a href="#Congratulations" class="headerlink" title="Congratulations !"></a>Congratulations !</h1><p><img data-src="https://chevereto.wudinaonao.com/images/2022/06/23/image123e440fce3bf42e.png" alt=""></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">Python单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-06-22 09:24:03" itemprop="dateCreated datePublished" datetime="2022-06-22T09:24:03+08:00">2022-06-22</time>
-            </span>
-
-          
-            <span id="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Python单例模式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/22/Python%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="基于元类"><a href="#基于元类" class="headerlink" title="基于元类"></a>基于元类</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">type</span>):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        cls.__instance = <span class="literal">None</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> cls.__instance <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>().__call__(*args, **kwargs)</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(metaclass=Singleton):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="基于-new-方法"><a href="#基于-new-方法" class="headerlink" title="基于 new 方法"></a>基于 <strong>new</strong> 方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    __instance = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__new__</span>(<span class="params">cls, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> cls.__instance:</span><br><span class="line">            cls.__instance = <span class="built_in">super</span>(Singleton, cls).__new__(cls, *args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> cls.__instance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">Singleton</span>):</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="基于装饰器"><a href="#基于装饰器" class="headerlink" title="基于装饰器"></a>基于装饰器</h2><h3 id="用闭包实现"><a href="#用闭包实现" class="headerlink" title="用闭包实现"></a>用闭包实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">singleton</span>(<span class="params">cls</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用闭包的方式实现一个单例装饰器&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    __instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_create</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> __instance:</span><br><span class="line">            __instance[cls] = cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> __instance[cls]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> _create</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h3 id="用类实现"><a href="#用类实现" class="headerlink" title="用类实现"></a>用类实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, cls</span>):</span><br><span class="line">        self.__cls = cls</span><br><span class="line">        self.__instance = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, *args, **kwargs</span>):</span><br><span class="line">        <span class="keyword">if</span> self.__cls <span class="keyword">not</span> <span class="keyword">in</span> self.__instance:</span><br><span class="line">            self.__instance[self.__cls] = self.__cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> self.__instance[self.__cls]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spam</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s1 = Spam()</span><br><span class="line">s2 = Spam()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(s2))</span><br></pre></td></tr></table></figure>
-
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>Python的模块是天然的单例模式</p>
-<p>在一个py文件中, 多次导入同一个模块, 这个模块也只有在第一次的时候被导入, 后续的该模块导入语句都不会再执行了</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/653759">https://developer.aliyun.com/article/653759</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/" class="post-title-link" itemprop="url">20.有效的括号</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-10 20:01:30" itemprop="dateCreated datePublished" datetime="2022-05-10T20:01:30+08:00">2022-05-10</time>
-            </span>
-
-          
-            <span id="/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/" class="post-meta-item leancloud_visitors" data-flag-title="20.有效的括号" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/10/20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>给定一个只包括 ‘(‘，’)’，’{‘，’}’，’[‘，’]’ 的字符串 s ，判断字符串是否有效。</p>
-<p>有效字符串需满足</p>
-<ul>
-<li>左括号必须用相同类型的右括号闭合。</li>
-<li>左括号必须以正确的顺序闭合。</li>
-</ul>
-<p>例如：</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;()[]&#123;&#125;&quot;</span></span><br><span class="line">输出：<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：<span class="attr">s</span> = <span class="string">&quot;(]&quot;</span></span><br><span class="line">输出：<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>即左右括号必须是闭合的。</p>
-<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>使用栈结构来处理这个问题非常简单。</p>
-<p>我们从左到右依次扫描字符串的每一个字符，如果是<code>([&#123;</code>左括号就入栈，如果是<code>)]&#125;</code>右括号就从栈里弹出栈顶的元素，然后匹配该字符和栈顶元素是否是成对的。</p>
-<p>例如扫描到字符<code>(</code>,然后栈顶元素是<code>)</code>,则成对，否则不成对则返回<code>False</code></p>
-<p>扫描完字符串，如果栈里没有元素则说明括号都是成对的，匹配成功。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">isValid</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 字符串匹配成功的话其长度一定是偶数, 否则一定不成功</span></span><br><span class="line">        <span class="comment"># 这里可以先检查长度, 可以省略之后的步骤</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(s) % <span class="number">2</span> != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助栈</span></span><br><span class="line">        _stack = []</span><br><span class="line">        <span class="comment"># 对照表</span></span><br><span class="line">        _<span class="built_in">map</span> = &#123;</span><br><span class="line">            <span class="string">&quot;)&quot;</span>: <span class="string">&quot;(&quot;</span>,</span><br><span class="line">            <span class="string">&quot;]&quot;</span>: <span class="string">&quot;[&quot;</span>,</span><br><span class="line">            <span class="string">&quot;&#125;&quot;</span>: <span class="string">&quot;&#123;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> _char <span class="keyword">in</span> <span class="built_in">list</span>(s):</span><br><span class="line">            <span class="keyword">if</span> _char <span class="keyword">in</span> <span class="string">&quot;([&#123;&quot;</span>:</span><br><span class="line">                _stack.append(_char)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 当遇到右括号时, 从栈顶弹出元素检测是否</span></span><br><span class="line">                <span class="comment"># 成对, 即是否闭合, 不成对则返回 False</span></span><br><span class="line">                <span class="keyword">if</span> _stack:</span><br><span class="line">                    <span class="keyword">if</span> _char <span class="keyword">in</span> _<span class="built_in">map</span>:</span><br><span class="line">                        _top = _stack.pop()</span><br><span class="line">                        <span class="keyword">if</span> _<span class="built_in">map</span>[_char] != _top:</span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 右括号溢出</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 这里要判断栈里是否还有元素</span></span><br><span class="line">        <span class="comment"># 有元素则说明该字符串匹配不成功</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(_stack) == <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-
-<p>原链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/valid-parentheses/">https://leetcode.cn/problems/valid-parentheses/</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/04/15/vue-router-api-now-is-not-a-function/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/15/vue-router-api-now-is-not-a-function/" class="post-title-link" itemprop="url">vue router api.now is not a function</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-15 00:44:14" itemprop="dateCreated datePublished" datetime="2022-04-15T00:44:14+08:00">2022-04-15</time>
-            </span>
-
-          
-            <span id="/2022/04/15/vue-router-api-now-is-not-a-function/" class="post-meta-item leancloud_visitors" data-flag-title="vue router api.now is not a function" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/04/15/vue-router-api-now-is-not-a-function/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/15/vue-router-api-now-is-not-a-function/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>记录一次奇怪的 DEBUG 过程</p>
-<p>事情的起因是我在搭建一个前端项目, 第一次打开可以, 但是如果再刷新页面则会报错.</p>
-<p>仔细查看我的代码, 发现没有什么问题, 最后跟踪错误到了<code>vue-router</code></p>
-<p>控制台报错</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Uncaught</span> (in promise) TypeError: api.now is not a function</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">2545</span>:<span class="number">31</span></span><br><span class="line">    <span class="attribute">at</span> triggerAfterEach (vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3166</span>:<span class="number">13</span>)</span><br><span class="line">    <span class="attribute">at</span> vue-router.esm-bundler.js?v=<span class="number">44</span>d7056b:<span class="number">3069</span>:<span class="number">13</span></span><br></pre></td></tr></table></figure>
-
-<p>继续跟踪</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">api.<span class="title function_">addTimelineEvent</span>(&#123;</span><br><span class="line">                <span class="attr">layerId</span>: navigationsLayerId,</span><br><span class="line">                <span class="attr">event</span>: &#123;</span><br><span class="line">                    <span class="attr">title</span>: <span class="string">&#x27;End of navigation&#x27;</span>,</span><br><span class="line">                    <span class="attr">subtitle</span>: to.<span class="property">fullPath</span>,</span><br><span class="line">                    <span class="attr">time</span>: api.<span class="title function_">now</span>(), <span class="language-xml">&lt;--</span></span><br><span class="line"><span class="language-xml">                    data,</span></span><br><span class="line"><span class="language-xml">                    logType: failure ? &#x27;warning&#x27; : &#x27;default&#x27;,</span></span><br><span class="line"><span class="language-xml">                    groupId: to.meta.__navigationId,</span></span><br><span class="line"><span class="language-xml">                &#125;,</span></span><br><span class="line"><span class="language-xml">            &#125;); </span></span><br></pre></td></tr></table></figure>
-
-<p>如果出错的地方在业务逻辑, 则可以很容易的找出错误原因, 但是这个地方报错, 让我毫无头绪.</p>
-<p>Google …</p>
-<p>没想到还真的找到了解决方案, 而且还就在该文章发布时间的前半个月(还热乎着…)</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>That’s from the Vue devtools plugin. And only happens if you are still on the 6.0 beta of Vue devtools.</p>
-<p>Happened to me today when checking in another browser that still was on the 6.0 beta version instead of the stable one we released recently.</p>
-<p>Solution: remove the beta, upgrade to the stable release</p>
-<p>大意是说, 如果你开发时使用了 Vue Devtools 这个插件, 并且还是 6.0 beta 版本时, 就会发生这个问题.</p>
-<p>解决方案也很简单, 卸载这个测试版, 安装稳定版</p>
-<p><a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd">https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd</a></p>
-<p>现在想想, 这个插件我一年前装的, 然后就没管过, 我不清楚它会不会自动更新, 但是确实在我意想不到的地方给我挖了个大坑….</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个事情总结出什么经验呢? </p>
-<p>BUG 有时候就是发生的这么毫无逻辑…让人捉摸不定</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/vuejs/router/issues/1338">https://github.com/vuejs/router/issues/1338</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1524,7 +1277,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

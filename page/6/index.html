@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,452 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-title-link" itemprop="url">文件系统特定的 LookupAndOpen[file] 实施失败</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-21 18:33:56" itemprop="dateCreated datePublished" datetime="2022-02-21T18:33:56+08:00">2022-02-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/ESXI/" itemprop="url" rel="index"><span itemprop="name">ESXI</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" class="post-meta-item leancloud_visitors" data-flag-title="文件系统特定的 LookupAndOpen[file] 实施失败" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%89%B9%E5%AE%9A%E7%9A%84-LookupAndOpen-file-%E5%AE%9E%E6%96%BD%E5%A4%B1%E8%B4%A5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>错误描述</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">文件系统特定的 LookupAndOpen[<span class="keyword">file</span>] 实施失败</span><br><span class="line">对象类型需要托管的 I/O</span><br><span class="line">无法打开磁盘“<span class="regexp">/vmfs/</span>volumes<span class="regexp">/5ec70d97-8b7959b3-d45b-ecf4bbe3557c/</span>openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk”或其所依赖的快照磁盘之一。</span><br><span class="line">模块“Disk”打开电源失败。</span><br><span class="line">无法启动虚拟机。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>解决方案, 找到对应的磁盘文件(可以在网页里查看到磁盘的挂载路径)</p>
+<p>例如</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[datastore1]</span> openwrt/openwrt-x86-<span class="number">64</span>-generic-squashfs-combined<span class="selector-class">.vmdk</span> </span><br></pre></td></tr></table></figure>
+
+<p>尝试修复</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -x repair <span class="regexp">/vmfs/</span>volumes<span class="regexp">/&lt;datastorepath&gt;/</span>&lt;vm name&gt;/&lt;vm name main base disk&gt;.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>例如</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到该目录下</span></span><br><span class="line">cd <span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastore1/</span>openwrt</span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">vmkfstools -x repair openwrt-x86-<span class="number">64</span>-generic-squashfs-combined.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Disk was successfully repaired.</span><br></pre></td></tr></table></figure>
+
+<p>磁盘修复成功, 可以打开了.</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://kb.vmware.com/s/article/2149438?lang=zh_CN">https://kb.vmware.com/s/article/2149438?lang=zh_CN</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Jupyter配合Nginx反向代理的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-22 00:30:43" itemprop="dateCreated datePublished" datetime="2021-09-22T00:30:43+08:00">2021-09-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/Docker/Jupyter/" itemprop="url" rel="index"><span itemprop="name">Jupyter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Jupyter配合Nginx反向代理的问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/22/Jupyter%E9%85%8D%E5%90%88Nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="SSL-Error"><a href="#SSL-Error" class="headerlink" title="SSL Error"></a>SSL Error</h1><p>当 jupyter 配置了 SSL 时, Nginx 反向代理时也需要用 https 协议</p>
+<p>例如, 反向代理到本地的 10000 端口</p>
+<p>错误示范</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>正确示范</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass https:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">10000</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Websocket-连接问题"><a href="#Websocket-连接问题" class="headerlink" title="Websocket 连接问题"></a>Websocket 连接问题</h1><p>在基于 Docker 部署 jupyter 工作环境时, 可能会发生可以打开网页, 可以创建文件, 但是无法与后端 python 连接的情况.</p>
+<p>查看 jupyter 日志显示</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jupyter    | [W 2021-09-21 16:09:24.778 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.21ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:26.418 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.13ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:28.696 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.28ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:30.660 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.24ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:37.605 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.15ms <span class="attribute">referer</span>=None</span><br><span class="line">jupyter    | [W 2021-09-21 16:09:41.758 ServerApp] 400 <span class="built_in">GET</span> /terminals/websocket/1 (172.27.0.1) 1.11ms <span class="attribute">referer</span>=None</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当我尝试用 jupyter 提供的 terminal 时, 发现以上日志.</p>
+<p>这说明这个请求没有成功, 400 状态码参考 MDN</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">HTTP</span> <span class="number">400</span> Bad Request 响应状态码表示由于语法无效，服务器无法理解该请求。 客户端不应该在未经修改的情况下重复此请求。</span><br></pre></td></tr></table></figure>
+
+<p>所以应该是 nginx 在与 jupyter 通信时发生了问题.</p>
+<p>Google …</p>
+<p>找到以下解决方案, 一个可用的 Nginx 反向代理配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">location</span> / &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">location</span> <span class="regexp">~* /(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/?</span> &#123;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://jupyter;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># WebSocket support</span></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注意添加这三项</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line"><span class="attribute">proxy_set_header</span> Connection <span class="variable">$connection_upgrade</span>;</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/jupyter/notebook/issues/625">https://github.com/jupyter/notebook/issues/625</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/latest/config.html#options">https://jupyter-notebook.readthedocs.io/en/latest/config.html#options</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status/400</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/cboettig/8643341bd3c93b62b5c2">https://gist.github.com/cboettig/8643341bd3c93b62b5c2</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/29/crontab-%E6%8E%92%E9%94%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" class="post-title-link" itemprop="url">crontab 排错</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-29 18:17:25" itemprop="dateCreated datePublished" datetime="2021-05-29T18:17:25+08:00">2021-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" class="post-meta-item leancloud_visitors" data-flag-title="crontab 排错" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/29/crontab-%E6%8E%92%E9%94%99/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/29/crontab-%E6%8E%92%E9%94%99/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>在用 crontab 定时备份 gitlab 时, 发现任务总是不成功. 😱😱😱 </p>
+<p>命令如下</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">0</span> * * * /root/docker/gitlab/backup-gitlab.sh &gt;&gt; /root/docker/gitlab/backup-gitlab.<span class="keyword">log</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>测试后发现日志总是没有任何输出, 说明这个命令没有被执行. 🤔🤔🤔</p>
+<p>随便写了条命令测试</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * echo <span class="string">&quot;`date`&quot;</span> &gt; <span class="regexp">/root/</span>crontest.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<p>发现有输出…. 😲😲😲</p>
+<p>那么说明 crontab 确实工作了…. 😵😵😵</p>
+<p>沉思…. 🤔🤔🤔</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>虽然我不太清楚是什么原因, 但是当我把以下配置加入 crontab 后他开始工作了. 😄😄😄</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SHELL=<span class="regexp">/bin/bash</span></span><br><span class="line">PATH=<span class="regexp">/sbin:/bin</span><span class="symbol">:/usr/sbin</span><span class="symbol">:/usr/bin</span></span><br><span class="line">MAILTO=root</span><br><span class="line">HOME=<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p>也许是因为显式指定了 shell, 以及一些其他的一些参数, 导致可以正常工作, 因为我之前一直怀疑是权限的问题. 🤣🤣🤣</p>
+<p>参考连接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://my.oschina.net/leejun2005/blog/1788342">https://my.oschina.net/leejun2005/blog/1788342</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">编译Openwrt以及遇到的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-09 21:28:35" itemprop="dateCreated datePublished" datetime="2021-05-09T21:28:35+08:00">2021-05-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linuxe/" itemprop="url" rel="index"><span itemprop="name">Linuxe</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="编译Openwrt以及遇到的问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/09/%E7%BC%96%E8%AF%91Openwrt%E4%BB%A5%E5%8F%8A%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题以及解决方案"><a href="#问题以及解决方案" class="headerlink" title="问题以及解决方案"></a>问题以及解决方案</h1><h2 id="you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check"><a href="#you-should-not-run-configure-as-root-set-FORCE-UNSAFE-CONFIGURE-1-in-environment-to-bypass-this-check" class="headerlink" title="you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)"></a>you should not run configure as root (set FORCE_UNSAFE_CONFIGURE=1 in environment to bypass this check)</h2><p>错误提示:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you should <span class="keyword">not</span> <span class="built_in">run</span> configure as root (<span class="built_in">set</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1 <span class="keyword">in</span> environment <span class="keyword">to</span> bypass this check)</span><br></pre></td></tr></table></figure>
+
+<p>如果你以root用户运行编译, 会有这个提示. 有两个解决方案, 你可以换一个非root用户, 或者接忽略提示.</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> <span class="attribute">FORCE_UNSAFE_CONFIGURE</span>=1</span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tx422/article/details/78593860">https://blog.csdn.net/tx422/article/details/78593860</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -740,434 +1186,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">gitlab 502 错误排查</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-06 02:07:28" itemprop="dateCreated datePublished" datetime="2021-05-06T02:07:28+08:00">2021-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-meta-item leancloud_visitors" data-flag-title="gitlab 502 错误排查" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="动态查看日志"><a href="#动态查看日志" class="headerlink" title="动态查看日志"></a>动态查看日志</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f  <span class="regexp">/var/</span>log<span class="regexp">/gitlab/gi</span>tlab-rails/production.log</span><br></pre></td></tr></table></figure>
-
-<h2 id="迁移或恢复备份后部分操作服务端响应500"><a href="#迁移或恢复备份后部分操作服务端响应500" class="headerlink" title="迁移或恢复备份后部分操作服务端响应500"></a>迁移或恢复备份后部分操作服务端响应500</h2><p>进入容器, 运行</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-rails dbconsole</span></span><br></pre></td></tr></table></figure>
-
-<p>依次清除 token, 注意! 这样会清除全部的 token, 不过解决问题简单粗暴</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- clear project tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> projects <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear group tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> namespaces <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear instance tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> application_settings <span class="keyword">SET</span> runners_registration_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-
-<p>造成这个问题的原因是因为没有备份这个文件</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-secrets.json</span><br></pre></td></tr></table></figure>
-
-<p>以后操作的时候还是要多看看官方文档, 文档说的很清楚…</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
-</blockquote>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">When <span class="keyword">the</span> secrets <span class="built_in">file</span> is lost</span><br><span class="line">If you didn’t back up <span class="keyword">the</span> secrets <span class="built_in">file</span>, you must complete several steps <span class="built_in">to</span> <span class="built_in">get</span> GitLab working properly again.</span><br><span class="line"></span><br><span class="line">The secrets <span class="built_in">file</span> is responsible <span class="keyword">for</span> storing <span class="keyword">the</span> encryption key <span class="keyword">for</span> <span class="keyword">the</span> columns that contain required, sensitive information. If <span class="keyword">the</span> key is lost, GitLab can’t <span class="built_in">decrypt</span> those columns, preventing access <span class="built_in">to</span> <span class="keyword">the</span> following <span class="keyword">items</span>:</span><br><span class="line"></span><br><span class="line">CI/CD variables</span><br><span class="line">Kubernetes / GCP integration</span><br><span class="line">Custom Pages domains</span><br><span class="line">Project error tracking</span><br><span class="line">Runner authentication</span><br><span class="line">Project mirroring</span><br><span class="line">Web hooks</span><br><span class="line">In cases like CI/CD variables <span class="keyword">and</span> runner authentication, you can experience unexpected behaviors, such <span class="keyword">as</span>:</span><br><span class="line"></span><br><span class="line">Stuck jobs.</span><br><span class="line"><span class="number">500</span> errors.</span><br></pre></td></tr></table></figure>
-
-<h2 id="Whoops-GitLab-is-currently-unavailable"><a href="#Whoops-GitLab-is-currently-unavailable" class="headerlink" title="Whoops, GitLab is currently unavailable."></a>Whoops, GitLab is currently unavailable.</h2><p>可以正常查看项目列表, 但是无法进入项目, 错误提示</p>
-<figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Whoops, GitLab <span class="keyword">is</span> currently unavailable.</span><br></pre></td></tr></table></figure>
-
-<p>项目基于docker容器部署, 首先查看日志, 发现一条错误, 权限拒绝.</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;error&quot;</span><span class="punctuation">:</span><span class="string">&quot;open /var/opt/gitlab/gitaly/gitaly.pid: permission denied&quot;</span><span class="punctuation">,</span><span class="attr">&quot;level&quot;</span><span class="punctuation">:</span><span class="string">&quot;fatal&quot;</span><span class="punctuation">,</span><span class="attr">&quot;msg&quot;</span><span class="punctuation">:</span><span class="string">&quot;find gitaly&quot;</span><span class="punctuation">,</span><span class="attr">&quot;time&quot;</span><span class="punctuation">:</span><span class="string">&quot;2021-05-05T18:05:26Z&quot;</span><span class="punctuation">,</span><span class="attr">&quot;wrapper&quot;</span><span class="punctuation">:</span><span class="number">3514</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>google 发现, 这个文件在 docker 容器里的权限应该是 git:git</p>
-<p>但是我进入容器后发现该文件的权限为 root:root</p>
-<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 63 </span>May <span class="number"> 5 </span>16:51 RUBY_VERSION</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 23 </span>May <span class="number"> 5 </span>17:56 VERSION</span><br><span class="line">-rw-r-----<span class="number"> 1 </span>root git  <span class="number"> 819 </span>May <span class="number"> 5 </span>17:56 config.toml</span><br><span class="line">-rw-------<span class="number"> 1 </span>root root   <span class="number"> 3 </span>Mar <span class="number"> 8 </span>18:57 gitaly.pid</span><br><span class="line">srwxr-xr-x<span class="number"> 1 </span>root root   <span class="number"> 0 </span>Mar <span class="number"> 8 </span>18:57 gitaly.socket</span><br><span class="line">drwx------<span class="number"> 2 </span>git  root<span class="number"> 4096 </span>Mar <span class="number"> 8 </span>18:57 internal_sockets</span><br></pre></td></tr></table></figure>
-
-<p>修改权限</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> git:git gitaly.pid</span><br></pre></td></tr></table></figure>
-
-<h2 id="Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories"><a href="#Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories" class="headerlink" title="Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories"></a>Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories</h2><p>备份的时候出现这个问题, 十有八九是权限问题.</p>
-<p>直接 </p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> -R <span class="number">777</span> bakcups</span><br></pre></td></tr></table></figure>
-
-<p>参考连接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19">https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19</a><br><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Cloudflare CDN 的一些问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-24 13:15:59" itemprop="dateCreated datePublished" datetime="2021-04-24T13:15:59+08:00">2021-04-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Cloudflare CDN 的一些问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Cloudflare 免费版的 CDN 似乎不支持三级域名.</p>
-<p>例如 </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; www<span class="selector-class">.abc</span><span class="selector-class">.xxx</span><span class="selector-class">.com</span></span><br><span class="line">B -&gt; abc<span class="selector-class">.xxx</span>.com</span><br></pre></td></tr></table></figure>
-
-<p>访问 A 域名时会提示 SSL 错误, 访问 B 则一切正常.</p>
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/third-level-domain/63383">https://community.cloudflare.com/t/third-level-domain/63383</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">Koolshare Clash 更新 Clash 版本</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-22 16:38:55" itemprop="dateCreated datePublished" datetime="2021-04-22T16:38:55+08:00">2021-04-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="Koolshare Clash 更新 Clash 版本" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Koolshare-Clash 的 Github 地址</p>
-<p><code>https://github.com/SukkaW/Koolshare-Clash</code></p>
-<p>这个项目已经两年没更新了, 项目自带的 Clash 版本为 Clash v0.20.0 已经很旧了.</p>
-<p>目前为止 Clash 的最新版本为 Clash v1.5.0</p>
-<p>笔者尝试更新 Clash 版本, 但是遇到的一些问题, 这里记录一下解决方案.</p>
-<h2 id="更新-Clash-版本"><a href="#更新-Clash-版本" class="headerlink" title="更新 Clash 版本"></a>更新 Clash 版本</h2><p>笔者的路由器为LEDE_X86 for linux, 首先通过 SSH 登录后台.</p>
-<p>切换到目录</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/koolshare/</span>bin</span><br></pre></td></tr></table></figure>
-
-<p>去 Github 下载对应的平台的最新的 Clash </p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash</span><br></pre></td></tr></table></figure>
-
-<p>删除旧的 Clash</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> clash</span><br></pre></td></tr></table></figure>
-
-<p>把新的 Clash 拷贝进去, 然后更改权限</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> <span class="number">755</span> clash</span><br></pre></td></tr></table></figure>
-
-<p>然后去 Koolshare 重启 Clash</p>
-<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="访问代理后台看不见配置的代理"><a href="#访问代理后台看不见配置的代理" class="headerlink" title="访问代理后台看不见配置的代理"></a>访问代理后台看不见配置的代理</h3><p>出现这种原因是因为 0.20.0 的配置文件和 1.5.0 配置文件有些字段更改了, 需要更改 Clash 的配置文件</p>
-<p>访问该网址可以查看最新的配置文件规则</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash<span class="regexp">/wiki/</span>configuration</span><br></pre></td></tr></table></figure>
-
-<p>一些差异</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxies</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy Group</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxy-groups</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Rule</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; rules</span><br></pre></td></tr></table></figure>
-
-<p>配置文件从1.0.0版本开始更改.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">Docker删除None镜像</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-21 12:58:25" itemprop="dateCreated datePublished" datetime="2021-04-21T12:58:25+08:00">2021-04-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Docker删除None镜像" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 停止docker</span><br><span class="line">docker stop <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除docker</span><br><span class="line">docker rm <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除images</span><br><span class="line">docker rmi <span class="constructor">$(<span class="params">docker</span> <span class="params">images</span> | <span class="params">grep</span> <span class="string">&quot;none&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $3&#125;&#x27;)</span></span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p> <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d06830de219f">https://www.jianshu.com/p/d06830de219f</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1239,7 +1257,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

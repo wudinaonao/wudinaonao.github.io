@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,454 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/" class="post-title-link" itemprop="url">Docker部署Nexus</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-29 20:53:44" itemprop="dateCreated datePublished" datetime="2022-10-29T20:53:44+08:00">2022-10-29</time>
+            </span>
+
+          
+            <span id="/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/" class="post-meta-item leancloud_visitors" data-flag-title="Docker部署Nexus" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>容器仓库是容器化管理中非常重要的一环，相当于 SVN 在程序研发、运维发布中的地位。因此，一个稳定、可靠的容器仓库尤为重要。</p>
+<p>目前我知道的的数据仓库有</p>
+<ul>
+<li><p>Docker 官方的 Registry 原生仓库</p>
+</li>
+<li><p>SuSE 团队推出的出的 Portus：<a target="_blank" rel="noopener" href="https://github.com/SUSE/Portus">https://github.com/SUSE/Portus</a></p>
+</li>
+<li><p>VMWare 中国团队推出的企业级仓库—Harbor</p>
+</li>
+<li><p>大家熟知的 Maven 私服：Sonatype Nexus3</p>
+<p>本文主要介绍下 Sonatype Nexus 3 这个功能强大的产品，它不仅能够用于创建 Maven 私服，还可以用来创建 yum、pypi、npm、nuget、rubygems 等各种私有仓库。而且，Nexus 从 3.0 版本也开始支持创建 Docker 镜像仓库了！</p>
+</li>
+</ul>
+<p>因此，在上述几个产品里面我毫不犹豫的选择了 Nexus3 作为部门的公共数据仓库，一举多得。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>创建<code>docker-compose.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.7&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nexus3:</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nexus3</span></span><br><span class="line">    <span class="attr">tty:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">sonatype/nexus3</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./data:/nexus-data&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/etc/localtime:/etc/localtime:ro&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/etc/timezone:/etc/timezone:ro&quot;</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8081:8081&quot;</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8082:8082&quot;</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8083:8083&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">      </span><br><span class="line">    <span class="attr">user:</span> <span class="string">root</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">deploy:</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">            <span class="attr">limits:</span></span><br><span class="line">                <span class="comment"># 限制内存使用</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">4G</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">&quot;100M&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后一键部署</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose <span class="comment">--compatibility up -d</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://hub.docker.com/r/sonatype/nexus3/">https://hub.docker.com/r/sonatype/nexus3/</a></p>
+</blockquote>
+<p>大概 2 分钟左右可以完成启动，此时可以通过浏览器访问 <a target="_blank" rel="noopener" href="http://IP">http://IP</a> 地址:8081 即可出现 nexus 的 web 界面：</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagec2562674cfbff261.png" alt=""></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>默认账户名<code>admin</code>, 密码参阅官方文档, 在<code>./data/admin.password</code>这个文件中</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Default</span> <span class="keyword">user</span> <span class="keyword">is</span> <span class="keyword">admin</span> <span class="keyword">and</span> the uniquely <span class="keyword">generated</span> <span class="keyword">password</span> can be <span class="built_in">found</span> <span class="keyword">in</span> the <span class="keyword">admin</span>.<span class="keyword">password</span> file inside the volume. See Persistent Data <span class="keyword">for</span> information about the volume.</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建-Docker-仓库"><a href="#创建-Docker-仓库" class="headerlink" title="创建 Docker 仓库"></a>创建 Docker 仓库</h2><p>回到前面的 repository 界面，点击 repositories 打开页面后点击【create repository】打开仓库类型选择界面</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image4c57d0fffe0de4a3.png" alt=""></p>
+<p>可以看到 Docker 有三种类型，分别是 docker(group)，docker(hosted)，docker(proxy)。其含义解释如下：</p>
+<ul>
+<li><p>hosted : 本地存储，即同 docker 官方仓库一样提供本地私服功能</p>
+</li>
+<li><p>proxy : 提供代理其他仓库的类型，如 docker 中央仓库</p>
+</li>
+<li><p>group : 组类型，实质作用是组合多个仓库为一个地址</p>
+</li>
+</ul>
+<p>开始创建 Docker 仓库</p>
+<p>首先，我们创建一个 docker 代理仓库，点击 docker(proxy)，如图填写信息</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image983e57f55fe40b9d.png" alt=""></p>
+<p>往下翻页，勾上 “Allow clients to use the V1 API to interact with this Repository”，允许 Docker V1 API 请求。</p>
+<p>至于代理的对象，我可以选择官方的镜像地址：<a target="_blank" rel="noopener" href="https://registry-1.docker.io，但是官方的比较慢，所以这里我们可以填写国内的">https://registry-1.docker.io，但是官方的比较慢，所以这里我们可以填写国内的</a> Docker 镜像加速器地址，比如阿里云或DaoCloud的容器加速</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagecf93af4f28551091.png" alt=""></p>
+<p>我这里选择了 DaoCloud 的镜像加速，这里为了确保能够拉取 DockerHub 最新的镜像，我选择了 Use DockerHub 这个 Index</p>
+<p>接着，再创建一个本地仓库，这里比较简单，只需要填写本地仓库的名称，比如 docker-hosted，然后填写 HTTP 端口即可，比如 8083</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image1831e73cfe510596.png" alt=""></p>
+<p>保存之后，最后创建一个聚合仓库（group），将代理仓库和本地仓库聚合到一起使用，这里我命名为 docker，然后端口选择 8082</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image048c2bbadac5f128.png" alt=""></p>
+<p>这里成员仓库的顺序可以稍微规划下，一般来说将本地的放前面，代理第三方的放后面，好处就是优先使用本地或小众的镜像仓库。我这边是用了多个第三方仓库，所有有多个</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagebf3b90ada73f2c0e.png" alt=""></p>
+<p>至此，nexus 在 docker 这一块是部署已经完成了，但是这样并不能很好的使用。因为 group 仓库并不能推送镜像，因为你推送自己制作的镜像到仓库还得通过本地仓库的端口去推送，很不方便！</p>
+<h2 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h2><p>上面配置完了，但是不够完美。</p>
+<p>Pull/Push 操作的端口并不相同，我们需要聚合到一个端口, 通过配置 Nginx 匹配请求方法，路径的匹配来分流到不同的端口</p>
+<p>我们需要两个域名，一个用作Nexus, 一个用作Docker</p>
+<p>例如</p>
+<ul>
+<li><p>nexus.abc.com</p>
+</li>
+<li><p>docker.abc.com</p>
+</li>
+</ul>
+<p>注意替换里面的IP地址</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">upstream</span> nexus_web &#123;</span><br><span class="line">    <span class="comment"># Nexus 前台</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8081</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="section">upstream</span> nexus_docker_get &#123;</span><br><span class="line">    <span class="comment"># docker push 请求</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8082</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="section">upstream</span> nexus_docker_put &#123;</span><br><span class="line">    <span class="comment"># docker pull 请求</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8083</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Docker 的配置</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="comment"># 这个用于 docker, 注意域名的配置</span></span><br><span class="line">    <span class="attribute">server_name</span> docker.abc.com;</span><br><span class="line">    <span class="attribute">access_log</span> /data/wwwlogs/docker.abc.com.log access_log_json;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 证书配置</span></span><br><span class="line">    <span class="comment"># 如果使用宝塔面板或其他可以自动申请证书的面板来配置会方便很多</span></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /data/wwwroot/ssl/out/docker.abc.com/docker.abc.com.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /data/wwwroot/ssl/out/docker.abc.com/docker.abc.com.key.pem;</span><br><span class="line">    <span class="attribute">ssl_protocols</span> TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> <span class="string">&#x27;!aNULL:kECDH+AESGCM:ECDH+AESGCM:RSA+AESGCM:kECDH+AES:ECDH+AES:RSA+AES:&#x27;</span>;</span><br><span class="line">    <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># disable any limits to avoid HTTP 413 for large image uploads</span></span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment"># required to avoid HTTP 411: see Issue #1486 (https://github.com/docker/docker/issues/1486)</span></span><br><span class="line">    <span class="attribute">chunked_transfer_encoding</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="comment"># 设置默认使用推送代理</span></span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_put&quot;</span>;</span><br><span class="line">    <span class="comment"># 当请求是 GET，也就是拉取镜像的时候，这里改为拉取代理，如此便解决了拉取和推送的端口统一</span></span><br><span class="line">    <span class="attribute">if</span> ( <span class="variable">$request_method</span> <span class="regexp">~* &#x27;GET&#x27;)</span> &#123;</span><br><span class="line">        <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_get&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># 只有本地仓库才支持搜索，所以将搜索请求转发到本地仓库，否则出现 500 报错</span></span><br><span class="line">    <span class="attribute">if</span> (<span class="variable">$request_uri</span> <span class="regexp">~ &#x27;/search&#x27;)</span> &#123;</span><br><span class="line">        <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_put&quot;</span>; </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.php;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://<span class="variable">$upstream</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_request_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto http;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nexus 前台的配置</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="comment"># 这个用于 nexus 前台, 注意域名的配置</span></span><br><span class="line">    <span class="attribute">server_name</span> nexus.abc.com;</span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.php;</span><br><span class="line">    <span class="attribute">ssl_certificate</span> /data/wwwroot/ssl/out/nexus.abc.com/nexus.abc.com.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /data/wwwroot/ssl/out/nexus.abc.com/nexus.abc.com.key.pem;</span><br><span class="line">    <span class="attribute">ssl_protocols</span> TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> <span class="string">&#x27;!aNULL:kECDH+AESGCM:ECDH+AESGCM:RSA+AESGCM:kECDH+AES:ECDH+AES:RSA+AES:&#x27;</span>;</span><br><span class="line">    <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">    <span class="attribute">access_log</span> /data/wwwlogs/nexus.abc.com.log access_log_json;</span><br><span class="line">    <span class="section">location</span> /download &#123;</span><br><span class="line">        <span class="attribute">root</span> /data/wwwroot/nexus.abc.com;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nexus_web;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">client_max_body_size</span> <span class="number">512m</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_request_buffering</span> <span class="literal">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再Push镜像的时候只需要把tag加上自己域名即可</p>
+<p>例如把官方的nginx推送到自建的仓库</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker pull nginx</span></span><br></pre></td></tr></table></figure>
+
+<p>改标签</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">tag</span> <span class="title">nginx</span> docker.abc.com/nginx</span><br></pre></td></tr></table></figure>
+
+<p>登录 docker.abc.com</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login docker.<span class="keyword">abc</span>.<span class="keyword">com</span></span><br></pre></td></tr></table></figure>
+
+<p>推送</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push docker.<span class="keyword">abc</span>.<span class="keyword">com</span>/nginx</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhangge.net/5139.html">https://zhangge.net/5139.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">Pytest在VSCode里无法跟踪到第三方包里的代码</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-29 20:51:49" itemprop="dateCreated datePublished" datetime="2022-10-29T20:51:49+08:00">2022-10-29</time>
+            </span>
+
+          
+            <span id="/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/" class="post-meta-item leancloud_visitors" data-flag-title="Pytest在VSCode里无法跟踪到第三方包里的代码" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在<code>launch.json</code>文件里关闭<code>justMyCode</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Python: Debug Tests&quot;</span>,</span><br><span class="line">  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;python&quot;</span>,</span><br><span class="line">  <span class="string">&quot;request&quot;</span>: <span class="string">&quot;launch&quot;</span>,</span><br><span class="line">  <span class="string">&quot;program&quot;</span>: <span class="string">&quot;<span class="variable">$&#123;file&#125;</span>&quot;</span>,</span><br><span class="line">  <span class="string">&quot;purpose&quot;</span>: [<span class="string">&quot;debug-test&quot;</span>],</span><br><span class="line">  <span class="string">&quot;console&quot;</span>: <span class="string">&quot;integratedTerminal&quot;</span>,</span><br><span class="line">  <span class="string">&quot;justMyCode&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/python/testing">https://code.visualstudio.com/docs/python/testing</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/" class="post-title-link" itemprop="url">Python中的前向引用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-29 20:39:42" itemprop="dateCreated datePublished" datetime="2022-10-29T20:39:42+08:00">2022-10-29</time>
+            </span>
+
+          
+            <span id="/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Python中的前向引用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self</span>) -&gt; B:</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码在IDE里会报错, 因为类<code>B</code>在声明前被引用了</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image.png" alt=""></p>
+<p>这样我们就无法利用IDE来查看类<code>B</code>的成员变量, 方法等内容. </p>
+<p>解决方法很简单</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(object):</span><br><span class="line">    </span><br><span class="line">    def get<span class="function"><span class="params">(self)</span> -&gt;</span> <span class="string">&quot;B&quot;</span>:</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagee49c7665b8c3dde4.png" alt=""></p>
+<p>加个引号<code>&quot;</code></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/typing.html#constant">https://docs.python.org/zh-cn/3/library/typing.html#constant</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">关于Python类型注解的一个问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-29 20:07:35" itemprop="dateCreated datePublished" datetime="2022-10-29T20:07:35+08:00">2022-10-29</time>
+            </span>
+
+          
+            <span id="/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="关于Python类型注解的一个问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在 Python 中有很多特殊属性, 例如 <code>__name__</code>, <code>__module__</code> 等有特殊的意义</p>
+<p><code>__annotations__</code> 该函数返回对象的注解字典, 更多详情参见官方文档</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/howto/annotations.html">https://docs.python.org/zh-cn/3/howto/annotations.html</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Human</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">str</span></span><br><span class="line">    age: <span class="built_in">int</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中, 我们创建了一个 <code>Human</code> 类, 同时声明了两个类属性<code>name</code>, <code>age</code></p>
+<p>因为我们使用了类型注解, 所以我们可以通过<code>__annotations__</code>方法拿到声明的这两个属性名以及类型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">h = Human()</span><br><span class="line"><span class="built_in">print</span>(h.__annotations__)</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;, <span class="string">&#x27;age&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;int&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们得到了一个<code>属性名:类型</code>的键值对</p>
+<p>此时我们继续创建一个<code>Human</code>的子类<code>Man</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Man</span>(<span class="title class_ inherited__">Human</span>):</span><br><span class="line"></span><br><span class="line">    name = <span class="string">&quot;Naonao&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意这里我们的类变量<code>name</code>没有使用类型注解, 仅仅是一个赋值的类变量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m = Man()</span><br><span class="line"><span class="built_in">print</span>(m.__annotations__)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;, <span class="string">&#x27;age&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;int&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看一下子类的<code>__annotations__</code>注解字典, 我们发现子类继承了父类的注解</p>
+<p><strong>但是如果我们这样写</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Man</span>(<span class="title class_ inherited__">Human</span>):</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><code>name</code>使用了类型注解, 我们将得到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>子类重写了<code>__annotations__</code></strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/howto/annotations.html">https://docs.python.org/zh-cn/3/howto/annotations.html</a></p>
+</blockquote>
+<p>查看官方文档发现, 这个是3.9版本之前的一个设计缺陷.</p>
+<p><strong>特此记录, 因为本人在此坑里陷了甚久</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -672,486 +1120,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">Jenkins更新失败解决方案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-13 10:59:35" itemprop="dateCreated datePublished" datetime="2022-10-13T10:59:35+08:00">2022-10-13</time>
-            </span>
-
-          
-            <span id="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-meta-item leancloud_visitors" data-flag-title="Jenkins更新失败解决方案" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/13/Jenkins%E6%9B%B4%E6%96%B0%E5%A4%B1%E8%B4%A5%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>笔者使用 Docker 部署了一个 Jenkins 镜像，最近升级镜像版本时遇到问题。</p>
-<p>现在记录解决方案</p>
-<h2 id="java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy"><a href="#java-lang-NoClassDefFoundError-org-jruby-javasupport-proxy-InternalJavaProxy" class="headerlink" title="java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy"></a>java.lang.NoClassDefFoundError: org/jruby/javasupport/proxy/InternalJavaProxy</h2><p>参考该链接解决</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282">https://community.jenkins.io/t/jenkins-war-update-caused-issue-when-ruby-runtime-plugin-is-installed/3282</a></p>
-</blockquote>
-<p>There may be deprecated plugins installed on your system that need to be removed.</p>
-<p>The Jenkins project stopped distributing the Ruby runtime plugin, the Python runtime plugin, and plugins that depend on those two plugins in January 2022. You can find a detailed list of plugins and more information in the blog post:</p>
-<p>大意是旧版本包含了已经弃用的插件。</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Ruby runtime plugin</span></span><br></pre></td></tr></table></figure>
-
-<p>这个插件在 2.373 版本已经弃用了，需要卸载之前安装的该插件。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image.png" alt=""></p>
-<p>启动旧版本docker镜像后，我们发现在控制台面板无法卸载。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image29d2887b0b56c1ea.png" alt=""></p>
-<p>解决方案是，进入到<code>$JENKINS_HOME/plugins</code>目录，然后移除<code>ruby-runtime*</code></p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image618cb411402d9219.png" alt=""></p>
-<p>即这两个文件</p>
-<p>然后更新镜像版本，一切正常</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/13/image2640e9e6bea963cb.png" alt=""></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">KMP字符串匹配算法的理解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-12 21:46:24" itemprop="dateCreated datePublished" datetime="2022-10-12T21:46:24+08:00">2022-10-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="KMP字符串匹配算法的理解" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/12/KMP%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在计算机科学中, 字符串搜索是一个很常见的任务. 给定两个字符串A和B, 例如</p>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; ABC ABCDAB ABCDABCDABDE</span><br><span class="line">B -&gt; ABCDABD</span><br></pre></td></tr></table></figure>
-
-<p>我们怎么知道 A 是否包含有 B ?</p>
-<p>有很多种算法可以完成这个任务, Knuth-Morris-Pratt字符串查找算法（简称为KMP算法）是比较著名的一种.</p>
-<p>这个算法由高德纳（Donald Knuth）和沃恩·普拉特（英语：Vaughan Pratt）在1974年构思，同年詹姆斯·H·莫里斯（英语：James H. Morris）也独立地设计出该算法，最终三人于1977年联合发表.</p>
-<p>没错! 起头的那个 K 就是高德纳老爷子</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image.png" alt=""></p>
-<p>该算法的巧妙之处在于, 一个词在不匹配时本身就包含足够的信息来确定下一个匹配可能的开始位置，此算法利用这一特性以避免重新检查先前配對的字符。（来自维基百科）</p>
-<p>emmm….</p>
-<p>我觉得，上面的话似乎不太好懂，我个人的理解是，该算法设计了一种方法，利用已经匹配过的信息，来减少重新匹配的次数。</p>
-<p>以下的文章基于阮一峰的网络日志，特地记录了下学习的过程，以加强理解。</p>
-<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagecc3ea0b9a4cb30b2.png" alt=""></p>
-<p>如上图，首先字符串“BBC ABCDAB ABCDABCDABDE”的第一个字符与搜索词“ABCDABD”的第一个字符进行比较，因为B与A不匹配，所以我们将搜索词后移一位。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image86dc56a4a494075f.png" alt=""></p>
-<p>因为B与A不匹配，我们继续后移。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imaged2ced97720283918.png" alt=""></p>
-<p>如此直到字符串有一个字符与搜索词的第一个字符匹配到为止。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image7477df616cfabb08.png" alt=""></p>
-<p>接着比较字符串和搜索词的下一个字符，还是相同。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
-<p>直到字符串有一个字符，与搜索词对应的字符不相同为止。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefd15692621352466.png" alt=""></p>
-<p>这时，最自然的反应是，将搜索词整个后移一位，再从头逐个比较。这样做虽然可行，但是效率很差，因为你要把”搜索位置”移到已经比较过的位置，重比一遍。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
-<p>一个基本事实是，当空格与D不匹配时，你其实知道前面六个字符是”ABCDAB”。KMP算法的想法是，设法利用这个已知信息，不要把”搜索位置”移回已经比较过的位置，继续把它向后移，这样就提高了效率。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
-<p>怎么做到这一点呢？可以针对搜索词，算出一张《部分匹配表》（Partial Match Table）。这张表是如何产生的，后面再介绍，这里只要会用就可以了。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagef86cfd399129e1e5.png" alt=""></p>
-<p>已知空格与D不匹配时，前面六个字符”ABCDAB”是匹配的。查表可知，最后一个匹配字符B对应的”部分匹配值”为2，因此按照下面的公式算出向后移动的位数</p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">移动位数 <span class="operator">=</span> 已匹配的字符数 - 对应的部分匹配值</span><br></pre></td></tr></table></figure>
-
-<p>因为 6 - 2 等于4，所以将搜索词向后移动4位。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image1b937471562a53b5.png" alt=""></p>
-<p>因为空格与Ｃ不匹配，搜索词还要继续往后移。这时，已匹配的字符数为2（”AB”），对应的”部分匹配值”为0。所以，移动位数 = 2 - 0，结果为 2，于是将搜索词向后移2位。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image3a680f9eeb1ae9f6.png" alt=""></p>
-<p>因为空格与A不匹配，继续后移一位。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
-<p>逐位比较，直到发现C与D不匹配。于是，移动位数 = 6 - 2，继续将搜索词向后移动4位。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/image71addcc418b4bb22.png" alt=""></p>
-<p>逐位比较，直到搜索词的最后一位，发现完全匹配，于是搜索完成。如果还要继续搜索（即找出全部匹配），移动位数 = 7 - 0，再将搜索词向后移动7位，这里就不再重复了。</p>
-<h2 id="如何计算部分匹配表"><a href="#如何计算部分匹配表" class="headerlink" title="如何计算部分匹配表"></a>如何计算部分匹配表</h2><p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imagefff2d7818cf3d586.png" alt=""></p>
-<p>首先，要了解两个概念：”前缀”和”后缀”。 “前缀”指除了最后一个字符以外，一个字符串的全部头部组合；”后缀”指除了第一个字符以外，一个字符串的全部尾部组合。</p>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb96657543b7badbc.png" alt=""></p>
-<p>“部分匹配值”就是”前缀”和”后缀”的最长的共有元素的长度。以”ABCDABD”为例，</p>
-<table>
-<thead>
-<tr>
-<th>字符串</th>
-<th>前缀</th>
-<th>后缀</th>
-<th>最长共有元素</th>
-<th>最长共有元素的长度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>A</td>
-<td>空集</td>
-<td>空集</td>
-<td>无</td>
-<td>0</td>
-</tr>
-<tr>
-<td>AB</td>
-<td>A</td>
-<td>B</td>
-<td>无</td>
-<td>0</td>
-</tr>
-<tr>
-<td>ABC</td>
-<td>A, AB</td>
-<td>BC, C</td>
-<td>无</td>
-<td>0</td>
-</tr>
-<tr>
-<td>ABCD</td>
-<td>A, AB, ABC</td>
-<td>BCD, CD, D</td>
-<td>无</td>
-<td>0</td>
-</tr>
-<tr>
-<td>ABCDA</td>
-<td>A, AB, ABC, ABCD</td>
-<td>BCDA, CDA, DA, A</td>
-<td>A</td>
-<td>1</td>
-</tr>
-<tr>
-<td>ABCDAB</td>
-<td>A, AB, ABC, ABCD, ABCDA</td>
-<td>BCDAB, CDAB, DAB, AB, B</td>
-<td>AB</td>
-<td>2</td>
-</tr>
-<tr>
-<td>ABCDABD</td>
-<td>A, AB, ABC, ABCD, ABCDA, ABCDAB</td>
-<td>BCDABD, CDABD, DABD, ABD, BD, D</td>
-<td>无</td>
-<td>0</td>
-</tr>
-</tbody></table>
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/12/imageb72b3b429bb59900.png" alt=""></p>
-<p><strong>“部分匹配”的实质是，有时候，字符串头部和尾部会有重复。比如，”ABCDAB”之中有两个”AB”，那么它的”部分匹配值”就是2（”AB”的长度）。搜索词移动的时候，第一个”AB”向后移动4位（搜索串长度-部分匹配值），就可以来到第二个”AB”的位置。</strong></p>
-<h2 id="Python-实现"><a href="#Python-实现" class="headerlink" title="Python 实现"></a>Python 实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">KMP</span>(<span class="params">text: <span class="built_in">str</span>, pattern: <span class="built_in">str</span>, search_all: <span class="built_in">bool</span> = <span class="literal">True</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;KMP字符串搜索算法&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t_len = <span class="built_in">len</span>(text)</span><br><span class="line">    p_len = <span class="built_in">len</span>(pattern)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 模式串长度小于待搜索的字符串</span></span><br><span class="line">    <span class="keyword">if</span> t_len &lt; p_len:</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">while</span> i &lt; t_len:</span><br><span class="line">        is_match = <span class="literal">True</span></span><br><span class="line">        <span class="comment"># 匹配最后一部分时, 起始坐标加上模式串的</span></span><br><span class="line">        <span class="comment"># 长度大于文本长度时, 注定匹配失败, 所以</span></span><br><span class="line">        <span class="comment"># 不用多此一举匹配最后部分</span></span><br><span class="line">        <span class="keyword">if</span> i + p_len &gt; t_len:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(pattern)):</span><br><span class="line">            <span class="keyword">if</span> text[i + j] != pattern[j]:</span><br><span class="line">                <span class="comment"># 第一位就不匹配</span></span><br><span class="line">                <span class="keyword">if</span> j == <span class="number">0</span>:</span><br><span class="line">                    is_match = <span class="literal">False</span></span><br><span class="line">                    i += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="comment"># 其余位不匹配时, 计算偏移值(对应的部分匹配值)</span></span><br><span class="line">                is_match = <span class="literal">False</span></span><br><span class="line">                p_offset = partial_match(pattern[:j])</span><br><span class="line">                <span class="comment"># 移动位数 = 已匹配的字符数 - 偏移值(对应的部分匹配值)</span></span><br><span class="line">                i += j - p_offset</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> is_match:</span><br><span class="line">            result.append(i)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> search_all:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            i += p_len - partial_match(pattern)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">partial_match</span>(<span class="params">p: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算部分匹配值</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    例如:</span></span><br><span class="line"><span class="string">        in:     &quot;ABCDAB&quot;</span></span><br><span class="line"><span class="string">        out:    2</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    假设我们输入&quot;ABCDAB&quot;, 则可知道该字符串的长度为 6, 最大下标(max_index)为 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        字符:   A B C D A B</span></span><br><span class="line"><span class="string">        下标:   0 1 2 3 4 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    前缀和后缀的可选范围</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">        Prefix: 0 1 2 3 4</span></span><br><span class="line"><span class="string">        Suffix:   1 2 3 4 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    于是我们知道</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        i   prefix          suffix          diffrence(前缀和后缀的差值)</span></span><br><span class="line"><span class="string">        -                                   </span></span><br><span class="line"><span class="string">        0   0               5               5</span></span><br><span class="line"><span class="string">        1   0, 1            4, 5            4</span></span><br><span class="line"><span class="string">        2   0, 1, 2         3, 4, 5         3</span></span><br><span class="line"><span class="string">        3   0, 1, 2, 3      2, 3, 4, 5      2</span></span><br><span class="line"><span class="string">        4   0, 1, 2, 3, 4   1, 2, 3, 4, 5   1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    我们最多需要进行 5 次循环, i 表示当前循环的次数, prefix 和 suffix 分别</span></span><br><span class="line"><span class="string">    对应了该次循环时每个字符的下标, diffrence 表示了该次循环时, prefix 和</span></span><br><span class="line"><span class="string">    suffix 对应的下标的差值, 显然可知</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        diffrence = max_index - i</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    我们需要取最长的共有元素的长度, 很显然我们从大到小搜索效率最高, 我们只需要</span></span><br><span class="line"><span class="string">    搜索到一个有效值, 该值即是最优解. 对应上图即为从下往上搜索.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(p) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    max_macth_length = <span class="number">0</span></span><br><span class="line">    max_index = <span class="built_in">len</span>(p) - <span class="number">1</span></span><br><span class="line">    i = max_index - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 从大到小搜索仅需要搜索到一个即是最优值</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; -<span class="number">1</span>:</span><br><span class="line">        is_match = <span class="literal">True</span></span><br><span class="line">        diff = max_index - i</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> p[j] != p[j + diff]:</span><br><span class="line">                is_match = <span class="literal">False</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> is_match:</span><br><span class="line">            max_macth_length = i + <span class="number">1</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> max_macth_length</span><br></pre></td></tr></table></figure>
-
-<p>测试</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;ABC ABCDAB ABCDABCDABDEABCDABD&quot;</span></span><br><span class="line">pattern = <span class="string">&quot;ABCDABD&quot;</span></span><br><span class="line"><span class="built_in">print</span>(KMP(text, pattern))</span><br></pre></td></tr></table></figure>
-
-<p>输出</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[15, 23]</span></span><br></pre></td></tr></table></figure>
-
-<p>参考链接</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html">https://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" class="post-title-link" itemprop="url">ERROR odoo odoo.modules.loading: Database odoo not initialized</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-11 20:30:47" itemprop="dateCreated datePublished" datetime="2022-10-11T20:30:47+08:00">2022-10-11</time>
-            </span>
-
-          
-            <span id="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" class="post-meta-item leancloud_visitors" data-flag-title="ERROR odoo odoo.modules.loading: Database odoo not initialized" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/11/ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized"><a href="#ERROR-odoo-odoo-modules-loading-Database-odoo-not-initialized" class="headerlink" title="ERROR odoo odoo.modules.loading: Database odoo not initialized"></a>ERROR odoo odoo.modules.loading: Database odoo not initialized</h2><p>在使用 docker-compose 部署 odoo 时报错</p>
-<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ERROR </span>odoo odoo.modules.loading: Database odoo not initialized, you can force it with -i base</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/11/image.png" alt=""></p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>数据库容器增加环境变量</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">POSTGRES_DB</span>=postgres</span><br></pre></td></tr></table></figure>
-
-<p>例如</p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&#x27;3.1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line"><span class="punctuation"></span></span><br><span class="line">  <span class="attribute">odoo</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">odoo:15.0</span></span><br><span class="line">    <span class="attribute">depends_on</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">postgres</span></span><br><span class="line">    <span class="attribute">ports</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8069:8069&quot;</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_web_data:/var/lib/odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./config/odoo.conf:/etc/odoo/odoo.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./addons:/mnt/extra-addons</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">HOST=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASSWORD=xxxxxxxxx</span></span><br><span class="line"></span><br><span class="line">  <span class="attribute">postgres</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">postgres:15rc2-alpine3.16</span></span><br><span class="line">    <span class="attribute">environment</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_DB=postgres</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=xxxxxxxxx</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">POSTGRES_USER=odoo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGDATA=/var/lib/postgresql/data/pgdata</span></span><br><span class="line">    <span class="attribute">volumes</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./odoo_db_data:/var/lib/postgresql/data/pgdata</span></span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/odoo/odoo/issues/27447">https://github.com/odoo/odoo/issues/27447</a></p>
-</blockquote>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/lefilament/ansible_role_odoo_docker/issues/7">https://github.com/lefilament/ansible_role_odoo_docker/issues/7</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" class="post-title-link" itemprop="url">Linux 下设置 swap 分区</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-08 15:57:20" itemprop="dateCreated datePublished" datetime="2022-10-08T15:57:20+08:00">2022-10-08</time>
-            </span>
-
-          
-            <span id="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="Linux 下设置 swap 分区" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/08/Linux-%E4%B8%8B%E8%AE%BE%E7%BD%AE-swap-%E5%88%86%E5%8C%BA/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近在腾讯云购置了一台2C2G的服务器用来放置 Gitlab。但是发现 Gitlab 的 docker 镜像最少需要 4G 内存才能跑起来，所以尝试下启用 SWAP 来用硬盘空间代替内存空间</p>
-<p>PS：腾讯云轻量服务器在内存消耗完毕时，会发生硬盘IO读写高的故障，导致无法通过SSH连接到服务器。笔者已经在两台服务器上测试过了，确实会发生这个BUG。</p>
-<h2 id="SWAP"><a href="#SWAP" class="headerlink" title="SWAP"></a>SWAP</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1223,7 +1191,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

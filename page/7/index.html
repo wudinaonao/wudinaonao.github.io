@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">91</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,434 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">gitlab 502 错误排查</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-06 02:07:28" itemprop="dateCreated datePublished" datetime="2021-05-06T02:07:28+08:00">2021-05-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" class="post-meta-item leancloud_visitors" data-flag-title="gitlab 502 错误排查" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/gitlab-502-%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="动态查看日志"><a href="#动态查看日志" class="headerlink" title="动态查看日志"></a>动态查看日志</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f  <span class="regexp">/var/</span>log<span class="regexp">/gitlab/gi</span>tlab-rails/production.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="迁移或恢复备份后部分操作服务端响应500"><a href="#迁移或恢复备份后部分操作服务端响应500" class="headerlink" title="迁移或恢复备份后部分操作服务端响应500"></a>迁移或恢复备份后部分操作服务端响应500</h2><p>进入容器, 运行</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gitlab-rails dbconsole</span></span><br></pre></td></tr></table></figure>
+
+<p>依次清除 token, 注意! 这样会清除全部的 token, 不过解决问题简单粗暴</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- clear project tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> projects <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear group tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> namespaces <span class="keyword">SET</span> runners_token <span class="operator">=</span> <span class="keyword">null</span>, runners_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">-- clear instance tokens</span></span><br><span class="line"><span class="keyword">UPDATE</span> application_settings <span class="keyword">SET</span> runners_registration_token_encrypted <span class="operator">=</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>造成这个问题的原因是因为没有备份这个文件</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-secrets.json</span><br></pre></td></tr></table></figure>
+
+<p>以后操作的时候还是要多看看官方文档, 文档说的很清楚…</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
+</blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">When <span class="keyword">the</span> secrets <span class="built_in">file</span> is lost</span><br><span class="line">If you didn’t back up <span class="keyword">the</span> secrets <span class="built_in">file</span>, you must complete several steps <span class="built_in">to</span> <span class="built_in">get</span> GitLab working properly again.</span><br><span class="line"></span><br><span class="line">The secrets <span class="built_in">file</span> is responsible <span class="keyword">for</span> storing <span class="keyword">the</span> encryption key <span class="keyword">for</span> <span class="keyword">the</span> columns that contain required, sensitive information. If <span class="keyword">the</span> key is lost, GitLab can’t <span class="built_in">decrypt</span> those columns, preventing access <span class="built_in">to</span> <span class="keyword">the</span> following <span class="keyword">items</span>:</span><br><span class="line"></span><br><span class="line">CI/CD variables</span><br><span class="line">Kubernetes / GCP integration</span><br><span class="line">Custom Pages domains</span><br><span class="line">Project error tracking</span><br><span class="line">Runner authentication</span><br><span class="line">Project mirroring</span><br><span class="line">Web hooks</span><br><span class="line">In cases like CI/CD variables <span class="keyword">and</span> runner authentication, you can experience unexpected behaviors, such <span class="keyword">as</span>:</span><br><span class="line"></span><br><span class="line">Stuck jobs.</span><br><span class="line"><span class="number">500</span> errors.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Whoops-GitLab-is-currently-unavailable"><a href="#Whoops-GitLab-is-currently-unavailable" class="headerlink" title="Whoops, GitLab is currently unavailable."></a>Whoops, GitLab is currently unavailable.</h2><p>可以正常查看项目列表, 但是无法进入项目, 错误提示</p>
+<figure class="highlight mercury"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Whoops, GitLab <span class="keyword">is</span> currently unavailable.</span><br></pre></td></tr></table></figure>
+
+<p>项目基于docker容器部署, 首先查看日志, 发现一条错误, 权限拒绝.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;error&quot;</span><span class="punctuation">:</span><span class="string">&quot;open /var/opt/gitlab/gitaly/gitaly.pid: permission denied&quot;</span><span class="punctuation">,</span><span class="attr">&quot;level&quot;</span><span class="punctuation">:</span><span class="string">&quot;fatal&quot;</span><span class="punctuation">,</span><span class="attr">&quot;msg&quot;</span><span class="punctuation">:</span><span class="string">&quot;find gitaly&quot;</span><span class="punctuation">,</span><span class="attr">&quot;time&quot;</span><span class="punctuation">:</span><span class="string">&quot;2021-05-05T18:05:26Z&quot;</span><span class="punctuation">,</span><span class="attr">&quot;wrapper&quot;</span><span class="punctuation">:</span><span class="number">3514</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>google 发现, 这个文件在 docker 容器里的权限应该是 git:git</p>
+<p>但是我进入容器后发现该文件的权限为 root:root</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 63 </span>May <span class="number"> 5 </span>16:51 RUBY_VERSION</span><br><span class="line">-rw-r--r--<span class="number"> 1 </span>root root  <span class="number"> 23 </span>May <span class="number"> 5 </span>17:56 VERSION</span><br><span class="line">-rw-r-----<span class="number"> 1 </span>root git  <span class="number"> 819 </span>May <span class="number"> 5 </span>17:56 config.toml</span><br><span class="line">-rw-------<span class="number"> 1 </span>root root   <span class="number"> 3 </span>Mar <span class="number"> 8 </span>18:57 gitaly.pid</span><br><span class="line">srwxr-xr-x<span class="number"> 1 </span>root root   <span class="number"> 0 </span>Mar <span class="number"> 8 </span>18:57 gitaly.socket</span><br><span class="line">drwx------<span class="number"> 2 </span>git  root<span class="number"> 4096 </span>Mar <span class="number"> 8 </span>18:57 internal_sockets</span><br></pre></td></tr></table></figure>
+
+<p>修改权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> git:git gitaly.pid</span><br></pre></td></tr></table></figure>
+
+<h2 id="Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories"><a href="#Errno-EEXIST-File-exists-dir-s-mkdir-var-opt-gitlab-backups-repositories" class="headerlink" title="Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories"></a>Errno::EEXIST: File exists @ dir_s_mkdir - /var/opt/gitlab/backups/repositories</h2><p>备份的时候出现这个问题, 十有八九是权限问题.</p>
+<p>直接 </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> -R <span class="number">777</span> bakcups</span><br></pre></td></tr></table></figure>
+
+<p>参考连接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19">https://forum.gitlab.com/t/local-gitlab-is-not-longer-working/29319/19</a><br><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/raketasks/backup_restore.html">https://docs.gitlab.com/ee/raketasks/backup_restore.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Cloudflare CDN 的一些问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-24 13:15:59" itemprop="dateCreated datePublished" datetime="2021-04-24T13:15:59+08:00">2021-04-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="Cloudflare CDN 的一些问题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/24/Cloudflare-CDN-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Cloudflare 免费版的 CDN 似乎不支持三级域名.</p>
+<p>例如 </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A -&gt; www<span class="selector-class">.abc</span><span class="selector-class">.xxx</span><span class="selector-class">.com</span></span><br><span class="line">B -&gt; abc<span class="selector-class">.xxx</span>.com</span><br></pre></td></tr></table></figure>
+
+<p>访问 A 域名时会提示 SSL 错误, 访问 B 则一切正常.</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/third-level-domain/63383">https://community.cloudflare.com/t/third-level-domain/63383</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">Koolshare Clash 更新 Clash 版本</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-22 16:38:55" itemprop="dateCreated datePublished" datetime="2021-04-22T16:38:55+08:00">2021-04-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="Koolshare Clash 更新 Clash 版本" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/22/Koolshare-Clash-%E6%9B%B4%E6%96%B0-Clash-%E7%89%88%E6%9C%AC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Koolshare-Clash 的 Github 地址</p>
+<p><code>https://github.com/SukkaW/Koolshare-Clash</code></p>
+<p>这个项目已经两年没更新了, 项目自带的 Clash 版本为 Clash v0.20.0 已经很旧了.</p>
+<p>目前为止 Clash 的最新版本为 Clash v1.5.0</p>
+<p>笔者尝试更新 Clash 版本, 但是遇到的一些问题, 这里记录一下解决方案.</p>
+<h2 id="更新-Clash-版本"><a href="#更新-Clash-版本" class="headerlink" title="更新 Clash 版本"></a>更新 Clash 版本</h2><p>笔者的路由器为LEDE_X86 for linux, 首先通过 SSH 登录后台.</p>
+<p>切换到目录</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/koolshare/</span>bin</span><br></pre></td></tr></table></figure>
+
+<p>去 Github 下载对应的平台的最新的 Clash </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash</span><br></pre></td></tr></table></figure>
+
+<p>删除旧的 Clash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> clash</span><br></pre></td></tr></table></figure>
+
+<p>把新的 Clash 拷贝进去, 然后更改权限</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> <span class="number">755</span> clash</span><br></pre></td></tr></table></figure>
+
+<p>然后去 Koolshare 重启 Clash</p>
+<h2 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h2><h3 id="访问代理后台看不见配置的代理"><a href="#访问代理后台看不见配置的代理" class="headerlink" title="访问代理后台看不见配置的代理"></a>访问代理后台看不见配置的代理</h3><p>出现这种原因是因为 0.20.0 的配置文件和 1.5.0 配置文件有些字段更改了, 需要更改 Clash 的配置文件</p>
+<p>访问该网址可以查看最新的配置文件规则</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//gi</span>thub.com<span class="regexp">/Dreamacro/</span>clash<span class="regexp">/wiki/</span>configuration</span><br></pre></td></tr></table></figure>
+
+<p>一些差异</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxies</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Proxy Group</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; proxy-groups</span><br><span class="line"></span><br><span class="line"><span class="attribute">0</span>.<span class="number">20</span>.<span class="number">0</span> -&gt; Rule</span><br><span class="line"><span class="attribute">1</span>.<span class="number">5</span>.<span class="number">0</span>  -&gt; rules</span><br></pre></td></tr></table></figure>
+
+<p>配置文件从1.0.0版本开始更改.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-title-link" itemprop="url">Docker删除None镜像</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-21 12:58:25" itemprop="dateCreated datePublished" datetime="2021-04-21T12:58:25+08:00">2021-04-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" class="post-meta-item leancloud_visitors" data-flag-title="Docker删除None镜像" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/04/21/Docker%E5%88%A0%E9%99%A4None%E9%95%9C%E5%83%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 停止docker</span><br><span class="line">docker stop <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除docker</span><br><span class="line">docker rm <span class="constructor">$(<span class="params">docker</span> <span class="params">ps</span> -<span class="params">a</span> | <span class="params">grep</span> <span class="string">&quot;Exited&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $1 &#125;&#x27;)</span></span><br><span class="line"># 删除images</span><br><span class="line">docker rmi <span class="constructor">$(<span class="params">docker</span> <span class="params">images</span> | <span class="params">grep</span> <span class="string">&quot;none&quot;</span> | <span class="params">awk</span> &#x27;&#123;<span class="params">print</span> $3&#125;&#x27;)</span></span><br></pre></td></tr></table></figure>
+
+<p>参考链接</p>
+<blockquote>
+<p> <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d06830de219f">https://www.jianshu.com/p/d06830de219f</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -843,427 +1271,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" class="post-title-link" itemprop="url">SQL查重以及删除</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-26 16:19:13" itemprop="dateCreated datePublished" datetime="2020-11-26T16:19:13+08:00">2020-11-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" class="post-meta-item leancloud_visitors" data-flag-title="SQL查重以及删除" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/26/SQL%E6%9F%A5%E9%87%8D%E4%BB%A5%E5%8F%8A%E5%88%A0%E9%99%A4/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="查询重复记录"><a href="#查询重复记录" class="headerlink" title="查询重复记录"></a>查询重复记录</h1><p>表名: table_name</p>
-<p>查询列: column_name</p>
-<h2 id="单个条件"><a href="#单个条件" class="headerlink" title="单个条件"></a>单个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> column_name <span class="keyword">in</span>(<span class="keyword">select</span> column_name <span class="keyword">from</span> table_name</span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name)<span class="operator">&gt;</span><span class="number">1</span>)</span><br><span class="line"> <span class="keyword">order</span> <span class="keyword">by</span> column_name;</span><br></pre></td></tr></table></figure>
-
-<h2 id="多个条件"><a href="#多个条件" class="headerlink" title="多个条件"></a>多个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table_name <span class="keyword">as</span> t1 </span><br><span class="line"><span class="keyword">where</span> </span><br><span class="line">( </span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> table_name t2 </span><br><span class="line"><span class="keyword">where</span> </span><br><span class="line">t2.column_name_1<span class="operator">=</span>t1.column_name_1 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_2<span class="operator">=</span>t1.column_name_2 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_3<span class="operator">=</span>t1.column_name_3 <span class="keyword">and</span> </span><br><span class="line">t2.column_name_4<span class="operator">=</span>t1.column_name_4 </span><br><span class="line">)<span class="operator">&gt;</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="删除重复只保留一个"><a href="#删除重复只保留一个" class="headerlink" title="删除重复只保留一个"></a>删除重复只保留一个</h1><p>表名: table_name</p>
-<p>查询列: column_name</p>
-<h2 id="单个条件-1"><a href="#单个条件-1" class="headerlink" title="单个条件"></a>单个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> column_name <span class="keyword">in</span> (<span class="keyword">select</span> column_name <span class="keyword">from</span> table_name <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name) <span class="operator">&gt;</span> <span class="number">1</span>) </span><br><span class="line"> <span class="keyword">and</span> ctid <span class="keyword">not</span> <span class="keyword">in</span> (<span class="keyword">select</span> <span class="built_in">min</span>(ctid) <span class="keyword">from</span> table_name <span class="keyword">group</span> <span class="keyword">by</span> column_name <span class="keyword">having</span> <span class="built_in">count</span>(column_name)<span class="operator">&gt;</span><span class="number">1</span>); </span><br></pre></td></tr></table></figure>
-
-<h2 id="多个条件-1"><a href="#多个条件-1" class="headerlink" title="多个条件"></a>多个条件</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">where</span> (column_name1,column_name2,column_name3) <span class="keyword">in</span> </span><br><span class="line"> (<span class="keyword">select</span> column_name1,column_name2,column_name3 <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name1,column_name2,column_name3 </span><br><span class="line"> <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="operator">&gt;</span> <span class="number">1</span>) </span><br><span class="line"> <span class="keyword">and</span> ctid <span class="keyword">not</span> <span class="keyword">in</span> </span><br><span class="line"> (<span class="keyword">select</span> <span class="built_in">min</span>(ctid) <span class="keyword">from</span> table_name </span><br><span class="line"> <span class="keyword">group</span> <span class="keyword">by</span> column_name1,column_name2,column_name3 </span><br><span class="line"> <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>)<span class="operator">&gt;</span><span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fm0517/article/details/61202099">https://blog.csdn.net/fm0517/article/details/61202099</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/" class="post-title-link" itemprop="url">Docker日志查看与清理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-26 11:01:02" itemprop="dateCreated datePublished" datetime="2020-11-26T11:01:02+08:00">2020-11-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="Docker日志查看与清理" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/26/Docker%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E4%B8%8E%E6%B8%85%E7%90%86/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>查看日志</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">docker logs container_name_or_id</span></span><br></pre></td></tr></table></figure>
-
-<p>Docker 日志目录</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/var/</span>lib<span class="regexp">/docker/</span>containers/container_id</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置Docker容器日志大小-以docker-compose文件为例"><a href="#设置Docker容器日志大小-以docker-compose文件为例" class="headerlink" title="设置Docker容器日志大小, 以docker-compose文件为例"></a>设置Docker容器日志大小, 以docker-compose文件为例</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">v2ray:</span> </span><br><span class="line"><span class="symbol">  image:</span> v2ray</span><br><span class="line"><span class="symbol">  restart:</span> always </span><br><span class="line"><span class="symbol">  logging:</span> </span><br><span class="line"><span class="symbol">    driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line"><span class="symbol">    options:</span> </span><br><span class="line">      max-size: <span class="string">&quot;5g&quot;</span></span><br></pre></td></tr></table></figure>
-<p>日志被限制在5g大小.</p>
-<h2 id="更改全局设置"><a href="#更改全局设置" class="headerlink" title="更改全局设置"></a>更改全局设置</h2><p>增加项文件</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;log-driver&quot;</span><span class="punctuation">:</span><span class="string">&quot;json-file&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;log-opts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;max-size&quot;</span><span class="punctuation">:</span><span class="string">&quot;500m&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;max-file&quot;</span><span class="punctuation">:</span><span class="string">&quot;3&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>到文件, 如果没有则新建.</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>docker/daemon.json</span><br></pre></td></tr></table></figure>
-
-<p>重启docker</p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">service docker restart</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/" class="post-title-link" itemprop="url">Git Your local changes to the following files would be overwritten by merge</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-20 18:08:50" itemprop="dateCreated datePublished" datetime="2020-11-20T18:08:50+08:00">2020-11-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/" class="post-meta-item leancloud_visitors" data-flag-title="Git Your local changes to the following files would be overwritten by merge" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/20/Git-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Your-local-changes-to-the-following-files-would-be-overwritten-by-merge"><a href="#Your-local-changes-to-the-following-files-would-be-overwritten-by-merge" class="headerlink" title="Your local changes to the following files would be overwritten by merge"></a>Your local changes to the following files would be overwritten by merge</h1><h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">e66515c..389e67f  master     -&gt; gitlab/master</span><br><span class="line"><span class="keyword">error: </span>Your local changes to the following files would be overwritten by merge:</span><br><span class="line">        config/clash/haikou.yaml</span><br><span class="line">        config/clash/yuncheng.yaml</span><br><span class="line">Please commit your changes or stash them before you merge.</span><br><span class="line">Aborting</span><br></pre></td></tr></table></figure>
-
-<h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>放弃本地修改,直接覆盖</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">reset</span> <span class="comment">--hard</span></span><br><span class="line">git pull</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" class="post-title-link" itemprop="url">基于Certbot docker部署letsencrypt证书</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-09-15 00:45:19" itemprop="dateCreated datePublished" datetime="2020-09-15T00:45:19+08:00">2020-09-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" class="post-meta-item leancloud_visitors" data-flag-title="基于Certbot docker部署letsencrypt证书" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/15/%E5%9F%BA%E4%BA%8ECertbot-docker%E9%83%A8%E7%BD%B2letsencrypt%E8%AF%81%E4%B9%A6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>仓库地址</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>registry.hub.docker.com<span class="regexp">/r/</span>certbot/certbot</span><br></pre></td></tr></table></figure>
-
-<p>官方参考</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>certbot.eff.org<span class="regexp">/docs/i</span>nstall.html<span class="comment">#running-with-docker</span></span><br></pre></td></tr></table></figure>
-
-
-<p>pull 镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull certbot/certbot</span><br></pre></td></tr></table></figure>
-
-<h2 id="基于内置webserver部署"><a href="#基于内置webserver部署" class="headerlink" title="基于内置webserver部署"></a>基于内置webserver部署</h2><p>这个方案的坏处是需要启动内置的nginx服务器占用80和443端口.</p>
-<p>创建两个目录</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>letsencrypt</span><br><span class="line"><span class="regexp">/var/</span>lib/letsencrypt</span><br></pre></td></tr></table></figure>
-
-<p>运行镜像</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -<span class="literal">it</span> --rm --name certbot <span class="string">\</span></span><br><span class="line">            -v <span class="string">&quot;/etc/letsencrypt:/etc/letsencrypt&quot;</span> <span class="string">\</span></span><br><span class="line">            -v <span class="string">&quot;/var/lib/letsencrypt:/var/lib/letsencrypt&quot;</span> <span class="string">\</span></span><br><span class="line">            -p <span class="number">80</span>:<span class="number">80</span> -p <span class="number">443</span>:<span class="number">443</span>  <span class="string">\</span></span><br><span class="line">            certbot/certbot certonly</span><br></pre></td></tr></table></figure>
-
-<p>提问用webserver部署或者用webroot</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">How would you like <span class="built_in">to</span> authenticate <span class="keyword">with</span> <span class="keyword">the</span> ACME CA?</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line"><span class="number">1</span>: Spin up <span class="keyword">a</span> temporary webserver (standalone)</span><br><span class="line"><span class="number">2</span>: Place <span class="built_in">files</span> <span class="keyword">in</span> webroot <span class="built_in">directory</span> (webroot)</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">Select <span class="keyword">the</span> appropriate <span class="built_in">number</span> [<span class="number">1</span><span class="number">-2</span>] <span class="keyword">then</span> [enter] (press <span class="string">&#x27;c&#x27;</span> <span class="built_in">to</span> <span class="built_in">cancel</span>): <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>我们用临时服务器方便点所以选择1, 如果用2的话需要自己设置验证文件.</p>
-<p>提示你输入邮箱</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Plugins selected: Authenticator standalone, Installer <span class="keyword">None</span></span><br><span class="line">Enter email address (used <span class="keyword">for</span> urgent renewal <span class="keyword">and</span> <span class="keyword">security</span> notices)</span><br><span class="line"> (Enter <span class="string">&#x27;c&#x27;</span> <span class="keyword">to</span> cancel):</span><br></pre></td></tr></table></figure>
-
-<p>不用看了,就是我已阅读并同意….</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Please <span class="built_in">read</span> <span class="keyword">the</span> Terms <span class="keyword">of</span> Service <span class="keyword">at</span></span><br><span class="line"><span class="keyword">https</span>://letsencrypt.org/documents/LE-SA-v1<span class="number">.2</span>-November<span class="number">-15</span><span class="number">-2017.</span>pdf. You must</span><br><span class="line">agree <span class="keyword">in</span> order <span class="built_in">to</span> register <span class="keyword">with</span> <span class="keyword">the</span> ACME server <span class="keyword">at</span></span><br><span class="line"><span class="keyword">https</span>://acme-v02.api.letsencrypt.org/<span class="built_in">directory</span></span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(A)gree/(C)ancel: <span class="keyword">a</span></span><br></pre></td></tr></table></figure>
-
-<p>想不想接受他给你发邮件</p>
-<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Would you be willing, once your first certificate <span class="built_in">is</span> successfully issued, <span class="keyword">to</span></span><br><span class="line">share your email address <span class="keyword">with</span> the Electronic Frontier Foundation, a founding</span><br><span class="line">partner <span class="keyword">of</span> the <span class="keyword">Let</span><span class="comment">&#x27;s Encrypt project and the non-profit organization that</span></span><br><span class="line">develops Certbot? We<span class="comment">&#x27;d like to send you email about our work encrypting the web,</span></span><br><span class="line">EFF news, campaigns, <span class="built_in">and</span> ways <span class="keyword">to</span> support digital freedom.</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(Y)es/(N)o: y</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>输入你的域名, 例如: yourself.hostname.xxx, 这里不要输错了, 输错无法后退, 只能重来.</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please enter in your domain name(s) (comma<span class="built_in"> and/or </span>space separated)  (Enter &#x27;c&#x27;</span><br><span class="line">to cancel): yourself.hostname.xxx</span><br></pre></td></tr></table></figure>
-
-<p>看到</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IMPORTANT NOTES:</span><br><span class="line"> - Congratulations! Your certificate and chain have been saved at:</span><br><span class="line">   <span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/fullchain.pem</span><br><span class="line">   Your key <span class="keyword">file</span> has been saved at:</span><br><span class="line">   <span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/privkey.pem</span><br><span class="line">   Your cert will expire on <span class="number">2020</span>-<span class="number">12</span>-<span class="number">13</span>. To obtain a <span class="keyword">new</span> or tweaked</span><br><span class="line">   version of <span class="keyword">this</span> certificate in the future, simply run certbot</span><br><span class="line">   again. To non-interactively renew *all* of your certificates, run</span><br><span class="line">   <span class="string">&quot;certbot renew&quot;</span></span><br><span class="line"> - <span class="keyword">If</span> you like Certbot, please consider supporting our work by:</span><br><span class="line"></span><br><span class="line">   Donating to ISRG <span class="regexp">/ Let&#x27;s Encrypt:   https:/</span><span class="regexp">/letsencrypt.org/</span>donate</span><br><span class="line">   Donating to EFF:                    https:<span class="comment">//eff.org/donate-le</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>完成</p>
-<p>证书保存在</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>letsencrypt<span class="regexp">/live/y</span>ourself.hostname.xxx/</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1335,7 +1342,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">91</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

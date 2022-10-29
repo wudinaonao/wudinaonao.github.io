@@ -3945,4 +3945,160 @@
 <p>解决方法也很简单, 先用Selenium打开一下网址, 然后在加上Cookie重新访问即可</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>关于Python类型注解的一个问题</title>
+    <url>/2022/10/29/%E5%85%B3%E4%BA%8EPython%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>在 Python 中有很多特殊属性, 例如 <code>__name__</code>, <code>__module__</code> 等有特殊的意义</p>
+<p><code>__annotations__</code> 该函数返回对象的注解字典, 更多详情参见官方文档</p>
+<blockquote>
+<p><a href="https://docs.python.org/zh-cn/3/howto/annotations.html">https://docs.python.org/zh-cn/3/howto/annotations.html</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Human</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">str</span></span><br><span class="line">    age: <span class="built_in">int</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中, 我们创建了一个 <code>Human</code> 类, 同时声明了两个类属性<code>name</code>, <code>age</code></p>
+<p>因为我们使用了类型注解, 所以我们可以通过<code>__annotations__</code>方法拿到声明的这两个属性名以及类型</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">h = Human()</span><br><span class="line"><span class="built_in">print</span>(h.__annotations__)</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;, <span class="string">&#x27;age&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;int&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们得到了一个<code>属性名:类型</code>的键值对</p>
+<p>此时我们继续创建一个<code>Human</code>的子类<code>Man</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Man</span>(<span class="title class_ inherited__">Human</span>):</span><br><span class="line"></span><br><span class="line">    name = <span class="string">&quot;Naonao&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意这里我们的类变量<code>name</code>没有使用类型注解, 仅仅是一个赋值的类变量</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">m = Man()</span><br><span class="line"><span class="built_in">print</span>(m.__annotations__)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;, <span class="string">&#x27;age&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;int&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看一下子类的<code>__annotations__</code>注解字典, 我们发现子类继承了父类的注解</p>
+<p><strong>但是如果我们这样写</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Man</span>(<span class="title class_ inherited__">Human</span>):</span><br><span class="line"></span><br><span class="line">    name: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p><code>name</code>使用了类型注解, 我们将得到</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&#x27;name&#x27;</span>: &lt;<span class="keyword">class</span> <span class="string">&#x27;str&#x27;</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>子类重写了<code>__annotations__</code></strong></p>
+<blockquote>
+<p><a href="https://docs.python.org/zh-cn/3/howto/annotations.html">https://docs.python.org/zh-cn/3/howto/annotations.html</a></p>
+</blockquote>
+<p>查看官方文档发现, 这个是3.9版本之前的一个设计缺陷.</p>
+<p><strong>特此记录, 因为本人在此坑里陷了甚久</strong></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Python中的前向引用</title>
+    <url>/2022/10/29/Python%E4%B8%AD%E7%9A%84%E5%89%8D%E5%90%91%E5%BC%95%E7%94%A8/</url>
+    <content><![CDATA[<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self</span>) -&gt; B:</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码在IDE里会报错, 因为类<code>B</code>在声明前被引用了</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image.png" alt=""></p>
+<p>这样我们就无法利用IDE来查看类<code>B</code>的成员变量, 方法等内容. </p>
+<p>解决方法很简单</p>
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>(object):</span><br><span class="line">    </span><br><span class="line">    def get<span class="function"><span class="params">(self)</span> -&gt;</span> <span class="string">&quot;B&quot;</span>:</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagee49c7665b8c3dde4.png" alt=""></p>
+<p>加个引号<code>&quot;</code></p>
+<blockquote>
+<p><a href="https://docs.python.org/zh-cn/3/library/typing.html#constant">https://docs.python.org/zh-cn/3/library/typing.html#constant</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>Docker部署Nexus</title>
+    <url>/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/</url>
+    <content><![CDATA[<p>容器仓库是容器化管理中非常重要的一环，相当于 SVN 在程序研发、运维发布中的地位。因此，一个稳定、可靠的容器仓库尤为重要。</p>
+<p>目前我知道的的数据仓库有</p>
+<ul>
+<li><p>Docker 官方的 Registry 原生仓库</p>
+</li>
+<li><p>SuSE 团队推出的出的 Portus：<a href="https://github.com/SUSE/Portus">https://github.com/SUSE/Portus</a></p>
+</li>
+<li><p>VMWare 中国团队推出的企业级仓库—Harbor</p>
+</li>
+<li><p>大家熟知的 Maven 私服：Sonatype Nexus3</p>
+<p>本文主要介绍下 Sonatype Nexus 3 这个功能强大的产品，它不仅能够用于创建 Maven 私服，还可以用来创建 yum、pypi、npm、nuget、rubygems 等各种私有仓库。而且，Nexus 从 3.0 版本也开始支持创建 Docker 镜像仓库了！</p>
+</li>
+</ul>
+<p>因此，在上述几个产品里面我毫不犹豫的选择了 Nexus3 作为部门的公共数据仓库，一举多得。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>创建<code>docker-compose.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.7&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">nexus3:</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nexus3</span></span><br><span class="line">    <span class="attr">tty:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">sonatype/nexus3</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./data:/nexus-data&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/etc/localtime:/etc/localtime:ro&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/etc/timezone:/etc/timezone:ro&quot;</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8081:8081&quot;</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8082:8082&quot;</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">&quot;8083:8083&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">      </span><br><span class="line">    <span class="attr">user:</span> <span class="string">root</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">deploy:</span></span><br><span class="line">        <span class="attr">resources:</span></span><br><span class="line">            <span class="attr">limits:</span></span><br><span class="line">                <span class="comment"># 限制内存使用</span></span><br><span class="line">                <span class="attr">memory:</span> <span class="string">4G</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">logging:</span></span><br><span class="line">      <span class="attr">driver:</span> <span class="string">&quot;json-file&quot;</span></span><br><span class="line">      <span class="attr">options:</span></span><br><span class="line">        <span class="attr">max-size:</span> <span class="string">&quot;100M&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后一键部署</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">docker-compose <span class="comment">--compatibility up -d</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://hub.docker.com/r/sonatype/nexus3/">https://hub.docker.com/r/sonatype/nexus3/</a></p>
+</blockquote>
+<p>大概 2 分钟左右可以完成启动，此时可以通过浏览器访问 <a href="http://IP">http://IP</a> 地址:8081 即可出现 nexus 的 web 界面：</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagec2562674cfbff261.png" alt=""></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>默认账户名<code>admin</code>, 密码参阅官方文档, 在<code>./data/admin.password</code>这个文件中</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Default</span> <span class="keyword">user</span> <span class="keyword">is</span> <span class="keyword">admin</span> <span class="keyword">and</span> the uniquely <span class="keyword">generated</span> <span class="keyword">password</span> can be <span class="built_in">found</span> <span class="keyword">in</span> the <span class="keyword">admin</span>.<span class="keyword">password</span> file inside the volume. See Persistent Data <span class="keyword">for</span> information about the volume.</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建-Docker-仓库"><a href="#创建-Docker-仓库" class="headerlink" title="创建 Docker 仓库"></a>创建 Docker 仓库</h2><p>回到前面的 repository 界面，点击 repositories 打开页面后点击【create repository】打开仓库类型选择界面</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image4c57d0fffe0de4a3.png" alt=""></p>
+<p>可以看到 Docker 有三种类型，分别是 docker(group)，docker(hosted)，docker(proxy)。其含义解释如下：</p>
+<ul>
+<li><p>hosted : 本地存储，即同 docker 官方仓库一样提供本地私服功能</p>
+</li>
+<li><p>proxy : 提供代理其他仓库的类型，如 docker 中央仓库</p>
+</li>
+<li><p>group : 组类型，实质作用是组合多个仓库为一个地址</p>
+</li>
+</ul>
+<p>开始创建 Docker 仓库</p>
+<p>首先，我们创建一个 docker 代理仓库，点击 docker(proxy)，如图填写信息</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image983e57f55fe40b9d.png" alt=""></p>
+<p>往下翻页，勾上 “Allow clients to use the V1 API to interact with this Repository”，允许 Docker V1 API 请求。</p>
+<p>至于代理的对象，我可以选择官方的镜像地址：<a href="https://registry-1.docker.io，但是官方的比较慢，所以这里我们可以填写国内的">https://registry-1.docker.io，但是官方的比较慢，所以这里我们可以填写国内的</a> Docker 镜像加速器地址，比如阿里云或DaoCloud的容器加速</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagecf93af4f28551091.png" alt=""></p>
+<p>我这里选择了 DaoCloud 的镜像加速，这里为了确保能够拉取 DockerHub 最新的镜像，我选择了 Use DockerHub 这个 Index</p>
+<p>接着，再创建一个本地仓库，这里比较简单，只需要填写本地仓库的名称，比如 docker-hosted，然后填写 HTTP 端口即可，比如 8083</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image1831e73cfe510596.png" alt=""></p>
+<p>保存之后，最后创建一个聚合仓库（group），将代理仓库和本地仓库聚合到一起使用，这里我命名为 docker，然后端口选择 8082</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/image048c2bbadac5f128.png" alt=""></p>
+<p>这里成员仓库的顺序可以稍微规划下，一般来说将本地的放前面，代理第三方的放后面，好处就是优先使用本地或小众的镜像仓库。我这边是用了多个第三方仓库，所有有多个</p>
+<p><img data-src="https://chevereto.wudinaonao.com/images/2022/10/29/imagebf3b90ada73f2c0e.png" alt=""></p>
+<p>至此，nexus 在 docker 这一块是部署已经完成了，但是这样并不能很好的使用。因为 group 仓库并不能推送镜像，因为你推送自己制作的镜像到仓库还得通过本地仓库的端口去推送，很不方便！</p>
+<h2 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h2><p>上面配置完了，但是不够完美。</p>
+<p>Pull/Push 操作的端口并不相同，我们需要聚合到一个端口, 通过配置 Nginx 匹配请求方法，路径的匹配来分流到不同的端口</p>
+<p>我们需要两个域名，一个用作Nexus, 一个用作Docker</p>
+<p>例如</p>
+<ul>
+<li><p>nexus.abc.com</p>
+</li>
+<li><p>docker.abc.com</p>
+</li>
+</ul>
+<p>注意替换里面的IP地址</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">upstream</span> nexus_web &#123;</span><br><span class="line">    <span class="comment"># Nexus 前台</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8081</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="section">upstream</span> nexus_docker_get &#123;</span><br><span class="line">    <span class="comment"># docker push 请求</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8082</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="section">upstream</span> nexus_docker_put &#123;</span><br><span class="line">    <span class="comment"># docker pull 请求</span></span><br><span class="line">    <span class="attribute">server</span> <span class="number">192.168.1.100:8083</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Docker 的配置</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="comment"># 这个用于 docker, 注意域名的配置</span></span><br><span class="line">    <span class="attribute">server_name</span> docker.abc.com;</span><br><span class="line">    <span class="attribute">access_log</span> /data/wwwlogs/docker.abc.com.log access_log_json;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 证书配置</span></span><br><span class="line">    <span class="comment"># 如果使用宝塔面板或其他可以自动申请证书的面板来配置会方便很多</span></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /data/wwwroot/ssl/out/docker.abc.com/docker.abc.com.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /data/wwwroot/ssl/out/docker.abc.com/docker.abc.com.key.pem;</span><br><span class="line">    <span class="attribute">ssl_protocols</span> TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> <span class="string">&#x27;!aNULL:kECDH+AESGCM:ECDH+AESGCM:RSA+AESGCM:kECDH+AES:ECDH+AES:RSA+AES:&#x27;</span>;</span><br><span class="line">    <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># disable any limits to avoid HTTP 413 for large image uploads</span></span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment"># required to avoid HTTP 411: see Issue #1486 (https://github.com/docker/docker/issues/1486)</span></span><br><span class="line">    <span class="attribute">chunked_transfer_encoding</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="comment"># 设置默认使用推送代理</span></span><br><span class="line">    <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_put&quot;</span>;</span><br><span class="line">    <span class="comment"># 当请求是 GET，也就是拉取镜像的时候，这里改为拉取代理，如此便解决了拉取和推送的端口统一</span></span><br><span class="line">    <span class="attribute">if</span> ( <span class="variable">$request_method</span> <span class="regexp">~* &#x27;GET&#x27;)</span> &#123;</span><br><span class="line">        <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_get&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># 只有本地仓库才支持搜索，所以将搜索请求转发到本地仓库，否则出现 500 报错</span></span><br><span class="line">    <span class="attribute">if</span> (<span class="variable">$request_uri</span> <span class="regexp">~ &#x27;/search&#x27;)</span> &#123;</span><br><span class="line">        <span class="attribute">set</span> <span class="variable">$upstream</span> <span class="string">&quot;nexus_docker_put&quot;</span>; </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.php;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://<span class="variable">$upstream</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">            <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_request_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto http;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nexus 前台的配置</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="comment"># 这个用于 nexus 前台, 注意域名的配置</span></span><br><span class="line">    <span class="attribute">server_name</span> nexus.abc.com;</span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.php;</span><br><span class="line">    <span class="attribute">ssl_certificate</span> /data/wwwroot/ssl/out/nexus.abc.com/nexus.abc.com.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /data/wwwroot/ssl/out/nexus.abc.com/nexus.abc.com.key.pem;</span><br><span class="line">    <span class="attribute">ssl_protocols</span> TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> <span class="string">&#x27;!aNULL:kECDH+AESGCM:ECDH+AESGCM:RSA+AESGCM:kECDH+AES:ECDH+AES:RSA+AES:&#x27;</span>;</span><br><span class="line">    <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">    <span class="attribute">access_log</span> /data/wwwlogs/nexus.abc.com.log access_log_json;</span><br><span class="line">    <span class="section">location</span> /download &#123;</span><br><span class="line">        <span class="attribute">root</span> /data/wwwroot/nexus.abc.com;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="attribute">proxy_pass</span> http://nexus_web;</span><br><span class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">            <span class="attribute">client_max_body_size</span> <span class="number">512m</span>;</span><br><span class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">3600</span>;</span><br><span class="line">            <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">            <span class="attribute">proxy_request_buffering</span> <span class="literal">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再Push镜像的时候只需要把tag加上自己域名即可</p>
+<p>例如把官方的nginx推送到自建的仓库</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">docker pull nginx</span></span><br></pre></td></tr></table></figure>
+
+<p>改标签</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">docker <span class="keyword">tag</span> <span class="title">nginx</span> docker.abc.com/nginx</span><br></pre></td></tr></table></figure>
+
+<p>登录 docker.abc.com</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">docker login docker.<span class="keyword">abc</span>.<span class="keyword">com</span></span><br></pre></td></tr></table></figure>
+
+<p>推送</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">docker push docker.<span class="keyword">abc</span>.<span class="keyword">com</span>/nginx</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><a href="https://zhangge.net/5139.html">https://zhangge.net/5139.html</a></p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>Pytest在VSCode里无法跟踪到第三方包里的代码</title>
+    <url>/2022/10/29/Pytest%E5%9C%A8VSCode%E9%87%8C%E6%97%A0%E6%B3%95%E8%B7%9F%E8%B8%AA%E5%88%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E9%87%8C%E7%9A%84%E4%BB%A3%E7%A0%81/</url>
+    <content><![CDATA[<p>在<code>launch.json</code>文件里关闭<code>justMyCode</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Python: Debug Tests&quot;</span>,</span><br><span class="line">  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;python&quot;</span>,</span><br><span class="line">  <span class="string">&quot;request&quot;</span>: <span class="string">&quot;launch&quot;</span>,</span><br><span class="line">  <span class="string">&quot;program&quot;</span>: <span class="string">&quot;<span class="variable">$&#123;file&#125;</span>&quot;</span>,</span><br><span class="line">  <span class="string">&quot;purpose&quot;</span>: [<span class="string">&quot;debug-test&quot;</span>],</span><br><span class="line">  <span class="string">&quot;console&quot;</span>: <span class="string">&quot;integratedTerminal&quot;</span>,</span><br><span class="line">  <span class="string">&quot;justMyCode&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://code.visualstudio.com/docs/python/testing">https://code.visualstudio.com/docs/python/testing</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
