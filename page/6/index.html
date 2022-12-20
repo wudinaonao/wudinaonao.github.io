@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">96</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,91 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">hexo部署项目报错解决：The mode argument must be integer(无需node降版本)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-21 18:45:54" itemprop="dateCreated datePublished" datetime="2022-02-21T18:45:54+08:00">2022-02-21</time>
+            </span>
+
+          
+            <span id="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="hexo部署项目报错解决：The mode argument must be integer(无需node降版本)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/21/hexo%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%EF%BC%9AThe-mode-argument-must-be-integer-%E6%97%A0%E9%9C%80node%E9%99%8D%E7%89%88%E6%9C%AC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">FATAL</span> <span class="variable">Something</span><span class="operator">&#x27;</span><span class="variable">s</span> <span class="variable">wrong</span><span class="operator">.</span> <span class="variable">Maybe</span> <span class="variable">you</span> <span class="variable">can</span> <span class="variable">find</span> <span class="variable">the</span> <span class="variable">solution</span> <span class="variable">here</span><span class="operator">:</span> <span class="variable">https</span><span class="operator">://</span><span class="variable">hexo</span><span class="operator">.</span><span class="variable">io</span><span class="operator">/</span><span class="variable">docs</span><span class="operator">/</span><span class="variable">troubleshooting</span><span class="operator">.</span><span class="variable">html</span></span><br><span class="line"><span class="variable">TypeError</span> <span class="punctuation">[</span><span class="type">ERR_INVALID</span><span class="type">_ARG</span><span class="type">_TYPE</span><span class="punctuation">]</span><span class="operator">:</span> <span class="variable">The</span> <span class="string">&quot;mode&quot;</span> <span class="variable">argument</span> <span class="variable">must</span> <span class="variable">be</span> <span class="variable">integer</span><span class="operator">.</span> <span class="variable">Received</span> <span class="variable">an</span> <span class="variable">instance</span> <span class="variable">of</span> <span class="variable">Object</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">copyFile</span> <span class="punctuation">(</span><span class="variable">fs</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">1890</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">tryCatcher</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">util</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">16</span><span class="operator">:</span><span class="number">23</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">ret</span> <span class="punctuation">(</span><span class="variable">eval</span> <span class="variable">at</span> <span class="variable">makeNodePromisifiedEval</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promisify</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">184</span><span class="operator">:</span><span class="number">12</span><span class="punctuation">)</span><span class="operator">,</span> <span class="operator">&lt;</span><span class="variable">anonymous</span><span class="operator">&gt;:</span><span class="number">13</span><span class="operator">:</span><span class="number">39</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">hexo</span><span class="operator">-</span><span class="variable">deployer</span><span class="operator">-</span><span class="variable">git</span>\<span class="type">node_modules</span>\<span class="variable">hexo</span><span class="operator">-</span><span class="variable">fs</span>\<span class="variable">lib</span>\<span class="variable">fs</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">144</span><span class="operator">:</span><span class="number">39</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">tryCatcher</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">util</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">16</span><span class="operator">:</span><span class="number">23</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromiseFromHandler</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">517</span><span class="operator">:</span><span class="number">31</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">574</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise0</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">619</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromises</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">699</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">fulfill</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">643</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">resolveCallback</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">437</span><span class="operator">:</span><span class="number">57</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromiseFromHandler</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">529</span><span class="operator">:</span><span class="number">17</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">574</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromise0</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">619</span><span class="operator">:</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">settlePromises</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">699</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br><span class="line">    <span class="variable">at</span> <span class="variable">Promise</span><span class="operator">._</span><span class="variable">fulfill</span> <span class="punctuation">(</span><span class="built_in">C</span><span class="operator">:</span>\<span class="variable">Users</span>\<span class="variable">Administrator</span>\<span class="variable">blog</span>\<span class="type">node_modules</span>\<span class="variable">bluebird</span>\<span class="variable">js</span>\<span class="variable">release</span>\<span class="variable">promise</span><span class="operator">.</span><span class="variable">js</span><span class="operator">:</span><span class="number">643</span><span class="operator">:</span><span class="number">18</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>解决办法是修改<code>package.json</code>文件，升级<code>hexo-renderer-stylus</code>到<code>2.0.0</code>版本</p>
+<p>参考链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://evestorm.github.io/posts/430/">https://evestorm.github.io/posts/430/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.4spaces.org/hexo-mode-argument-must-be-integer-error/">https://www.4spaces.org/hexo-mode-argument-must-be-integer-error/</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1096,96 +1181,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-title-link" itemprop="url">SSH第一次登录免输入yes</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-06 19:48:35" itemprop="dateCreated datePublished" datetime="2021-05-06T19:48:35+08:00">2021-05-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linuxe/" itemprop="url" rel="index"><span itemprop="name">Linuxe</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" class="post-meta-item leancloud_visitors" data-flag-title="SSH第一次登录免输入yes" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/06/SSH%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%99%BB%E5%BD%95%E5%85%8D%E8%BE%93%E5%85%A5yes/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>连接时加入StrictHostKeyChecking=no</p>
-<p>例如</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> -o StrictHostKeyChecking=<span class="literal">no</span> root@<span class="number">192.168.1.100</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1257,7 +1252,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

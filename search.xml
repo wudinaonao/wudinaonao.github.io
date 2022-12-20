@@ -4101,4 +4101,45 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>Ubuntu 自动挂载Samba服务器</title>
+    <url>/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<p>首先安装这个工具</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">apt <span class="keyword">install</span> cifs-utils</span><br></pre></td></tr></table></figure>
+
+<p>不然之后会提示</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">(<span class="keyword">for</span> several filesystems (e.g. nfs, cifs) you might need a <span class="regexp">/sbin/m</span>ount. helper program)</span><br></pre></td></tr></table></figure>
+
+<p>创建一个凭证文件, 可以放在任何位置 e.g.</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>sambapin</span><br></pre></td></tr></table></figure>
+
+<p>文件内容为</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">username</span><span class="operator">=</span>xxx</span><br><span class="line"><span class="attribute">password</span><span class="operator">=</span>xxx</span><br><span class="line"><span class="attribute">domain</span><span class="operator">=</span>xxx</span><br></pre></td></tr></table></figure>
+
+<p>根据相关的字段填写对应的值，domain可以填写<code>DOMAIN</code></p>
+<p>e.g.</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">username</span><span class="operator">=</span>admin</span><br><span class="line"><span class="attribute">password</span><span class="operator">=</span>xxxxxx</span><br><span class="line"><span class="attribute">domain</span><span class="operator">=</span>DOMAIN</span><br></pre></td></tr></table></figure>
+
+<p>然后编辑<code>/etc/fstab</code>新增一行</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">//</span><span class="number">172.16</span>.<span class="number">100.5</span><span class="regexp">/Downloads /</span>home<span class="regexp">/download/</span>Downloads cifs credentials=<span class="regexp">/etc/</span>sambapin <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>表示将<code>//172.16.100.5/Downloads</code>这个目录挂载到本地的<code>/home/download/Downloads</code>上</p>
+<p>如果出现错误提示</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">mount <span class="built_in">error</span>(95): Operation <span class="keyword">not</span> supported</span><br><span class="line">Refer <span class="keyword">to</span> the mount.cifs(8)<span class="built_in"> manual page </span>(e.g. man mount.cifs) <span class="keyword">and</span> kernel log messages (dmesg)</span><br></pre></td></tr></table></figure>
+
+<p>有可能的原因是需要设置协议版本</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">//</span><span class="number">172.16</span>.<span class="number">100.5</span><span class="regexp">/Downloads /</span>home<span class="regexp">/download/</span>Downloads cifs credentials=<span class="regexp">/etc/</span>sambapin,vers=<span class="number">1.0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>如上, 在<code>credentials=/etc/sambapin</code>后加上协议版本即可</p>
+<blockquote>
+<p><a href="https://www.cnblogs.com/hpcpp/p/7483397.html">https://www.cnblogs.com/hpcpp/p/7483397.html</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.truenas.com/community/threads/mounting-smb-with-ubuntu-mount-error-95.71137/">https://www.truenas.com/community/threads/mounting-smb-with-ubuntu-mount-error-95.71137/</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://askubuntu.com/questions/525243/why-do-i-get-wrong-fs-type-bad-option-bad-superblock-error">https://askubuntu.com/questions/525243/why-do-i-get-wrong-fs-type-bad-option-bad-superblock-error</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.wudinaonao.com/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2022-12-20</lastmod>
+  </url>
+  <url>
     <loc>https://blog.wudinaonao.com/2022/10/29/Docker%E9%83%A8%E7%BD%B2Nexus/</loc>
     <lastmod>2022-10-29</lastmod>
   </url>

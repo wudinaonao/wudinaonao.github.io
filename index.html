@@ -155,7 +155,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">95</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">96</span></a>
 
   </li>
         <li class="menu-item menu-item-留言板">
@@ -219,6 +219,120 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar-0.gif">
+      <meta itemprop="name" content="wudinaonao">
+      <meta itemprop="description" content="Naonao Life Record">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Naonao Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">Ubuntu 自动挂载Samba服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-12-20 11:22:43" itemprop="dateCreated datePublished" datetime="2022-12-20T11:22:43+08:00">2022-12-20</time>
+            </span>
+
+          
+            <span id="/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Ubuntu 自动挂载Samba服务器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/12/20/Ubuntu-%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDSamba%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>首先安装这个工具</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt <span class="keyword">install</span> cifs-utils</span><br></pre></td></tr></table></figure>
+
+<p>不然之后会提示</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">for</span> several filesystems (e.g. nfs, cifs) you might need a <span class="regexp">/sbin/m</span>ount. helper program)</span><br></pre></td></tr></table></figure>
+
+<p>创建一个凭证文件, 可以放在任何位置 e.g.</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano <span class="regexp">/etc/</span>sambapin</span><br></pre></td></tr></table></figure>
+
+<p>文件内容为</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">username</span><span class="operator">=</span>xxx</span><br><span class="line"><span class="attribute">password</span><span class="operator">=</span>xxx</span><br><span class="line"><span class="attribute">domain</span><span class="operator">=</span>xxx</span><br></pre></td></tr></table></figure>
+
+<p>根据相关的字段填写对应的值，domain可以填写<code>DOMAIN</code></p>
+<p>e.g.</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">username</span><span class="operator">=</span>admin</span><br><span class="line"><span class="attribute">password</span><span class="operator">=</span>xxxxxx</span><br><span class="line"><span class="attribute">domain</span><span class="operator">=</span>DOMAIN</span><br></pre></td></tr></table></figure>
+
+<p>然后编辑<code>/etc/fstab</code>新增一行</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">//</span><span class="number">172.16</span>.<span class="number">100.5</span><span class="regexp">/Downloads /</span>home<span class="regexp">/download/</span>Downloads cifs credentials=<span class="regexp">/etc/</span>sambapin <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>表示将<code>//172.16.100.5/Downloads</code>这个目录挂载到本地的<code>/home/download/Downloads</code>上</p>
+<p>如果出现错误提示</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount <span class="built_in">error</span>(95): Operation <span class="keyword">not</span> supported</span><br><span class="line">Refer <span class="keyword">to</span> the mount.cifs(8)<span class="built_in"> manual page </span>(e.g. man mount.cifs) <span class="keyword">and</span> kernel log messages (dmesg)</span><br></pre></td></tr></table></figure>
+
+<p>有可能的原因是需要设置协议版本</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">//</span><span class="number">172.16</span>.<span class="number">100.5</span><span class="regexp">/Downloads /</span>home<span class="regexp">/download/</span>Downloads cifs credentials=<span class="regexp">/etc/</span>sambapin,vers=<span class="number">1.0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>如上, 在<code>credentials=/etc/sambapin</code>后加上协议版本即可</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hpcpp/p/7483397.html">https://www.cnblogs.com/hpcpp/p/7483397.html</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.truenas.com/community/threads/mounting-smb-with-ubuntu-mount-error-95.71137/">https://www.truenas.com/community/threads/mounting-smb-with-ubuntu-mount-error-95.71137/</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/525243/why-do-i-get-wrong-fs-type-bad-option-bad-superblock-error">https://askubuntu.com/questions/525243/why-do-i-get-wrong-fs-type-bad-option-bad-superblock-error</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1027,99 +1141,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.wudinaonao.com/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar-0.gif">
-      <meta itemprop="name" content="wudinaonao">
-      <meta itemprop="description" content="Naonao Life Record">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Naonao Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/" class="post-title-link" itemprop="url">docker-compose 限制内存，CPU</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-13 11:17:27" itemprop="dateCreated datePublished" datetime="2022-10-13T11:17:27+08:00">2022-10-13</time>
-            </span>
-
-          
-            <span id="/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/" class="post-meta-item leancloud_visitors" data-flag-title="docker-compose 限制内存，CPU" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/13/docker-compose-%E9%99%90%E5%88%B6%E5%86%85%E5%AD%98%EF%BC%8CCPU/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>docker-compose 使用3.7版本，然后加入 deploy，例如：</p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">version</span><span class="punctuation">:</span> <span class="string">&quot;3.7&quot;</span></span><br><span class="line"><span class="attribute">services</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">redis</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">image</span><span class="punctuation">:</span> <span class="string">redis:alpine</span></span><br><span class="line">    <span class="attribute">container_name</span><span class="punctuation">:</span> <span class="string">testredis</span></span><br><span class="line">    <span class="attribute">deploy</span><span class="punctuation">:</span></span><br><span class="line">      <span class="attribute">resources</span><span class="punctuation">:</span></span><br><span class="line">        <span class="attribute">limits</span><span class="punctuation">:</span></span><br><span class="line">          <span class="attribute">cpus</span><span class="punctuation">:</span> <span class="string">&#x27;0.50&#x27;</span></span><br><span class="line">          <span class="attribute">memory</span><span class="punctuation">:</span> <span class="string">500M</span></span><br></pre></td></tr></table></figure>
-
-<p>限制 CPU 使用率 50%， 500MB 内存</p>
-<p><strong>需要注意的是，启动时需增加 –compatibility 选项</strong></p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose <span class="comment">--compatibility up -d</span></span><br></pre></td></tr></table></figure>
-
-<p>否则会报错</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">WARNING: </span>Some services (mysql, rsnmp) use the <span class="emphasis">&#x27;deploy&#x27;</span> key, which will be ignored. Compose does not support <span class="emphasis">&#x27;deploy&#x27;</span> configuration - use <span class="code">`docker stack deploy`</span> to deploy to a swarm.</span><br></pre></td></tr></table></figure>
-
-<p>注：</p>
-<p>–compatibility是docker-compose 1.20.0加入，主要目的就是用来将deploy中的数据限制、replicas与重启策略直接转译为version 2的语法</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yjt1993/p/12402394.htm">https://www.cnblogs.com/yjt1993/p/12402394.htm</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ba5518476057">https://www.jianshu.com/p/ba5518476057</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1191,7 +1212,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
