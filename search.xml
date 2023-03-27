@@ -4142,4 +4142,18 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>WinPcap 安装提示已安装了更新的版本</title>
+    <url>/2023/03/27/WinPcap-%E5%AE%89%E8%A3%85%E6%8F%90%E7%A4%BA%E5%B7%B2%E5%AE%89%E8%A3%85%E4%BA%86%E6%9B%B4%E6%96%B0%E7%9A%84%E7%89%88%E6%9C%AC/</url>
+    <content><![CDATA[<h1 id="WinPcap安装提示A-newer-version-of-WinPcap-is-already-installed-on-this-machine解决办法"><a href="#WinPcap安装提示A-newer-version-of-WinPcap-is-already-installed-on-this-machine解决办法" class="headerlink" title="WinPcap安装提示A newer version of WinPcap is already installed on this machine解决办法"></a>WinPcap安装提示A newer version of WinPcap is already installed on this machine解决办法</h1><p>找到如下文件，然后更改后缀</p>
+<ul>
+<li>C:\Windows\SysWOW64\wpcap.dll -&gt; wpcap.dll.bak</li>
+<li>C:\Windows\SysWOW64\packet.dll -&gt; packet.dll.bak</li>
+</ul>
+<p>上述文件即是已安装的版本，改名后就可以重新安装了</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/qq_42815050/article/details/108758226">https://blog.csdn.net/qq_42815050/article/details/108758226</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
