@@ -4165,6 +4165,7 @@
 <p>可以通过如下命令来转换磁盘文件来解决</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">vmkfstools -i <span class="tag">&lt;<span class="name">HostedVirtualDisk</span>&gt;</span>  <span class="tag">&lt;<span class="name">ESXVirtualDisk</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
+<p>如果是Windows的话可以直接使用软件<code>StarWind V2V Converter</code>转换</p>
 <p>首先开启ESXI的SSH功能, 然后登陆进去, 找到目标磁盘文件</p>
 <p>假设我们要转换的磁盘文件为</p>
 <figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">openwrt</span>-<span class="number">21</span>.<span class="number">02</span>.<span class="number">1</span>-<span class="number">2022042317</span>-x86-<span class="number">64</span>-generic-squashfs-combined-efi.vmdk</span><br></pre></td></tr></table></figure>
