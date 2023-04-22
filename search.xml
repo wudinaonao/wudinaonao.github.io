@@ -4156,4 +4156,44 @@
 </blockquote>
 ]]></content>
   </entry>
+  <entry>
+    <title>Openwrt相关问题</title>
+    <url>/2023/04/22/Openwrt%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h1 id="ESXI-安装提示-“sata0-0”的磁盘类型-7-不受支持或无效。请确保磁盘已导入"><a href="#ESXI-安装提示-“sata0-0”的磁盘类型-7-不受支持或无效。请确保磁盘已导入" class="headerlink" title="ESXI 安装提示 “sata0:0”的磁盘类型 7 不受支持或无效。请确保磁盘已导入"></a>ESXI 安装提示 “sata0:0”的磁盘类型 7 不受支持或无效。请确保磁盘已导入</h1><p>提示磁盘错误, 例如:</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;sata0:0&quot;</span>的磁盘类型 <span class="number">7</span> 不受支持或无效。请确保磁盘已导入</span><br></pre></td></tr></table></figure>
+
+<p>可以通过如下命令来转换磁盘文件来解决</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">vmkfstools -i <span class="tag">&lt;<span class="name">HostedVirtualDisk</span>&gt;</span>  <span class="tag">&lt;<span class="name">ESXVirtualDisk</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>首先开启ESXI的SSH功能, 然后登陆进去, 找到目标磁盘文件</p>
+<p>假设我们要转换的磁盘文件为</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">openwrt</span>-<span class="number">21</span>.<span class="number">02</span>.<span class="number">1</span>-<span class="number">2022042317</span>-x86-<span class="number">64</span>-generic-squashfs-combined-efi.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>我们执行命令</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">vmkfstools</span> -i openwrt-<span class="number">21</span>.<span class="number">02</span>.<span class="number">1</span>-<span class="number">2022042317</span>-x86-<span class="number">64</span>-generic-squashfs-combined-efi.vmdk  new.vmdk</span><br></pre></td></tr></table></figure>
+
+<p>会生成一个新的磁盘文件, 将新的磁盘文件挂载到虚拟机启动即可.</p>
+<blockquote>
+<p><a href="https://xitao.me/%E5%9C%A8esxi7%E4%B8%AD%E5%AE%89%E8%A3%85istoreos%E8%BD%AF%E8%B7%AF%E7%94%B1%E7%B3%BB%E7%BB%9F/">https://xitao.me/%E5%9C%A8esxi7%E4%B8%AD%E5%AE%89%E8%A3%85istoreos%E8%BD%AF%E8%B7%AF%E7%94%B1%E7%B3%BB%E7%BB%9F/</a></p>
+</blockquote>
+<h1 id="重启后文件变只读"><a href="#重启后文件变只读" class="headerlink" title="重启后文件变只读"></a>重启后文件变只读</h1><p>存在一种情况, 在第一启动的时候可以进行配置和保存, 但是重启之后, 配置无法保存, 表现为 <code>/dev/root</code> 这个目录变成了只读模式 <code>Read-only file system</code></p>
+<p>具体来讲就是从现在开始, 你的任何配置都无法保存了, 将在重启后被重置.</p>
+<p>临时的解决方式</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">mount</span> -o remount rw /</span><br></pre></td></tr></table></figure>
+
+<p>每次重启都需要执行, 你可以将这个命令写到</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>rc.local</span><br></pre></td></tr></table></figure>
+<p>文件里来开机自动执行.</p>
+<p>但这终究不是一个合理的解决方式.</p>
+<p>仔细定位问题后发现<code>block-mount</code>和这个模块有关.</p>
+<p>查阅相关资料后, 我们可以在编译固件的时候不要编译该模块即可解决问题.</p>
+<p>具体操作, <code>make menuconfig</code> 调出配置, 依次取消以下勾选</p>
+<figure class="highlight xl"><table><tr><td class="code"><pre><span class="line">E<span class="function"><span class="title">xtra</span> packages ---&gt;</span> automount</span><br><span class="line">B<span class="function"><span class="title">ase</span> system ---&gt;</span> <span class="keyword">block</span>-mount</span><br></pre></td></tr></table></figure>
+
+<p>重新编译即可解决.</p>
+<blockquote>
+<p><a href="https://github.com/coolsnowwolf/lede/issues/10317">https://github.com/coolsnowwolf/lede/issues/10317</a></p>
+</blockquote>
+]]></content>
+  </entry>
 </search>
